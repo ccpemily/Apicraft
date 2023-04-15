@@ -2,6 +2,7 @@ package com.emily.apicraft.core.client;
 
 import cofh.lib.api.item.IColorableItem;
 import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.world.item.Item;
@@ -10,6 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -20,6 +22,15 @@ public class ClientSetupEvents {
     private static final List<Item> COLORABLE_ITEMS = new ArrayList<>();
     private ClientSetupEvents(){}
 
+    @SubscribeEvent
+    public static void clientSetup(final FMLClientSetupEvent event){
+        event.enqueueWork(ClientSetupEvents::registerScreens);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void registerScreens(){
+
+    }
     @SubscribeEvent
     public static void colorSetupItem(final RegisterColorHandlersEvent.Item event) {
         ItemColors colors = event.getItemColors();

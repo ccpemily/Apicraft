@@ -25,7 +25,6 @@ public class Apicraft {
 
         // Register the commonSetup method for mod loading
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(Registries::clientSetup);
         // 初始化等位基因、染色体类型注册表项
         Registries.initRegistry(modEventBus);
 

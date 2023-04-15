@@ -1,0 +1,12 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+      "particle": "thermalapiculture:block/apiary_side",
+      "down": "thermalapiculture:block/apiary_bottom",
+      "up": "thermalapiculture:block/apiary_top",
+      "north": "thermalapiculture:block/apiary_entrance",
+      "east": "thermalapiculture:block/apiary_side",
+      "south": "thermalapiculture:block/apiary_side",
+      "west": "thermalapiculture:block/apiary_side"
+    }
+}

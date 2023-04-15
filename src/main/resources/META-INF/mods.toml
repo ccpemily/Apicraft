@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[mods]]
+modId="apicraft"
+version="${file.jarVersion}"
+displayName="Apicraft"
+#logoFile="forestry_logo.png"
+credits="TeamCofh and ForestryMC Team"
+authors="Emily Crystal for sourcecode."
+description='''
+An apiculture addon for Cofh series, aimed to bring Apiculture in the ForestryMC and APICO to 1.19.2.
+'''
+
+[[dependencies.apicraft]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.apicraft]]
+    modId="cofh_core"
+    mandatory=true
+    versionRange="[10.2.0,10.3.0)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.apicraft]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"

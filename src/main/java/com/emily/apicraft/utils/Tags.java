@@ -4,8 +4,8 @@ public class Tags {
     // region Genetics
     public static final String TAG_BEE = "BeeProperties";
     public static final String TAG_HEALTH = "Health";
-    public static final String TAG_MAX_HEALTH = "MaxHealth";
     public static final String TAG_GENERATION = "Generation";
+    public static final String TAG_ANALYZED = "Analyzed";
     public static final String TAG_GENOME = "Genome";
     public static final String TAG_MATE = "Mate";
 

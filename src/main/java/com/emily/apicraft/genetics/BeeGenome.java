@@ -10,10 +10,15 @@ import java.util.Arrays;
 
 public class BeeGenome {
     @SuppressWarnings("unchecked")
-    private static final Class<? extends IChromosomeType>[] karyotype = new Class<>[]{
+    private static final Class<? extends IChromosomeType>[] karyotype = new Class[]{
             Chromosomes.Species.class,
             Chromosomes.LifeSpan.class,
             Chromosomes.Productivity.class
+    };
+    private static final BeeChromosome[] defaultTemplate = new BeeChromosome[]{
+            new BeeChromosome(Chromosomes.Species.FOREST, Chromosomes.Species.class),
+            new BeeChromosome(Chromosomes.LifeSpan.SHORT, Chromosomes.LifeSpan.class),
+            new BeeChromosome(Chromosomes.Productivity.SLOWEST, Chromosomes.Productivity.class)
     };
     private final BeeChromosome[] chromosomes;
 
@@ -51,4 +56,20 @@ public class BeeGenome {
         tag.put(Tags.TAG_CHROMOSOMES, list);
         return tag;
     }
+
+    // region GenomeInfo
+    public Chromosomes.Species getSpecies(){
+        return (Chromosomes.Species) chromosomes[0].getActive();
+    }
+    public int getMaxHealth(){
+        return ((Chromosomes.LifeSpan) chromosomes[1].getActive()).getMaxHealth();
+    }
+    // endregion
+
+    // region GenomeTemplate
+    public static BeeGenome defaultGenome(Chromosomes.Species species){
+        BeeChromosome[] chromosomes = Arrays.copyOf(defaultTemplate, karyotype.length);
+        return new BeeGenome(chromosomes);
+    }
+    // endregion
 }

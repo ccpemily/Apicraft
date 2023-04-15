@@ -1,8 +1,8 @@
 {
-  "parent": "thermalapiculture:item/mirror_hands",
+  "parent": "apicraft:item/mirror_hands",
   "textures": {
-    "layer0": "thermalapiculture:item/bees/default/drone.outline",
-    "layer1": "thermalapiculture:item/bees/default/body1",
-    "layer2": "thermalapiculture:item/bees/default/drone.body2"
+    "layer0": "apicraft:item/bees/default/drone.outline",
+    "layer1": "apicraft:item/bees/default/body1",
+    "layer2": "apicraft:item/bees/default/drone.body2"
   }
 }

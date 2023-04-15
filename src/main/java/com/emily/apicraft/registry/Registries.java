@@ -4,6 +4,8 @@ import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.items.BeeItem;
+import com.emily.apicraft.items.BeeTypes;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -52,6 +54,9 @@ public class Registries {
     }
 
     private static void registerItems(){
+        for(BeeTypes type : BeeTypes.values()){
+            registerItem("bee_" + type.getName(), () -> new BeeItem(type));
+        }
     }
     private static void registerBlocks(){
     }

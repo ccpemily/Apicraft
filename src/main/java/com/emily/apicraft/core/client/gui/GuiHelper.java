@@ -9,7 +9,7 @@ public final class GuiHelper {
 
     public static ElementBreedingProcess createDefaultBreedingProcess(IGuiAccess gui, int posX, int posY, BreedingProcessStorage storage){
         return (ElementBreedingProcess) new ElementBreedingProcess(gui, posX, posY, storage)
-                .setTexture("thermalapiculture:textures/gui/element/breeding.png", 24, 46)
+                .setTexture("apicraft:textures/gui/element/breeding.png", 24, 46)
                 .setSize(4, 46);
     }
 }

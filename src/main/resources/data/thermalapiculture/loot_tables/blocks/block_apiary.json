@@ -16,7 +16,7 @@
               "function": "cofh_core:nbt_sync"
             }
           ],
-          "name": "thermalapiculture:block_apiary"
+          "name": "apicraft:block_apiary"
         }
       ],
       "rolls": 1.0

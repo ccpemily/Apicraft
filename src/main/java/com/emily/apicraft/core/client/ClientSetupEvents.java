@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid= Apicraft.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Apicraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetupEvents {
     private static final List<Item> COLORABLE_ITEMS = new ArrayList<>();
     private ClientSetupEvents(){}

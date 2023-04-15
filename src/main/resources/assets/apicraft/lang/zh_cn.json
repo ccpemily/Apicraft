@@ -1,8 +1,8 @@
 {
-  "itemGroup.thermalapiculture_group.bees":"热力系列 | 蜜蜂",
-  "itemGroup.thermalapiculture_group.items" : "热力系列 | 养蜂",
-  "itemGroup.thermalapiculture_group.blocks" : "热力系列 | 蜂房",
-  "block.thermalapiculture.block_apiary": "蜂箱",
+  "itemGroup.apicraft.bees":"蜜蜂学 | 蜜蜂",
+  "itemGroup.apicraft.items" : "蜜蜂学 | 物品",
+  "itemGroup.apicraft.blocks" : "蜜蜂学 | 方块",
+  "block.apicraft.block_apiary": "蜂箱",
   "tile.tile_apiary.name": "蜂箱",
   "gui.tooltip.bee_housing_no_bee": "没有蜜蜂",
   "gui.climate.header": "气候",

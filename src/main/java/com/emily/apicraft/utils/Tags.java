@@ -6,6 +6,8 @@ public class Tags {
     public static final String TAG_HEALTH = "Health";
     public static final String TAG_MAX_HEALTH = "MaxHealth";
     public static final String TAG_GENERATION = "Generation";
+    public static final String TAG_GENOME = "Genome";
+    public static final String TAG_MATE = "Mate";
 
     public static final String TAG_CHROMOSOMES = "Chromosomes";
     public static final String TAG_ACTIVE = "Active";

@@ -1,8 +1,8 @@
 {
-  "itemGroup.thermalapiculture_group.bees":"Thermal Series | Bees",
-  "itemGroup.thermalapiculture_group.items" : "Thermal Series | Items",
-  "itemGroup.thermalapiculture_group.blocks" : "Thermal Series | Blocks",
-  "block.thermalapiculture.block_apiary": "Apiary",
+  "itemGroup.apicraft.bees":"Apicraft | Bees",
+  "itemGroup.apicraft.items" : "Apicraft | Items",
+  "itemGroup.apicraft.blocks" : "Apicraft | Blocks",
+  "block.apicraft.block_apiary": "Apiary",
   "tile.tile_apiary.name": "Apiary",
   "gui.tooltip.bee_housing_no_bee": "No princess or queen",
   "gui.climate.header": "Climate",

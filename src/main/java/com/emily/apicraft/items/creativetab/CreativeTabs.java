@@ -1,5 +1,6 @@
 package com.emily.apicraft.items.creativetab;
 
+import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.capabilities.Capabilities;
 import com.emily.apicraft.capabilities.EmptyBeeProvider;
 import com.emily.apicraft.genetics.Bee;
@@ -16,8 +17,7 @@ public class CreativeTabs {
         @Override
         public @NotNull ItemStack makeIcon() {
             ItemStack stack = new ItemStack(Registries.ITEMS.get("bee_drone"));
-            IBeeProvider provider = stack.getCapability(Capabilities.BEE_PROVIDER).orElse(EmptyBeeProvider.getInstance());
-            provider.setBeeIndividual(new Bee(BeeGenome.defaultGenome(Chromosomes.Species.FOREST)));
+            BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(Chromosomes.Species.FOREST));
             return stack;
         }
     };

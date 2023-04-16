@@ -50,9 +50,9 @@ public class Bee {
     // region NBT
     public CompoundTag writeToTag(CompoundTag tag){
         CompoundTag beeTag = new CompoundTag();
-        this.genome.writeToTag(beeTag);
+        beeTag.put(TAG_GENOME, this.genome.writeToTag(new CompoundTag()));
         if(this.mate != null){
-            this.mate.writeToTag(beeTag);
+            beeTag.put(TAG_MATE, this.mate.writeToTag(new CompoundTag()));
         }
         beeTag.putInt(TAG_HEALTH, this.health);
         beeTag.putInt(TAG_GENERATION, this.generation);
@@ -104,7 +104,7 @@ public class Bee {
 
     // region Helpers
     public static Bee getPure(Chromosomes.Species species){
-        return new Bee(BeeGenome.defaultGenome(species));
+        return new Bee(BeeKaryotype.INSTANCE.defaultGenome(species));
     }
     // endregion
 }

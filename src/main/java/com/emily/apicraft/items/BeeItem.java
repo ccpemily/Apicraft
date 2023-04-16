@@ -10,35 +10,40 @@ import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
+import com.emily.apicraft.interfaces.items.IBeeItem;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class BeeItem extends ItemCoFH implements IColorableItem {
+public class BeeItem extends ItemCoFH implements IBeeItem {
     private final BeeTypes type;
 
     public BeeItem(BeeTypes type) {
         super(type == BeeTypes.QUEEN ? new Properties().tab(CreativeTabs.TAB_BEES).stacksTo(1) : new Properties().tab(CreativeTabs.TAB_BEES));
         this.type = type;
-        this.showInGroups = () -> true;
+        this.showInGroups = () -> false;
         ClientSetupEvents.addColorable(this);
     }
 
     @Override
+    public @NotNull Component getName(@NotNull ItemStack stack){
+        Chromosomes.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
+        return Component.translatable("chromosomes." + species.toString()).append(Component.translatable(this.getBeeType().getName()));
+    }
+
+    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (!showInGroups.get()) {
-            return;
-        }
         if(this.allowedIn(group)){
             for(Chromosomes.Species species : Chromosomes.Species.values()){
                 ItemStack stack = new ItemStack(this);
-                IBeeProvider provider = stack.getCapability(Capabilities.BEE_PROVIDER).orElse(EmptyBeeProvider.getInstance());
-                provider.setBeeIndividual(new Bee(BeeGenome.defaultGenome(species)));
+                BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(species));
                 items.add(stack);
             }
         }
@@ -51,16 +56,15 @@ public class BeeItem extends ItemCoFH implements IColorableItem {
             return tintIndex == 0 ? 0x000000 : 0xffffff;
         }
         else{
-            IBeeProvider provider = stack.getCapability(Capabilities.BEE_PROVIDER).orElse(EmptyBeeProvider.getInstance());
-            return provider.getBeeSpeciesDirectly().getColor(tintIndex);
+            return BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true).getColor(tintIndex);
         }
     }
     // endregion
 
-    // region CapabilityProvider
+    // region IBeeInfoProvider
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag tag){
-        return new BeeProviderCapability(stack);
+    public BeeTypes getBeeType() {
+        return type;
     }
     // endregion
 }

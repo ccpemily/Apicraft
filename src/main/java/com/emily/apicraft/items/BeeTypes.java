@@ -6,6 +6,6 @@ public enum BeeTypes {
     DRONE, QUEEN, LARVA;
 
     public String getName(){
-        return this.name().toLowerCase(Locale.ENGLISH);
+        return "bee.type." + this.name().toLowerCase(Locale.ENGLISH);
     }
 }

@@ -2,6 +2,8 @@ package com.emily.apicraft.registry;
 
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.genetics.BeeGenome;
+import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
 import com.emily.apicraft.items.BeeItem;
@@ -19,6 +21,8 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 import static com.mojang.logging.LogUtils.getLogger;
@@ -55,7 +59,7 @@ public class Registries {
 
     private static void registerItems(){
         for(BeeTypes type : BeeTypes.values()){
-            registerItem("bee_" + type.getName(), () -> new BeeItem(type));
+            registerItem("bee_" + type.name().toLowerCase(Locale.ENGLISH), () -> new BeeItem(type));
         }
     }
     private static void registerBlocks(){
@@ -65,15 +69,14 @@ public class Registries {
     private static void registerContainers(){
     }
     private static void registerChromosomeTypes(){
-        for(Chromosomes.Species species : Chromosomes.Species.values()){
-            registerChromosomeType(species.toString(), () -> species);
-        }
-        for(Chromosomes.LifeSpan span : Chromosomes.LifeSpan.values()){
-            registerChromosomeType(span.toString(), () -> span);
-        }
-        for(Chromosomes.Productivity productivity : Chromosomes.Productivity.values()){
-            registerChromosomeType(productivity.toString(), () -> productivity);
-        }
+        registerChromosomeType(Chromosomes.Species.class, Chromosomes.Species.FOREST);
+        registerChromosomeType(Chromosomes.LifeSpan.class, Chromosomes.LifeSpan.SHORT);
+        registerChromosomeType(Chromosomes.Productivity.class, Chromosomes.Productivity.SLOWEST);
+        registerChromosomeType(Chromosomes.Fertility.class, Chromosomes.Fertility.FERTILE);
+        registerChromosomeType(Chromosomes.Behavior.class, Chromosomes.Behavior.DIURNAL);
+        registerChromosomeType(Chromosomes.RainTolerance.class, Chromosomes.RainTolerance.FALSE);
+        registerChromosomeType(Chromosomes.CaveDwelling.class, Chromosomes.CaveDwelling.FALSE);
+        registerChromosomeType(Chromosomes.AcceptedFlowers.class, Chromosomes.AcceptedFlowers.VANILLA);
     }
 
     private static void registerItem(String name, Supplier<Item> supplier){
@@ -91,8 +94,12 @@ public class Registries {
         TILE_ENTITIES.register(name, supplier);
     }
 
-    private static void registerChromosomeType(String name, Supplier<IChromosomeType> supplier){
-        logger.debug("Registering chromosome type: " + name);
-        CHROMOSOMES.register(name, supplier);
+    private static void registerChromosomeType(Class<? extends IChromosomeType> type, IChromosomeType defaultValue){
+        logger.debug("Registering chromosome type: " + type);
+        IChromosomeType[] types = type.getEnumConstants();
+        BeeKaryotype.INSTANCE.registerToKaryotype(type, defaultValue);
+        for(IChromosomeType t : types){
+            CHROMOSOMES.register(t.toString(), () -> t);
+        }
     }
 }

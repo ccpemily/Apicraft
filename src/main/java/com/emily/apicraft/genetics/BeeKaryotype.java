@@ -36,12 +36,27 @@ public class BeeKaryotype {
         defaultTemplate.put(type, defaultValue);
     }
 
+    public IChromosomeType[] defaultTemplate(Chromosomes.Species species){
+        IChromosomeType[] chromosomes = new IChromosomeType[karyotype.size()];
+        for(int i = 0; i < karyotype.size(); i++){
+            Class<? extends IChromosomeType> type = karyotype.get(i);
+            if(species.getTemplate().containsKey(type)){
+                chromosomes[i] = species.getTemplate().get(type);
+            }
+            else {
+                chromosomes[i] = defaultTemplate.get(type);
+            }
+        }
+        chromosomes[getIndex(Chromosomes.Species.class)] = species;
+        return chromosomes;
+    }
+
     public BeeGenome defaultGenome(Chromosomes.Species species){
         BeeChromosome[] chromosomes = new BeeChromosome[karyotype.size()];
+        IChromosomeType[] template = defaultTemplate(species);
         for(int i = 0; i < karyotype.size(); i++){
-            chromosomes[i] = new BeeChromosome(defaultTemplate.get(karyotype.get(i)), karyotype.get(i));
+            chromosomes[i] = new BeeChromosome(template[i], karyotype.get(i));
         }
-        chromosomes[getIndex(Chromosomes.Species.class)] = new BeeChromosome(species, Chromosomes.Species.class);
         return new BeeGenome(chromosomes);
     }
 }

@@ -8,6 +8,7 @@ import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
 import com.emily.apicraft.items.BeeItem;
 import com.emily.apicraft.items.BeeTypes;
+import com.emily.apicraft.items.PortableAnalyzer;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -61,6 +62,7 @@ public class Registries {
         for(BeeTypes type : BeeTypes.values()){
             registerItem("bee_" + type.name().toLowerCase(Locale.ENGLISH), () -> new BeeItem(type));
         }
+        registerItem("portable_analyzer", PortableAnalyzer::new);
     }
     private static void registerBlocks(){
     }
@@ -77,6 +79,10 @@ public class Registries {
         registerChromosomeType(Chromosomes.RainTolerance.class, Chromosomes.RainTolerance.FALSE);
         registerChromosomeType(Chromosomes.CaveDwelling.class, Chromosomes.CaveDwelling.FALSE);
         registerChromosomeType(Chromosomes.AcceptedFlowers.class, Chromosomes.AcceptedFlowers.VANILLA);
+        registerChromosomeType(Chromosomes.TemperatureTolerance.class, Chromosomes.TemperatureTolerance.NONE);
+        registerChromosomeType(Chromosomes.HumidityTolerance.class, Chromosomes.HumidityTolerance.NONE);
+        registerChromosomeType(Chromosomes.Territory.class, Chromosomes.Territory.AVERAGE);
+        registerChromosomeType(Chromosomes.Effect.class, Chromosomes.Effect.NONE);
     }
 
     private static void registerItem(String name, Supplier<Item> supplier){
@@ -95,7 +101,7 @@ public class Registries {
     }
 
     private static void registerChromosomeType(Class<? extends IChromosomeType> type, IChromosomeType defaultValue){
-        logger.debug("Registering chromosome type: " + type);
+        logger.debug("Registering chromosome type: " + type.getSimpleName());
         IChromosomeType[] types = type.getEnumConstants();
         BeeKaryotype.INSTANCE.registerToKaryotype(type, defaultValue);
         for(IChromosomeType t : types){

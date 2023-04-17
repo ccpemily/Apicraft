@@ -12,15 +12,26 @@ import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
 import com.emily.apicraft.interfaces.items.IBeeItem;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
+
+import static com.mojang.logging.LogUtils.getLogger;
 
 public class BeeItem extends ItemCoFH implements IBeeItem {
     private final BeeTypes type;
@@ -36,6 +47,43 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
     public @NotNull Component getName(@NotNull ItemStack stack){
         Chromosomes.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
         return Component.translatable("chromosomes." + species.toString()).append(Component.translatable(this.getBeeType().getName()));
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        if(!stack.hasTag()){
+            return false;
+        }
+        else {
+            Chromosomes.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
+            return species.isFoil();
+        }
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+        if(!stack.hasTag()){
+            return;
+        }
+        Optional<Bee> beeOptional = BeeProviderCapability.get(stack).getBeeIndividual();
+        if(beeOptional.isEmpty()){
+            return;
+        }
+        Bee bee = beeOptional.get();
+        bee.analyze(); // debug
+        if(bee.isAnalyzed()){
+            if(!Screen.hasShiftDown()){
+                bee.addTooltip(components);
+            }
+            else{
+                components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            }
+        }
+        else{
+            components.add(Component.translatable("bee.tooltip.unknown").withStyle(ChatFormatting.GRAY));
+        }
+        super.appendHoverText(stack, level, components, flag);
     }
 
     @Override

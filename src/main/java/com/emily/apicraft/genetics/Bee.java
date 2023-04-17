@@ -1,9 +1,14 @@
 package com.emily.apicraft.genetics;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Rarity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 import static com.emily.apicraft.utils.Tags.*;
 
@@ -59,6 +64,64 @@ public class Bee {
         beeTag.putBoolean(TAG_ANALYZED, this.analyzed);
         tag.put(TAG_BEE, beeTag);
         return tag;
+    }
+    // endregion
+
+    // region Tooltips
+    public void addTooltip(List<Component> components) {
+        if(!analyzed){
+            return;
+        }
+        Chromosomes.Species speciesActive = genome.getSpecies();
+        Chromosomes.Species speciesInactive = genome.getInactiveSpecies();
+        if(speciesActive != speciesInactive){
+            components.add(
+                    Component.translatable("chromosomes." + speciesActive.toString()).append("-").append(Component.translatable("chromosomes." + speciesInactive.toString()).append(Component.translatable("bee.tooltip.hybrid")).withStyle(ChatFormatting.BLUE))
+            );
+        }
+        if(generation > 0){
+            Rarity rarity;
+            if (generation >= 1000) {
+                rarity = Rarity.EPIC;
+            } else if (generation >= 100) {
+                rarity = Rarity.RARE;
+            } else if (generation >= 10) {
+                rarity = Rarity.UNCOMMON;
+            } else {
+                rarity = Rarity.COMMON;
+            }
+            components.add(Component.literal(String.format(Component.translatable("bee.tooltip.generation").toString(), generation)).withStyle(rarity.getStyleModifier()));
+        }
+        components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.LifeSpan.class, true).toString()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.Productivity.class, true).toString()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.literal("T: ")
+                .append(Component.translatable(speciesActive.getTemperature().getName())
+                        .append(" / ")
+                        .append(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.TemperatureTolerance.class, true).toString()))
+                ).withStyle(ChatFormatting.GREEN)
+        );
+        components.add(Component.literal("H: ")
+                .append(Component.translatable(speciesActive.getHumidity().getName())
+                                .append(" / ")
+                                .append(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.HumidityTolerance.class, true).toString()))
+                ).withStyle(ChatFormatting.GREEN)
+        );
+        Chromosomes.Behavior behavior = genome.getChromosomeValue(Chromosomes.Behavior.class, true);
+        ChatFormatting color = ChatFormatting.WHITE;
+        switch (behavior){
+            case DIURNAL -> color = ChatFormatting.YELLOW;
+            case NOCTURNAL -> color = ChatFormatting.DARK_RED;
+            case CREPUSCULAR -> color = ChatFormatting.AQUA;
+            case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
+        }
+        components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("chromosomes." + behavior).withStyle(color)));
+        components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.AcceptedFlowers.class, true).toString()).withStyle(ChatFormatting.GRAY));
+        if(genome.isCaveDwelling()){
+            components.add(Component.translatable("bee.tooltip.cave_dwelling").withStyle(ChatFormatting.DARK_GRAY));
+        }
+        if(genome.toleratesRain()){
+            components.add(Component.translatable("bee.tooltip.tolerates_rain").withStyle(ChatFormatting.WHITE));
+        }
     }
     // endregion
 

@@ -32,12 +32,7 @@ public class BeeProviderCapability implements IBeeProvider, ICapabilityProvider 
 
     @Override
     public Optional<Bee> getBeeIndividual() {
-        if(container.hasTag()){
-            return Optional.empty();
-        }
-        else{
-            return Optional.of(new Bee(container.getTag()));
-        }
+        return container.hasTag() ? Optional.of(new Bee(container.getTag())) : Optional.empty();
     }
 
     @Override

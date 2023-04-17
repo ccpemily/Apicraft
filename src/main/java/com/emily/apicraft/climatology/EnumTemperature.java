@@ -1,6 +1,6 @@
 package com.emily.apicraft.climatology;
 
-import com.emily.apicraft.core.client.gui.icons.Icons;
+import com.emily.apicraft.client.gui.icons.Icons;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 import java.util.Locale;

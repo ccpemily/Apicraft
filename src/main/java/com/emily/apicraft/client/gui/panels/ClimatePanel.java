@@ -1,4 +1,4 @@
-package com.emily.apicraft.core.client.gui.panels;
+package com.emily.apicraft.client.gui.panels;
 
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.client.gui.element.panel.PanelBase;

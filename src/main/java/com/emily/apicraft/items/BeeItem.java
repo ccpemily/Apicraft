@@ -1,21 +1,15 @@
 package com.emily.apicraft.items;
 
 import cofh.core.item.ItemCoFH;
-import cofh.lib.api.item.IColorableItem;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
-import com.emily.apicraft.capabilities.Capabilities;
-import com.emily.apicraft.capabilities.EmptyBeeProvider;
-import com.emily.apicraft.core.client.ClientSetupEvents;
+import com.emily.apicraft.client.ClientSetupEvents;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
 import com.emily.apicraft.interfaces.items.IBeeItem;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -23,15 +17,11 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-
-import static com.mojang.logging.LogUtils.getLogger;
 
 public class BeeItem extends ItemCoFH implements IBeeItem {
     private final BeeTypes type;

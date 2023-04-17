@@ -1,4 +1,4 @@
-package com.emily.apicraft.core.client.gui.icons;
+package com.emily.apicraft.client.gui.icons;
 
 import com.emily.apicraft.Apicraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;

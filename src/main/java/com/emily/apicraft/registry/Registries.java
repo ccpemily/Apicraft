@@ -6,6 +6,7 @@ import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.inventory.containers.PortableAnalyzerContainer;
 import com.emily.apicraft.items.BeeItem;
 import com.emily.apicraft.items.BeeTypes;
 import com.emily.apicraft.items.PortableAnalyzer;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -26,6 +28,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Supplier;
 
+import static cofh.core.util.ProxyUtils.getClientPlayer;
+import static cofh.core.util.ProxyUtils.getClientWorld;
 import static com.mojang.logging.LogUtils.getLogger;
 
 public class Registries {
@@ -69,6 +73,7 @@ public class Registries {
     private static void registerTileEntities(){
     }
     private static void registerContainers(){
+        registerContainer("portable_analyzer", () -> IForgeMenuType.create(((windowId, inv, data) -> new PortableAnalyzerContainer(windowId, inv, getClientPlayer()))));
     }
     private static void registerChromosomeTypes(){
         registerChromosomeType(Chromosomes.Species.class, Chromosomes.Species.FOREST);
@@ -98,6 +103,11 @@ public class Registries {
     private static void registerTileEntity(String name, Supplier<BlockEntityType<?>> supplier){
         logger.debug("Registering tile entity type: " + name);
         TILE_ENTITIES.register(name, supplier);
+    }
+
+    private static void registerContainer(String name, Supplier<MenuType<?>> supplier){
+        logger.debug("Registering container type: " + name);
+        CONTAINERS.register(name, supplier);
     }
 
     private static void registerChromosomeType(Class<? extends IChromosomeType> type, IChromosomeType defaultValue){

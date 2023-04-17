@@ -1,10 +1,14 @@
-package com.emily.apicraft.core.client;
+package com.emily.apicraft.client;
 
 import cofh.lib.api.item.IColorableItem;
 import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.client.gui.menus.PortableAnalyzerScreen;
+import com.emily.apicraft.inventory.containers.PortableAnalyzerContainer;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,7 +33,7 @@ public class ClientSetupEvents {
 
     @SuppressWarnings("unchecked")
     private static void registerScreens(){
-
+        MenuScreens.register((MenuType<PortableAnalyzerContainer>)Registries.CONTAINERS.get("portable_analyzer"), PortableAnalyzerScreen::new);
     }
     @SubscribeEvent
     public static void colorSetupItem(final RegisterColorHandlersEvent.Item event) {
@@ -47,7 +51,6 @@ public class ClientSetupEvents {
 
     private static class ColorableItemColor implements ItemColor {
         public static final ColorableItemColor INSTANCE = new ColorableItemColor();
-
         private ColorableItemColor(){}
         @Override
         public int getColor(@NotNull ItemStack stack, int layer) {

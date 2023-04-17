@@ -1,8 +1,8 @@
-package com.emily.apicraft.core.client.gui;
+package com.emily.apicraft.client.gui;
 
 import cofh.core.client.gui.IGuiAccess;
-import com.emily.apicraft.core.client.gui.elements.BreedingProcessStorage;
-import com.emily.apicraft.core.client.gui.elements.ElementBreedingProcess;
+import com.emily.apicraft.client.gui.elements.ElementBreedingProcess;
+import com.emily.apicraft.client.gui.elements.BreedingProcessStorage;
 
 public final class GuiHelper {
     private GuiHelper(){}

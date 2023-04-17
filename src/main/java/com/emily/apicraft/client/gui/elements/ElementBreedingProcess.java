@@ -1,4 +1,4 @@
-package com.emily.apicraft.core.client.gui.elements;
+package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.client.gui.element.ElementResourceStorage;

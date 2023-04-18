@@ -1,6 +1,7 @@
 package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
+import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.Chromosomes;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,6 +29,15 @@ public class ElementTemperatureInfo extends ElementText{
             setText(Component.translatable(chromosome.getTemperature().getName()).getString(), getColor(chromosome.isDominant()));
             super.drawBackground(stack, mouseX, mouseY);
         }
+    }
+
+    public EnumTemperature getTemperature(){
+        Optional<Bee> beeOptional = supplier.get();
+        if(beeOptional.isPresent()) {
+            Chromosomes.Species chromosome = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
+            return chromosome.getTemperature();
+        }
+        return EnumTemperature.NONE;
     }
 
     private int getColor(boolean dominant){

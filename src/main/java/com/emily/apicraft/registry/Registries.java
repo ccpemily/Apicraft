@@ -2,7 +2,6 @@ package com.emily.apicraft.registry;
 
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
@@ -24,12 +23,10 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Supplier;
 
 import static cofh.core.util.ProxyUtils.getClientPlayer;
-import static cofh.core.util.ProxyUtils.getClientWorld;
 import static com.mojang.logging.LogUtils.getLogger;
 
 public class Registries {

@@ -6,15 +6,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 
 public class ElementText extends ElementBase {
-    private String text = "";
-    private int color = 0xffffff;
+    protected String text = "";
+    protected int color = 0xffffff;
 
     public ElementText(IGuiAccess gui, int posX, int posY) {
         super(gui, posX, posY);
-    }
-
-    public ElementText(IGuiAccess gui, int posX, int posY, int width, int height) {
-        super(gui, posX, posY, width, height);
     }
 
     public ElementText setText(String text){

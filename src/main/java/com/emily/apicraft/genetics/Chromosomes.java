@@ -520,7 +520,7 @@ public class Chromosomes {
             List<Component> components = new ArrayList<>();
             components.add(Component.translatable("chromosomes.behavior.class")
                     .append(": ")
-                    .append(Component.translatable("tooltip." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -531,7 +531,7 @@ public class Chromosomes {
                 case CREPUSCULAR -> color = ChatFormatting.AQUA;
                 case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
             }
-            components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("chromosomes." + this).withStyle(color)));
+            components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + this).withStyle(color)));
             return components;
         }
         // endregion
@@ -544,7 +544,7 @@ public class Chromosomes {
             this(false);
         }
         RainTolerance(boolean dominant){
-            this.dominant = true;
+            this.dominant = dominant;
         }
         @Override
         public String toString(){
@@ -569,9 +569,6 @@ public class Chromosomes {
             for(String str : strings){
                 components.add(Component.literal(str));
             }
-            components.add(Component.translatable("tooltip.rain_tolerance")
-                    .append(": ")
-                    .append(Component.translatable(toleratesRain() ? "tooltip.true" : "tooltip.false").withStyle(ChatFormatting.YELLOW)));
             return components;
         }
         // endregion
@@ -584,7 +581,7 @@ public class Chromosomes {
             this(false);
         }
         CaveDwelling(boolean dominant){
-            this.dominant = true;
+            this.dominant = dominant;
         }
         @Override
         public String toString(){
@@ -609,9 +606,6 @@ public class Chromosomes {
             for(String str : strings){
                 components.add(Component.literal(str));
             }
-            components.add(Component.translatable("tooltip.cave_dwelling")
-                    .append(": ")
-                    .append(Component.translatable(isCaveDwelling() ? "tooltip.true" : "tooltip.false").withStyle(ChatFormatting.YELLOW)));
             return components;
         }
         // endregion
@@ -715,6 +709,9 @@ public class Chromosomes {
         }
 
         public boolean canTolerate(EnumTemperature environment, EnumTemperature self){
+            if(environment == EnumTemperature.NONE){
+                return false;
+            }
             int diff = environment.ordinal() - self.ordinal();
             return diff <= toleranceUp && diff >= -toleranceDown;
         }
@@ -780,7 +777,10 @@ public class Chromosomes {
             return dominant;
         }
 
-        public boolean canTolerate(EnumTemperature environment, EnumTemperature self){
+        public boolean canTolerate(EnumHumidity environment, EnumHumidity self){
+            if(environment == EnumHumidity.NONE){
+                return false;
+            }
             int diff = environment.ordinal() - self.ordinal();
             return diff <= toleranceUp && diff >= -toleranceDown;
         }

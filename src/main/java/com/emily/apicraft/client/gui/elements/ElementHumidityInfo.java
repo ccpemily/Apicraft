@@ -1,9 +1,9 @@
 package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
+import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 
@@ -29,6 +29,15 @@ public class ElementHumidityInfo extends ElementText {
             setText(Component.translatable(chromosome.getHumidity().getName()).getString(), getColor(chromosome.isDominant()));
             super.drawBackground(stack, mouseX, mouseY);
         }
+    }
+
+    public EnumHumidity getHumidity(){
+        Optional<Bee> beeOptional = supplier.get();
+        if(beeOptional.isPresent()) {
+            Chromosomes.Species chromosome = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
+            return chromosome.getHumidity();
+        }
+        return EnumHumidity.NONE;
     }
 
     private int getColor(boolean dominant){

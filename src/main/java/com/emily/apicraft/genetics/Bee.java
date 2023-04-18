@@ -107,7 +107,7 @@ public class Bee {
             case CREPUSCULAR -> color = ChatFormatting.AQUA;
             case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
         }
-        components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("chromosomes." + behavior).withStyle(color)));
+        components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + behavior).withStyle(color)));
         components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.AcceptedFlowers.class, true).toString()).withStyle(ChatFormatting.GRAY));
         if(genome.isCaveDwelling()){
             components.add(Component.translatable("bee.tooltip.cave_dwelling").withStyle(ChatFormatting.DARK_GRAY));

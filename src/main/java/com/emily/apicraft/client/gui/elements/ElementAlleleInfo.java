@@ -2,6 +2,7 @@ package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
 import com.emily.apicraft.genetics.Bee;
+import com.emily.apicraft.genetics.Chromosomes;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -13,9 +14,9 @@ public class ElementAlleleInfo extends ElementText{
     private static final int DOMINANT_COLOR = 0xec3661;
     private static final int RECESSIVE_COLOR = 0x3687ec;
 
-    private final Supplier<Optional<Bee>> beeSupplier;
-    private final Class<? extends IChromosomeType> type;
-    private final boolean active;
+    protected final Supplier<Optional<Bee>> beeSupplier;
+    protected final Class<? extends IChromosomeType> type;
+    protected final boolean active;
 
     public ElementAlleleInfo(IGuiAccess gui, int posX, int posY, Supplier<Optional<Bee>> supplier, Class<? extends IChromosomeType> type, boolean active) {
         super(gui, posX, posY);
@@ -43,7 +44,15 @@ public class ElementAlleleInfo extends ElementText{
         }
     }
 
-    private int getColor(boolean dominant){
+    public Optional<Bee> getBee(){
+        return beeSupplier.get();
+    }
+
+    public boolean isActive(){
+        return active;
+    }
+
+    protected int getColor(boolean dominant){
         return dominant ? DOMINANT_COLOR : RECESSIVE_COLOR;
     }
 }

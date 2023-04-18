@@ -5,10 +5,14 @@ import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.effects.EffectProvider;
 import com.emily.apicraft.genetics.flowers.FlowerProvider;
 import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class Chromosomes {
@@ -268,6 +272,22 @@ public class Chromosomes {
             return branch;
         }
 
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.species.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            components.add(Component.translatable("tooltip.branch")
+                    .append(": ")
+                    .append(Component.translatable("branch." + getBranch().name().toLowerCase(Locale.ENGLISH)).withStyle(ChatFormatting.YELLOW)));
+            return components;
+        }
+
         private static class BeeSpeciesProperties {
             public int firstColor = 0x000000;
             public int secondColor = 0xffffff;
@@ -343,6 +363,22 @@ public class Chromosomes {
         public int getMaxHealth(){
             return span;
         }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.lifespan.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            components.add(Component.translatable("tooltip.max_health")
+                    .append(": ")
+                    .append(Component.literal(getMaxHealth() * 30 + "s").withStyle(ChatFormatting.YELLOW)));
+            return components;
+        }
         // endregion
     }
     public enum Productivity implements IChromosomeType {
@@ -377,6 +413,22 @@ public class Chromosomes {
 
         public float getProductivity(){
             return productivity;
+        }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.productivity.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            components.add(Component.translatable("tooltip.productivity")
+                    .append(": ")
+                    .append(Component.literal(getProductivity() + "x").withStyle(ChatFormatting.YELLOW)));
+            return components;
         }
         // endregion
     }
@@ -415,6 +467,18 @@ public class Chromosomes {
             return fertility;
         }
 
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.fertility.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            return components;
+        }
         // endregion
     }
     public enum Behavior implements IChromosomeType {
@@ -449,6 +513,27 @@ public class Chromosomes {
             }
             return true;
         }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.behavior.class")
+                    .append(": ")
+                    .append(Component.translatable("tooltip." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            ChatFormatting color = ChatFormatting.WHITE;
+            switch (this){
+                case DIURNAL -> color = ChatFormatting.YELLOW;
+                case NOCTURNAL -> color = ChatFormatting.DARK_RED;
+                case CREPUSCULAR -> color = ChatFormatting.AQUA;
+                case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
+            }
+            components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("chromosomes." + this).withStyle(color)));
+            return components;
+        }
         // endregion
     }
     public enum RainTolerance implements IChromosomeType {
@@ -473,6 +558,22 @@ public class Chromosomes {
         public boolean toleratesRain(){
             return this == TRUE;
         }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.rain_tolerance.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            components.add(Component.translatable("tooltip.rain_tolerance")
+                    .append(": ")
+                    .append(Component.translatable(toleratesRain() ? "tooltip.true" : "tooltip.false").withStyle(ChatFormatting.YELLOW)));
+            return components;
+        }
         // endregion
     }
     public enum CaveDwelling implements IChromosomeType {
@@ -496,6 +597,22 @@ public class Chromosomes {
 
         public boolean isCaveDwelling(){
             return this == TRUE;
+        }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.cave_dwelling.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            components.add(Component.translatable("tooltip.cave_dwelling")
+                    .append(": ")
+                    .append(Component.translatable(isCaveDwelling() ? "tooltip.true" : "tooltip.false").withStyle(ChatFormatting.YELLOW)));
+            return components;
         }
         // endregion
     }
@@ -534,6 +651,19 @@ public class Chromosomes {
 
         public FlowerProvider getProvider(){
             return provider;
+        }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.accepted_flowers.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            return components;
         }
         // endregion
     }
@@ -588,6 +718,19 @@ public class Chromosomes {
             int diff = environment.ordinal() - self.ordinal();
             return diff <= toleranceUp && diff >= -toleranceDown;
         }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.temperature_tolerance.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            return components;
+        }
         // endregion
     }
     public enum HumidityTolerance implements IChromosomeType {
@@ -641,6 +784,19 @@ public class Chromosomes {
             int diff = environment.ordinal() - self.ordinal();
             return diff <= toleranceUp && diff >= -toleranceDown;
         }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.humidity_tolerance.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            return components;
+        }
         // endregion
     }
     public enum Territory implements IChromosomeType {
@@ -682,6 +838,22 @@ public class Chromosomes {
         public Vec3i getTerritory() {
             return territory;
         }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.territory.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            components.add(Component.translatable("tooltip.territory")
+                    .append(": ")
+                    .append(Component.literal(getTerritory().getX() + " x " + getTerritory().getY() + " x " + getTerritory().getZ()).withStyle(ChatFormatting.YELLOW)));
+            return components;
+        }
         // endregion
     }
     public enum Effect implements IChromosomeType {
@@ -712,6 +884,19 @@ public class Chromosomes {
 
         public EffectProvider getProvider() {
             return provider;
+        }
+
+        @Override
+        public List<Component> getDescriptionTooltips() {
+            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("chromosomes.effect.class")
+                    .append(": ")
+                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+            for(String str : strings){
+                components.add(Component.literal(str));
+            }
+            return components;
         }
         // endregion
     }

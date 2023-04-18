@@ -19,7 +19,6 @@ public class Bee {
     private BeeGenome mate;
     private int health;
     private final int generation;
-    private boolean analyzed;
     // endregion
 
     // region Constructor
@@ -27,7 +26,6 @@ public class Bee {
         this.genome = genome;
         this.health = genome.getMaxHealth();
         this.generation = generation;
-        this.analyzed = false;
     }
     public Bee(BeeGenome genome, @Nullable BeeGenome mate){
         this(genome, mate, 0);
@@ -48,7 +46,6 @@ public class Bee {
         }
         this.health = tag.getInt(TAG_HEALTH);
         this.generation = tag.getInt(TAG_GENERATION);
-        this.analyzed = tag.getBoolean(TAG_ANALYZED);
     }
     // endregion
 
@@ -61,7 +58,6 @@ public class Bee {
         }
         beeTag.putInt(TAG_HEALTH, this.health);
         beeTag.putInt(TAG_GENERATION, this.generation);
-        beeTag.putBoolean(TAG_ANALYZED, this.analyzed);
         tag.put(TAG_BEE, beeTag);
         return tag;
     }
@@ -69,9 +65,6 @@ public class Bee {
 
     // region Tooltips
     public void addTooltip(List<Component> components) {
-        if(!analyzed){
-            return;
-        }
         Chromosomes.Species speciesActive = genome.getSpecies();
         Chromosomes.Species speciesInactive = genome.getInactiveSpecies();
         if(speciesActive != speciesInactive){
@@ -140,7 +133,6 @@ public class Bee {
     public boolean isAlive(){
         return health > 0;
     }
-    public boolean isAnalyzed() { return analyzed; }
     // endregion
 
     // region BeeBehavior
@@ -160,9 +152,6 @@ public class Bee {
         }
     }
 
-    public void analyze(){
-        this.analyzed = true;
-    }
     // endregion
 
     // region Helpers

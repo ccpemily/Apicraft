@@ -61,17 +61,11 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
             return;
         }
         Bee bee = beeOptional.get();
-        bee.analyze(); // debug
-        if(bee.isAnalyzed()){
-            if(!Screen.hasShiftDown()){
-                bee.addTooltip(components);
-            }
-            else{
-                components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
-            }
+        if(Screen.hasShiftDown()){
+            bee.addTooltip(components);
         }
         else{
-            components.add(Component.translatable("bee.tooltip.unknown").withStyle(ChatFormatting.GRAY));
+            components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
         super.appendHoverText(stack, level, components, flag);
     }

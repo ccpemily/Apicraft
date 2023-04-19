@@ -4,7 +4,8 @@ import cofh.core.item.ItemCoFH;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.client.ClientSetupEvents;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.items.IBeeItem;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.ChatFormatting;
@@ -35,8 +36,8 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack){
-        Chromosomes.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
-        return Component.translatable("chromosomes." + species.toString()).append(Component.translatable(this.getBeeType().getName()));
+        Alleles.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
+        return Component.translatable(species.getName()).append(Component.translatable(this.getBeeType().getName()));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
             return false;
         }
         else {
-            Chromosomes.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
+            AlleleSpecies species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true).getValue();
             return species.isFoil();
         }
     }
@@ -73,7 +74,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if(this.allowedIn(group)){
-            for(Chromosomes.Species species : Chromosomes.Species.values()){
+            for(Alleles.Species species : Alleles.Species.values()){
                 ItemStack stack = new ItemStack(this);
                 BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(species));
                 items.add(stack);
@@ -88,7 +89,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
             return tintIndex == 0 ? 0x000000 : 0xffffff;
         }
         else{
-            return BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true).getColor(tintIndex);
+            return BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true).getValue().getColor(tintIndex);
         }
     }
     // endregion

@@ -1,14 +1,19 @@
-package com.emily.apicraft.client.gui.menus;
+package com.emily.apicraft.client.gui.screens;
 
 import cofh.core.client.gui.ContainerScreenCoFH;
 import cofh.core.client.gui.element.*;
 import cofh.lib.inventory.wrapper.InvWrapperCoFH;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.client.gui.elements.*;
+import com.emily.apicraft.client.gui.elements.tooltip.AlleleInfoTooltip;
+import com.emily.apicraft.client.gui.elements.tooltip.AlleleTypeToolTip;
+import com.emily.apicraft.client.gui.elements.tooltip.HumidityTooltip;
+import com.emily.apicraft.client.gui.elements.tooltip.TemperatureTooltip;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
-import com.emily.apicraft.inventory.containers.PortableAnalyzerContainer;
+import com.emily.apicraft.genetics.alleles.AlleleTypes;
+import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,9 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-import static cofh.lib.util.helpers.StringHelper.localize;
-
-public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzerContainer> {
+public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzerMenu> {
     private static final int COLUMN_0 = 17;
     private static final int COLUMN_1 = 95;
     private static final int COLUMN_2 = 160;
@@ -28,7 +31,7 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     private int selected = 0;
     private final InvWrapperCoFH invWrapper;
 
-    public PortableAnalyzerScreen(PortableAnalyzerContainer container, Inventory inv, Component titleIn) {
+    public PortableAnalyzerScreen(PortableAnalyzerMenu container, Inventory inv, Component titleIn) {
         super(container, inv, titleIn);
         texture = new ResourceLocation("apicraft:textures/gui/portable_analyzer/background.png");
         imageWidth = 250;
@@ -75,15 +78,12 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     private ItemStack getBeeStack(){
         return invWrapper.getItem(0);
     }
-
     private Optional<Bee> getBeeIndividual(){
         return getBeeStack().isEmpty() || !getBeeStack().hasTag() ? Optional.empty() : BeeProviderCapability.get(getBeeStack()).getBeeIndividual();
     }
-
     private int getRowY(int row){
         return 1 + LINE_HEIGHT * (row + 1);
     }
-
     private void addButtons(){
         addElement(new ElementButton(this, 226, 56){
             @Override
@@ -126,7 +126,6 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
                 .setTexture("apicraft:textures/gui/portable_analyzer/button_4.png", 54, 18)
                 .setEnabled(() -> this.selected != 4 && getBeeIndividual().isPresent()));
     }
-
     private void addPages(){
         // Top row (Active and Inactive)
         addElement(new ElementText(this, COLUMN_1, getRowY(0))
@@ -142,34 +141,34 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
 
         // Page 1
         // Species row
-        addChromosomeInfoLine(Chromosomes.Species.class, "chromosomes.species.class", 2, 1);
+        addChromosomeInfoLine(AlleleTypes.SPECIES, 2, 1);
         // Item icon
         addSpeciesIcon(true);
         addSpeciesIcon(false);
         // Lifespan row
-        addChromosomeInfoLine(Chromosomes.LifeSpan.class, "chromosomes.lifespan.class", 4, 1);
+        addChromosomeInfoLine(AlleleTypes.LIFESPAN, 4, 1);
         // Productivity row
-        addChromosomeInfoLine(Chromosomes.Productivity.class, "chromosomes.productivity.class", 5, 1);
+        addChromosomeInfoLine(AlleleTypes.PRODUCTIVITY, 5, 1);
         // Fertility row
-        addChromosomeInfoLine(Chromosomes.Fertility.class, "chromosomes.fertility.class", 6, 1);
+        addChromosomeInfoLine(AlleleTypes.FERTILITY, 6, 1);
         addFertilityIcon();
 
         // Flowers row
-        addChromosomeInfoLine(Chromosomes.AcceptedFlowers.class, "chromosomes.accepted_flowers.class", 8, 1);
+        addChromosomeInfoLine(AlleleTypes.ACCEPTED_FLOWERS, 8, 1);
         // Territory row
-        addChromosomeInfoLine(Chromosomes.Territory.class, "chromosomes.territory.class", 9, 1);
+        addChromosomeInfoLine(AlleleTypes.TERRITORY, 9, 1);
         // Effect row
-        addChromosomeInfoLine(Chromosomes.Effect.class, "chromosomes.effect.class", 10, 1);
+        addChromosomeInfoLine(AlleleTypes.EFFECT, 10, 1);
 
         // Page 2
         // Temperature row
         addTemperatureInfoLine();
-        addToleranceInfoLine(Chromosomes.TemperatureTolerance.class, "chromosomes.temperature_tolerance.class", 3);
+        addToleranceInfoLine(AlleleTypes.TEMPERATURE_TOLERANCE, 3);
         addHumidityInfoLine();
-        addToleranceInfoLine(Chromosomes.HumidityTolerance.class, "chromosomes.humidity_tolerance.class", 5);
-        addChromosomeInfoLine(Chromosomes.Behavior.class, "chromosomes.behavior.class", 7, 2);
-        addChromosomeInfoLine(Chromosomes.RainTolerance.class, "chromosomes.rain_tolerance.class", 9, 2);
-        addChromosomeInfoLine(Chromosomes.CaveDwelling.class, "chromosomes.cave_dwelling.class", 10, 2);
+        addToleranceInfoLine(AlleleTypes.HUMIDITY_TOLERANCE, 5);
+        addChromosomeInfoLine(AlleleTypes.BEHAVIOR, 7, 2);
+        addChromosomeInfoLine(AlleleTypes.RAIN_TOLERANCE, 9, 2);
+        addChromosomeInfoLine(AlleleTypes.CAVE_DWELLING, 10, 2);
     }
     private void addSpeciesIcon(boolean active){
         addElement(new ElementItem(this, (active ? COLUMN_1 : COLUMN_2) + 36, getRowY(0) - 2)
@@ -179,7 +178,7 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
                             getBeeIndividual().isPresent() ?
                                     active ? getBeeIndividual().get().getGenome().getSpecies()
                                             : getBeeIndividual().get().getGenome().getInactiveSpecies()
-                                    :Chromosomes.Species.FOREST)
+                                    : Alleles.Species.FOREST)
                     );
                     return stack;
                 })
@@ -201,10 +200,10 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
                 .setVisible(() -> this.selected == 1)
         );
     }
-    private void addChromosomeInfoLine(Class<? extends IChromosomeType> type, String localizationKey, int row, int page){
+    private void addChromosomeInfoLine(IAlleleType type, int row, int page){
         addElement(new ElementText(this, COLUMN_0, getRowY(row))
-                .setText(Component.translatable(localizationKey).getString())
-                .setTooltipFactory(new SimpleTooltip(Component.translatable(localizationKey + ".description")))
+                .setText(Component.translatable(type.getName()).getString())
+                .setTooltipFactory(new AlleleTypeToolTip(type))
                 .setVisible(() -> this.selected == page)
         );
         addElement(new ElementAlleleInfo(this, COLUMN_1, getRowY(row), this::getBeeIndividual, type, true)
@@ -216,7 +215,6 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
                 .setVisible(() -> this.selected == page)
         );
     }
-
     private void addTemperatureInfoLine(){
         addElement(new ElementText(this, COLUMN_0, getRowY(2))
                 .setText(Component.translatable("climatology.temperature").getString())
@@ -232,7 +230,6 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
                 .setVisible(() -> this.selected == 2)
         );
     }
-
     private void addHumidityInfoLine(){
         addElement(new ElementText(this, COLUMN_0, getRowY(4))
                 .setText(Component.translatable("climatology.humidity").getString())
@@ -248,11 +245,10 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
                 .setVisible(() -> this.selected == 2)
         );
     }
-
-    private void addToleranceInfoLine(Class<? extends IChromosomeType> type, String localizationKey, int row){
+    private void addToleranceInfoLine(IAlleleType type, int row){
         addElement(new ElementText(this, COLUMN_0 + 10, getRowY(row))
-                .setText(Component.translatable(localizationKey).getString())
-                .setTooltipFactory(new SimpleTooltip(Component.translatable(localizationKey + ".description")))
+                .setText(Component.translatable(type.getName()).getString())
+                .setTooltipFactory(new AlleleTypeToolTip(type))
                 .setVisible(() -> this.selected == 2)
         );
         addElement(new ElementToleranceInfo(this, COLUMN_1, getRowY(row), this::getBeeIndividual, type, true)

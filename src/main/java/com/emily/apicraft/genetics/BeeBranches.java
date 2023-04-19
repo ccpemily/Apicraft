@@ -1,8 +1,11 @@
 package com.emily.apicraft.genetics;
 
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public enum BeeBranches {
     HONEY,
@@ -10,62 +13,62 @@ public enum BeeBranches {
     INDUSTRIOUS,
     HEROIC,
     INFERNAL(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.TemperatureTolerance.DOWN_2)
-            .addToTemplate(Chromosomes.Behavior.NOCTURNAL)
-            .addToTemplate(Chromosomes.AcceptedFlowers.NETHER)),
+            .addToTemplate(Alleles.TemperatureTolerance.DOWN_2)
+            .addToTemplate(Alleles.Behavior.NOCTURNAL)
+            .addToTemplate(Alleles.AcceptedFlowers.NETHER)),
     AUSTERE(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.Productivity.SLOW)
-            .addToTemplate(Chromosomes.LifeSpan.NORMAL)
-            .addToTemplate(Chromosomes.Behavior.NOCTURNAL)
-            .addToTemplate(Chromosomes.TemperatureTolerance.BOTH_1)
-            .addToTemplate(Chromosomes.HumidityTolerance.DOWN_1)
-            .addToTemplate(Chromosomes.AcceptedFlowers.CACTI)),
+            .addToTemplate(Alleles.Productivity.SLOW)
+            .addToTemplate(Alleles.LifeSpan.NORMAL)
+            .addToTemplate(Alleles.Behavior.NOCTURNAL)
+            .addToTemplate(Alleles.TemperatureTolerance.BOTH_1)
+            .addToTemplate(Alleles.HumidityTolerance.DOWN_1)
+            .addToTemplate(Alleles.AcceptedFlowers.CACTI)),
     TROPICAL(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.TemperatureTolerance.UP_1)
-            .addToTemplate(Chromosomes.HumidityTolerance.UP_1)
-            .addToTemplate(Chromosomes.AcceptedFlowers.JUNGLE)),
+            .addToTemplate(Alleles.TemperatureTolerance.UP_1)
+            .addToTemplate(Alleles.HumidityTolerance.UP_1)
+            .addToTemplate(Alleles.AcceptedFlowers.JUNGLE)),
     END(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.Fertility.UNLUCKY)
-            .addToTemplate(Chromosomes.Productivity.SLOWEST)
-            .addToTemplate(Chromosomes.LifeSpan.ANCIENT)
-            .addToTemplate(Chromosomes.Behavior.NOCTURNAL)
-            .addToTemplate(Chromosomes.TemperatureTolerance.UP_1)
-            .addToTemplate(Chromosomes.AcceptedFlowers.END)
-            .addToTemplate(Chromosomes.Territory.LARGE)),
+            .addToTemplate(Alleles.Fertility.UNLUCKY)
+            .addToTemplate(Alleles.Productivity.SLOWEST)
+            .addToTemplate(Alleles.LifeSpan.ANCIENT)
+            .addToTemplate(Alleles.Behavior.NOCTURNAL)
+            .addToTemplate(Alleles.TemperatureTolerance.UP_1)
+            .addToTemplate(Alleles.AcceptedFlowers.END)
+            .addToTemplate(Alleles.Territory.LARGE)),
     FROZEN(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.LifeSpan.NORMAL)
-            .addToTemplate(Chromosomes.Fertility.PROLIFIC)
-            .addToTemplate(Chromosomes.TemperatureTolerance.UP_1)
-            .addToTemplate(Chromosomes.HumidityTolerance.BOTH_1)
-            .addToTemplate(Chromosomes.AcceptedFlowers.SNOW)),
+            .addToTemplate(Alleles.LifeSpan.NORMAL)
+            .addToTemplate(Alleles.Fertility.PROLIFIC)
+            .addToTemplate(Alleles.TemperatureTolerance.UP_1)
+            .addToTemplate(Alleles.HumidityTolerance.BOTH_1)
+            .addToTemplate(Alleles.AcceptedFlowers.SNOW)),
     VENGEFUL(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.Territory.LARGEST)),
+            .addToTemplate(Alleles.Territory.LARGEST)),
     AGRARIAN(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.Productivity.NORMAL)
-            .addToTemplate(Chromosomes.LifeSpan.NORMAL)
-            .addToTemplate(Chromosomes.AcceptedFlowers.WHEAT)
-            .addToTemplate(Chromosomes.Territory.LARGE)),
+            .addToTemplate(Alleles.Productivity.NORMAL)
+            .addToTemplate(Alleles.LifeSpan.NORMAL)
+            .addToTemplate(Alleles.AcceptedFlowers.WHEAT)
+            .addToTemplate(Alleles.Territory.LARGE)),
     BOGGY(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.AcceptedFlowers.MUSHROOMS)
-            .addToTemplate(Chromosomes.TemperatureTolerance.BOTH_1)),
+            .addToTemplate(Alleles.AcceptedFlowers.MUSHROOMS)
+            .addToTemplate(Alleles.TemperatureTolerance.BOTH_1)),
     MONASTIC(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.Productivity.SLOWEST)
-            .addToTemplate(Chromosomes.LifeSpan.ANCIENT)
-            .addToTemplate(Chromosomes.Fertility.INFERTILE)
-            .addToTemplate(Chromosomes.TemperatureTolerance.BOTH_1)
-            .addToTemplate(Chromosomes.HumidityTolerance.BOTH_1)
-            .addToTemplate(Chromosomes.Behavior.CREPUSCULAR)
-            .addToTemplate(Chromosomes.CaveDwelling.TRUE)
-            .addToTemplate(Chromosomes.AcceptedFlowers.WHEAT)),
+            .addToTemplate(Alleles.Productivity.SLOWEST)
+            .addToTemplate(Alleles.LifeSpan.ANCIENT)
+            .addToTemplate(Alleles.Fertility.INFERTILE)
+            .addToTemplate(Alleles.TemperatureTolerance.BOTH_1)
+            .addToTemplate(Alleles.HumidityTolerance.BOTH_1)
+            .addToTemplate(Alleles.Behavior.CREPUSCULAR)
+            .addToTemplate(Alleles.CaveDwelling.TRUE)
+            .addToTemplate(Alleles.AcceptedFlowers.WHEAT)),
     EMILY(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.CaveDwelling.TRUE)
-            .addToTemplate(Chromosomes.RainTolerance.TRUE)
-            .addToTemplate(Chromosomes.Productivity.BRISK)),
+            .addToTemplate(Alleles.CaveDwelling.TRUE)
+            .addToTemplate(Alleles.RainTolerance.TRUE)
+            .addToTemplate(Alleles.Productivity.BRISK)),
     AKINA(BeeBranchProperties.get()
-            .addToTemplate(Chromosomes.TemperatureTolerance.BOTH_3)
-            .addToTemplate(Chromosomes.HumidityTolerance.BOTH_2));
+            .addToTemplate(Alleles.TemperatureTolerance.BOTH_3)
+            .addToTemplate(Alleles.HumidityTolerance.BOTH_2));
 
-    private final HashMap<Class<? extends IChromosomeType>, IChromosomeType> template;
+    private final HashMap<IAlleleType, IAllele<?>> template;
 
     BeeBranches(){
         this.template = new HashMap<>();
@@ -74,19 +77,21 @@ public enum BeeBranches {
         this.template = properties.template;
     }
 
-    public HashMap<Class<? extends IChromosomeType>, IChromosomeType> getTemplate(){
+    public HashMap<IAlleleType, IAllele<?>> getTemplate(){
         return template;
     }
 
-
+    public String getName(){
+        return "branch." + this.name().toLowerCase(Locale.ENGLISH);
+    }
 
     private static class BeeBranchProperties {
-        private final HashMap<Class<? extends IChromosomeType>, IChromosomeType> template = new HashMap<>();
+        private final HashMap<IAlleleType, IAllele<?>> template = new HashMap<>();
 
         private BeeBranchProperties(){}
 
-        public BeeBranchProperties addToTemplate(IChromosomeType chromosome){
-            template.put(chromosome.getClass(), chromosome);
+        public BeeBranchProperties addToTemplate(IAllele<?> allele){
+            template.put(allele.getType(), allele);
             return this;
         }
 

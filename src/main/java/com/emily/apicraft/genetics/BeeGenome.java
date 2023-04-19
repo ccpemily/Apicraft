@@ -1,15 +1,15 @@
 package com.emily.apicraft.genetics;
 
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.genetics.alleles.AlleleTypes;
+import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 public class BeeGenome {
     private final BeeKaryotype karyotype = BeeKaryotype.INSTANCE;
@@ -51,27 +51,27 @@ public class BeeGenome {
     }
 
     // region GenomeInfo
-    public Chromosomes.Species getSpecies(){
-        return (Chromosomes.Species) chromosomes[karyotype.getIndex(Chromosomes.Species.class)].getActive();
+    public Alleles.Species getSpecies(){
+        return (Alleles.Species) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getActive();
     }
-    public Chromosomes.Species getInactiveSpecies(){
-        return (Chromosomes.Species) chromosomes[karyotype.getIndex(Chromosomes.Species.class)].getInactive();
+    public Alleles.Species getInactiveSpecies(){
+        return (Alleles.Species) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getInactive();
     }
-    @SuppressWarnings("unchecked")
-    public <T extends IChromosomeType> T getChromosomeValue(Class<T> type, boolean active){
-        return (T) (active ? chromosomes[karyotype.getIndex(type)].getActive() : chromosomes[karyotype.getIndex(type)].getInactive());
+
+    public IAllele<?> getAllele(IAlleleType type, boolean active){
+        return active ? chromosomes[karyotype.getIndex(type)].getActive() : chromosomes[karyotype.getIndex(type)].getInactive();
     }
     public int getMaxHealth(){
-        return ((Chromosomes.LifeSpan) chromosomes[karyotype.getIndex(Chromosomes.LifeSpan.class)].getActive()).getMaxHealth();
+        return ((Alleles.LifeSpan) getAllele(AlleleTypes.LIFESPAN, true)).getValue();
     }
-    public float getProductivity() { return ((Chromosomes.Productivity) chromosomes[karyotype.getIndex(Chromosomes.Productivity.class)].getActive()).getProductivity(); }
-    public int getFertility() { return ((Chromosomes.Fertility) chromosomes[karyotype.getIndex(Chromosomes.Fertility.class)].getActive()).getFertility(); }
-    public boolean canWork(long time) { return ((Chromosomes.Behavior) chromosomes[karyotype.getIndex(Chromosomes.Behavior.class)].getActive()).canWork(time); }
+    public float getProductivity() { return ((Alleles.Productivity) getAllele(AlleleTypes.PRODUCTIVITY, true)).getValue(); }
+    public int getFertility() { return ((Alleles.Fertility) getAllele(AlleleTypes.FERTILITY, true)).getValue(); }
+    public boolean canWork(long time) { return ((Alleles.Behavior) getAllele(AlleleTypes.BEHAVIOR, true)).getValue().apply(time); }
     public boolean toleratesRain(){
-        return getChromosomeValue(Chromosomes.RainTolerance.class, true).toleratesRain();
+        return ((Alleles.RainTolerance) getAllele(AlleleTypes.RAIN_TOLERANCE, true)).getValue();
     }
     public boolean isCaveDwelling(){
-        return getChromosomeValue(Chromosomes.CaveDwelling.class, true).isCaveDwelling();
+        return ((Alleles.CaveDwelling) getAllele(AlleleTypes.CAVE_DWELLING, true)).getValue();
     }
     // endregion
 }

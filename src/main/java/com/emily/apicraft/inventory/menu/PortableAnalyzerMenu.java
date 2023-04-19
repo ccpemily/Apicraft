@@ -1,4 +1,4 @@
-package com.emily.apicraft.inventory.containers;
+package com.emily.apicraft.inventory.menu;
 
 import cofh.core.inventory.container.ContainerCoFH;
 import cofh.lib.inventory.ItemStorageCoFH;
@@ -16,15 +16,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PortableAnalyzerContainer extends ContainerCoFH {
+public class PortableAnalyzerMenu extends ContainerCoFH {
     public ItemStack containerStack;
     public SlotLocked lockedSlot;
     public SlotCoFH beeSlot;
     public SimpleItemInv inv;
     public InvWrapperCoFH invWrapper;
 
-    public PortableAnalyzerContainer(int id, Inventory inventory, Player player) {
-        super(Registries.CONTAINERS.get("portable_analyzer"), id, inventory, player);
+    public PortableAnalyzerMenu(int id, Inventory inventory, Player player) {
+        super(Registries.MENUS.get("portable_analyzer"), id, inventory, player);
         containerStack = player.getMainHandItem();
         inv = new SimpleItemInv(List.of(new ItemStorageCoFH((stack -> stack.getItem() instanceof BeeItem))));
         invWrapper = new InvWrapperCoFH(inv);

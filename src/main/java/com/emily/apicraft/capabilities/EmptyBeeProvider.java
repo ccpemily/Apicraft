@@ -1,9 +1,10 @@
 package com.emily.apicraft.capabilities;
 
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -26,13 +27,13 @@ public class EmptyBeeProvider implements IBeeProvider {
     }
 
     @Override
-    public Chromosomes.Species getBeeSpeciesDirectly(boolean active) {
-        return Chromosomes.Species.FOREST;
+    public Alleles.Species getBeeSpeciesDirectly(boolean active) {
+        return Alleles.Species.FOREST;
     }
 
     @Override
     @Nullable
-    public <T extends IChromosomeType> T getBeeChromosomeDirectly(Class<T> type, boolean active) {
+    public IAllele<?> getBeeChromosomeDirectly(IAlleleType type, boolean active) {
         return null;
     }
 }

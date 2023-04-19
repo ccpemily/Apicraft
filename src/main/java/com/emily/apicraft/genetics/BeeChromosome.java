@@ -1,6 +1,7 @@
 package com.emily.apicraft.genetics;
 
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
@@ -8,41 +9,41 @@ import net.minecraft.nbt.CompoundTag;
 import java.util.Random;
 
 public class BeeChromosome {
-    private final Class<? extends IChromosomeType> type;
-    private final IChromosomeType active;
-    private final IChromosomeType inactive;
+    private final IAlleleType type;
+    private final IAllele<?> active;
+    private final IAllele<?> inactive;
 
-    public BeeChromosome(IChromosomeType active, IChromosomeType inactive, Class<? extends IChromosomeType> type){
+    public BeeChromosome(IAllele<?> active, IAllele<?> inactive, IAlleleType type){
         this.type = type;
-        if(!type.isInstance(active) || !type.isInstance(inactive)){
+        if(!type.isValid(active) || !type.isValid(inactive)){
             throw new IllegalArgumentException();
         }
         this.active = active;
         this.inactive = inactive;
     }
 
-    public BeeChromosome(IChromosomeType active, Class<? extends IChromosomeType> type){
+    public BeeChromosome(IAllele<?> active, IAlleleType type){
         this(active, active, type);
     }
 
     public BeeChromosome(CompoundTag tag){
-        this.active = Registries.CHROMOSOMES.get(tag.getString(Tags.TAG_ACTIVE));
-        this.inactive = Registries.CHROMOSOMES.get(tag.getString(Tags.TAG_INACTIVE));
-        this.type = active.getClass();
-        if(!type.isInstance(active) || !type.isInstance(inactive)){
+        this.active = Registries.ALLELES.get(tag.getString(Tags.TAG_ACTIVE));
+        this.inactive = Registries.ALLELES.get(tag.getString(Tags.TAG_INACTIVE));
+        this.type = active.getType();
+        if(!type.isValid(active) || !type.isValid(inactive)){
             throw new IllegalArgumentException();
         }
     }
 
-    public IChromosomeType getActive() {
+    public IAllele<?> getActive() {
         return active;
     }
 
-    public IChromosomeType getInactive() {
+    public IAllele<?> getInactive() {
         return inactive;
     }
 
-    public Class<? extends IChromosomeType> getType(){
+    public IAlleleType getType(){
         return type;
     }
 
@@ -57,8 +58,8 @@ public class BeeChromosome {
             throw new IllegalArgumentException();
         }
         Random random = new Random();
-        IChromosomeType first = random.nextBoolean() ? this.getActive() : this.getInactive();
-        IChromosomeType second = random.nextBoolean() ? mate.getActive() : mate.getInactive();
+        IAllele<?> first = random.nextBoolean() ? this.getActive() : this.getInactive();
+        IAllele<?> second = random.nextBoolean() ? mate.getActive() : mate.getInactive();
         if(first.isDominant() == second.isDominant()){
             return random.nextBoolean() ? new BeeChromosome(first, second, this.getType()) : new BeeChromosome(second, first, this.getType());
         }

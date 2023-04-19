@@ -3,8 +3,8 @@ package com.emily.apicraft.client.gui.elements;
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.util.helpers.RenderHelper;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ElementToleranceInfo extends ElementAlleleInfo{
-    public ElementToleranceInfo(IGuiAccess gui, int posX, int posY, Supplier<Optional<Bee>> supplier, Class<? extends IChromosomeType> type, boolean active) {
+    public ElementToleranceInfo(IGuiAccess gui, int posX, int posY, Supplier<Optional<Bee>> supplier, IAlleleType type, boolean active) {
         super(gui, posX, posY, supplier, type, active);
         texture = new ResourceLocation("apicraft:textures/gui/portable_analyzer/tolerance.png");
         texW = 64;
@@ -24,14 +24,14 @@ public class ElementToleranceInfo extends ElementAlleleInfo{
     public void drawBackground(PoseStack stack, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = beeSupplier.get();
         if(beeOptional.isPresent()){
-            IChromosomeType chromosome = beeOptional.get().getGenome().getChromosomeValue(type, active);
+            IAllele<?> allele = beeOptional.get().getGenome().getAllele(type, active);
             setText(Component.literal("(")
-                    .append(Component.translatable("chromosomes." + chromosome.toString()))
+                    .append(Component.translatable(allele.getName()))
                     .append(Component.literal(")"))
-                    .getString(), getColor(chromosome.isDominant()));
+                    .getString(), getColor(allele.isDominant()));
             int u = 0;
             int v = 0;
-            if(chromosome instanceof Enum tolerance){
+            if(allele instanceof Enum tolerance){
                 if(tolerance.name().contains("UP")){
                     u = 16;
                 }

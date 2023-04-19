@@ -1,5 +1,7 @@
 package com.emily.apicraft.genetics;
 
+import com.emily.apicraft.genetics.alleles.AlleleTypes;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -65,11 +67,11 @@ public class Bee {
 
     // region Tooltips
     public void addTooltip(List<Component> components) {
-        Chromosomes.Species speciesActive = genome.getSpecies();
-        Chromosomes.Species speciesInactive = genome.getInactiveSpecies();
+        Alleles.Species speciesActive = genome.getSpecies();
+        Alleles.Species speciesInactive = genome.getInactiveSpecies();
         if(speciesActive != speciesInactive){
             components.add(
-                    Component.translatable("chromosomes." + speciesActive.toString()).append("-").append(Component.translatable("chromosomes." + speciesInactive.toString()).append(Component.translatable("bee.tooltip.hybrid")).withStyle(ChatFormatting.BLUE))
+                    Component.translatable(speciesActive.getName()).append("-").append(Component.translatable(speciesInactive.getName()).append(Component.translatable("bee.tooltip.hybrid")).withStyle(ChatFormatting.BLUE))
             );
         }
         if(generation > 0){
@@ -85,21 +87,21 @@ public class Bee {
             }
             components.add(Component.literal(String.format(Component.translatable("bee.tooltip.generation").toString(), generation)).withStyle(rarity.getStyleModifier()));
         }
-        components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.LifeSpan.class, true).toString()).withStyle(ChatFormatting.GRAY));
-        components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.Productivity.class, true).toString()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable(genome.getAllele(AlleleTypes.LIFESPAN, true).getName()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable(genome.getAllele(AlleleTypes.PRODUCTIVITY, true).getName()).withStyle(ChatFormatting.GRAY));
         components.add(Component.literal("T: ")
-                .append(Component.translatable(speciesActive.getTemperature().getName())
+                .append(Component.translatable(speciesActive.getValue().getTemperature().getName())
                         .append(" / ")
-                        .append(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.TemperatureTolerance.class, true).toString()))
+                        .append(Component.translatable(genome.getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true).getName()))
                 ).withStyle(ChatFormatting.GREEN)
         );
         components.add(Component.literal("H: ")
-                .append(Component.translatable(speciesActive.getHumidity().getName())
+                .append(Component.translatable(speciesActive.getValue().getHumidity().getName())
                                 .append(" / ")
-                                .append(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.HumidityTolerance.class, true).toString()))
+                                .append(Component.translatable(genome.getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true).getName()))
                 ).withStyle(ChatFormatting.GREEN)
         );
-        Chromosomes.Behavior behavior = genome.getChromosomeValue(Chromosomes.Behavior.class, true);
+        Alleles.Behavior behavior = (Alleles.Behavior) genome.getAllele(AlleleTypes.BEHAVIOR, true);
         ChatFormatting color = ChatFormatting.WHITE;
         switch (behavior){
             case DIURNAL -> color = ChatFormatting.YELLOW;
@@ -108,7 +110,7 @@ public class Bee {
             case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
         }
         components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + behavior).withStyle(color)));
-        components.add(Component.translatable("chromosomes." + genome.getChromosomeValue(Chromosomes.AcceptedFlowers.class, true).toString()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable(genome.getAllele(AlleleTypes.ACCEPTED_FLOWERS, true).getName()).withStyle(ChatFormatting.GRAY));
         if(genome.isCaveDwelling()){
             components.add(Component.translatable("bee.tooltip.cave_dwelling").withStyle(ChatFormatting.DARK_GRAY));
         }
@@ -155,7 +157,7 @@ public class Bee {
     // endregion
 
     // region Helpers
-    public static Bee getPure(Chromosomes.Species species){
+    public static Bee getPure(Alleles.Species species){
         return new Bee(BeeKaryotype.INSTANCE.defaultGenome(species));
     }
     // endregion

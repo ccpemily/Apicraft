@@ -1,12 +1,13 @@
-package com.emily.apicraft.client.gui.elements;
+package com.emily.apicraft.client.gui.elements.tooltip;
 
 import cofh.core.client.gui.element.ElementBase;
 import cofh.core.client.gui.element.ITooltipFactory;
+import com.emily.apicraft.client.gui.elements.ElementAlleleInfo;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.genetics.IAllele;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,19 +26,19 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                 return Collections.emptyList();
             }
             else{
-                IChromosomeType allele = alleleInfo.getCurrentChromosome().get();
+                IAllele<?> allele = alleleInfo.getCurrentChromosome().get();
                 List<Component> components = new ArrayList<>(allele.getDescriptionTooltips());
-                if(allele.getClass() == Chromosomes.TemperatureTolerance.class || allele.getClass() == Chromosomes.HumidityTolerance.class){
+                if(allele.getClass() == Alleles.TemperatureTolerance.class || allele.getClass() == Alleles.HumidityTolerance.class){
                     Optional<Bee> bee = alleleInfo.getBee();
                     MutableComponent component = Component.translatable("tooltip.tolerance.can_tolerate").append(": ");
                     if(bee.isPresent()){
-                        Chromosomes.Species species = alleleInfo.isActive() ? bee.get().getGenome().getSpecies() : bee.get().getGenome().getInactiveSpecies();
-                        EnumTemperature temperatureSelf = species.getTemperature();
-                        EnumHumidity humiditySelf = species.getHumidity();
+                        Alleles.Species species = alleleInfo.isActive() ? bee.get().getGenome().getSpecies() : bee.get().getGenome().getInactiveSpecies();
+                        EnumTemperature temperatureSelf = species.getValue().getTemperature();
+                        EnumHumidity humiditySelf = species.getValue().getHumidity();
                         boolean addedComment = false;
-                        if(allele instanceof Chromosomes.TemperatureTolerance temperatureTolerance){
+                        if(allele instanceof Alleles.TemperatureTolerance temperatureTolerance){
                             for(EnumTemperature temperature : EnumTemperature.values()){
-                                if(temperatureTolerance.canTolerate(temperature, temperatureSelf)){
+                                if(temperatureTolerance.getValue().apply(temperature, temperatureSelf)){
                                     if(addedComment){
                                         component.append(", ");
                                     }
@@ -49,9 +50,9 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                             }
                         }
                         else {
-                            Chromosomes.HumidityTolerance humidityTolerance = (Chromosomes.HumidityTolerance) allele;
+                            Alleles.HumidityTolerance humidityTolerance = (Alleles.HumidityTolerance) allele;
                             for(EnumHumidity humidity : EnumHumidity.values()){
-                                if(humidityTolerance.canTolerate(humidity, humiditySelf)){
+                                if(humidityTolerance.getValue().apply(humidity, humiditySelf)){
                                     if(addedComment){
                                         component.append(", ");
                                     }

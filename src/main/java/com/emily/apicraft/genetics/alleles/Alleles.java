@@ -1,246 +1,274 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.alleles;
 
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
+import com.emily.apicraft.genetics.BeeBranches;
 import com.emily.apicraft.genetics.effects.EffectProvider;
 import com.emily.apicraft.genetics.flowers.FlowerProvider;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
-public class Chromosomes {
-    public enum Species implements IChromosomeType {
-        FOREST(BeeBranches.HONEY, BeeSpeciesProperties.get()
+public class Alleles {
+    public enum Species implements IAllele<AlleleSpecies> {
+        // region Honey branch
+        FOREST(AlleleSpecies.getBuilder()
                 .addToTemplate(Fertility.FECUND)
-                .setColor(new Color(0x19d0ec), new Color(0xffdc16)), true),
-        MEADOWS(BeeBranches.HONEY, BeeSpeciesProperties.get()
-                .setColor(new Color(0xef131e), new Color(0xffdc16)), true),
-        COMMON(BeeBranches.HONEY, BeeSpeciesProperties.get()
+                .setColor(new Color(0x19d0ec), new Color(0xffdc16))
+                .build(BeeBranches.HONEY), true),
+        MEADOWS(AlleleSpecies.getBuilder()
+                .setColor(new Color(0xef131e), new Color(0xffdc16))
+                .build(BeeBranches.HONEY), true),
+        COMMON(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
-                .setColor(new Color(0xb2b2b2), new Color(0xffdc16)), true),
-        CULTIVATED(BeeBranches.HONEY, BeeSpeciesProperties.get()
+                .setColor(new Color(0xb2b2b2), new Color(0xffdc16))
+                .build(BeeBranches.HONEY), true),
+        CULTIVATED(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.FASTEST)
                 .addToTemplate(LifeSpan.HYPER)
-                .setColor(new Color(0x5734ec), new Color(0xffdc16)), true),
-
-        // Noble branch
-        NOBLE(BeeBranches.NOBLE, BeeSpeciesProperties.get()
+                .setColor(new Color(0x5734ec), new Color(0xffdc16))
+                .build(BeeBranches.HONEY), true),
+        // endregion
+        // region Noble branch
+        NOBLE(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
-                .setColor(new Color(0xec9a19), new Color(0xffdc16))),
-        MAJESTIC(BeeBranches.NOBLE, BeeSpeciesProperties.get()
+                .setColor(new Color(0xec9a19), new Color(0xffdc16))
+                .build(BeeBranches.NOBLE)),
+        MAJESTIC(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(Fertility.SWARMING)
-                .setColor(new Color(0x7f0000), new Color(0xffdc16)), true),
-        IMPERIAL(BeeBranches.NOBLE, BeeSpeciesProperties.get()
+                .setColor(new Color(0x7f0000), new Color(0xffdc16))
+                .build(BeeBranches.NOBLE), true),
+        IMPERIAL(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.LONG)
-                .setColor(new Color(0xa3e02f), new Color(0xffdc16)).setFoil()),
-
-        // Industrious branch
-        DILIGENT(BeeBranches.INDUSTRIOUS, BeeSpeciesProperties.get()
+                .setColor(new Color(0xa3e02f), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.NOBLE)),
+        // endregion
+        // region Industrious branch
+        DILIGENT(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
-                .setColor(new Color(0xc219ec), new Color(0xffdc16))),
-        UNWEARY(BeeBranches.INDUSTRIOUS, BeeSpeciesProperties.get()
+                .setColor(new Color(0xc219ec), new Color(0xffdc16))
+                .build(BeeBranches.INDUSTRIOUS)),
+        UNWEARY(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.RAPID)
-                .setColor(new Color(0x19ec5a), new Color(0xffdc16)), true),
-        INDUSTRIOUS(BeeBranches.INDUSTRIOUS, BeeSpeciesProperties.get()
+                .setColor(new Color(0x19ec5a), new Color(0xffdc16))
+                .build(BeeBranches.INDUSTRIOUS), true),
+        INDUSTRIOUS(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.FAST)
                 .addToTemplate(LifeSpan.LONG)
-                .setColor(new Color(0xffffff), new Color(0xffdc16)).setFoil()),
-
-        // Heroic branch
-        STEADFAST(BeeBranches.HEROIC, BeeSpeciesProperties.get()
+                .setColor(new Color(0xffffff), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.INDUSTRIOUS)),
+        // endregion
+        // region Heroic branch
+        STEADFAST(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.LONG)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .addToTemplate(CaveDwelling.TRUE)
-                .setColor(new Color(0x4d2b15), new Color(0xffdc16)).setFoil()),
-        VALIANT(BeeBranches.HEROIC, BeeSpeciesProperties.get()
+                .setColor(new Color(0x4d2b15), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.HEROIC)),
+        VALIANT(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .addToTemplate(CaveDwelling.TRUE)
-                .setColor(new Color(0x626dbb), new Color(0xffdc16)), true),
-        HEROIC(BeeBranches.HEROIC, BeeSpeciesProperties.get()
+                .setColor(new Color(0x626dbb), new Color(0xffdc16))
+                .build(BeeBranches.HEROIC), true),
+        HEROIC(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .addToTemplate(CaveDwelling.TRUE)
-                .setColor(new Color(0xb3d5e4), new Color(0xffdc16)).setFoil()),
-
-        // Infernal branch
-        SINISTER(BeeBranches.INFERNAL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xb3d5e4), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.HEROIC)),
+        // endregion
+        // region Infernal branch
+        SINISTER(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
                 .setTemperature(EnumTemperature.HELLISH).setHumidity(EnumHumidity.ARID)
-                .setColor(new Color(0xb3d5e4), new Color(0x9a2323))),
-        FIENDISH(BeeBranches.INFERNAL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xb3d5e4), new Color(0x9a2323))
+                .build(BeeBranches.INFERNAL)),
+        FIENDISH(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.LONG)
                 .setTemperature(EnumTemperature.HELLISH).setHumidity(EnumHumidity.ARID)
-                .setColor(new Color(0xd7bee5), new Color(0x9a2323)), true),
-        DEMONIC(BeeBranches.INFERNAL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xd7bee5), new Color(0x9a2323))
+                .build(BeeBranches.INFERNAL), true),
+        DEMONIC(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .setTemperature(EnumTemperature.HELLISH).setHumidity(EnumHumidity.ARID)
-                .setColor(new Color(0xf4e400), new Color(0x9a2323)).setFoil()),
-
-        // Austere branch
-        MODEST(BeeBranches.AUSTERE, BeeSpeciesProperties.get()
+                .setColor(new Color(0xf4e400), new Color(0x9a2323)).setFoil()
+                .build(BeeBranches.INFERNAL)),
+        // endregion
+        // region Austere branch
+        MODEST(AlleleSpecies.getBuilder()
                 .setTemperature(EnumTemperature.HOT).setHumidity(EnumHumidity.ARID)
-                .setColor(new Color(0xc5be86), new Color(0xffdc16))),
-        FRUGAL(BeeBranches.AUSTERE, BeeSpeciesProperties.get()
+                .setColor(new Color(0xc5be86), new Color(0xffdc16))
+                .build(BeeBranches.AUSTERE)),
+        FRUGAL(AlleleSpecies.getBuilder()
                 .addToTemplate(LifeSpan.LONG)
                 .setTemperature(EnumTemperature.HOT).setHumidity(EnumHumidity.ARID)
-                .setColor(new Color(0xe8dcb1), new Color(0xffdc16)), true),
-        AUSTERE(BeeBranches.AUSTERE, BeeSpeciesProperties.get()
+                .setColor(new Color(0xe8dcb1), new Color(0xffdc16))
+                .build(BeeBranches.AUSTERE), true),
+        AUSTERE(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLUGGISH)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Behavior.CREPUSCULAR)
                 .addToTemplate(TemperatureTolerance.DOWN_2)
                 .setTemperature(EnumTemperature.HOT).setHumidity(EnumHumidity.ARID)
-                .setColor(new Color(0xfffac2), new Color(0xffdc16)).setFoil()),
-
-        // Tropical branch
-        TROPICAL(BeeBranches.TROPICAL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xfffac2), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.AUSTERE)),
+        // endregion
+        // region Tropical branch
+        TROPICAL(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
                 .setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP)
-                .setColor(new Color(0x378020), new Color(0xffdc16))),
-        EXOTIC(BeeBranches.TROPICAL, BeeSpeciesProperties.get()
+                .setColor(new Color(0x378020), new Color(0xffdc16))
+                .build(BeeBranches.TROPICAL)),
+        EXOTIC(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.LONG)
                 .setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP)
-                .setColor(new Color(0x304903), new Color(0xffdc16)), true),
-        EDENIC(BeeBranches.TROPICAL, BeeSpeciesProperties.get()
+                .setColor(new Color(0x304903), new Color(0xffdc16))
+                .build(BeeBranches.TROPICAL), true),
+        EDENIC(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOWEST)
                 .addToTemplate(LifeSpan.ETERNAL)
                 .addToTemplate(HumidityTolerance.UP_1)
                 .setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP)
-                .setColor(new Color(0x393d0d), new Color(0xffdc16)).setFoil()),
-
-        // Phantom branch
-        ENDED(BeeBranches.END, BeeSpeciesProperties.get()
+                .setColor(new Color(0x393d0d), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.TROPICAL)),
+        // endregion
+        // region Phantom branch
+        ENDED(AlleleSpecies.getBuilder()
                 .setTemperature(EnumTemperature.COLD)
-                .setColor(new Color(0xe079fa), new Color(0xd9de9e))),
-        SPECTRAL(BeeBranches.END, BeeSpeciesProperties.get()
+                .setColor(new Color(0xe079fa), new Color(0xd9de9e))
+                .build(BeeBranches.END)),
+        SPECTRAL(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .setTemperature(EnumTemperature.COLD)
-                .setColor(new Color(0xa98bed), new Color(0xd9de9e))),
-        PHANTASMAL(BeeBranches.END, BeeSpeciesProperties.get()
+                .setColor(new Color(0xa98bed), new Color(0xd9de9e))
+                .build(BeeBranches.END)),
+        PHANTASMAL(AlleleSpecies.getBuilder()
                 .addToTemplate(LifeSpan.ETERNAL)
                 .addToTemplate(Territory.LARGE)
                 .setTemperature(EnumTemperature.COLD)
-                .setColor(new Color(0xcc00fa), new Color(0xd9de9e)).setFoil(), true),
-
-        // Frozen branch
-        WINTRY(BeeBranches.FROZEN, BeeSpeciesProperties.get()
+                .setColor(new Color(0xcc00fa), new Color(0xd9de9e)).setFoil()
+                .build(BeeBranches.END), true),
+        // endregion
+        // region Frozen branch
+        WINTRY(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .setTemperature(EnumTemperature.ICY)
-                .setColor(new Color(0xa0ffc8), new Color(0xdaf5f3))),
-        ICY(BeeBranches.FROZEN, BeeSpeciesProperties.get()
+                .setColor(new Color(0xa0ffc8), new Color(0xdaf5f3))
+                .build(BeeBranches.FROZEN)),
+        ICY(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .setTemperature(EnumTemperature.ICY)
-                .setColor(new Color(0xa0ffff), new Color(0xdaf5f3)), true),
-        GLACIAL(BeeBranches.FROZEN, BeeSpeciesProperties.get()
+                .setColor(new Color(0xa0ffff), new Color(0xdaf5f3))
+                .build(BeeBranches.FROZEN), true),
+        GLACIAL(AlleleSpecies.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.SHORT)
                 .setTemperature(EnumTemperature.ICY)
-                .setColor(new Color(0xefffff), new Color(0xdaf5f3)).setFoil()),
-
-        // Vengeful branch
-        VINDICTIVE(BeeBranches.VENGEFUL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xefffff), new Color(0xdaf5f3)).setFoil()
+                .build(BeeBranches.FROZEN)),
+        // endregion
+        // region Vengeful branch
+        VINDICTIVE(AlleleSpecies.getBuilder()
                 .addToTemplate(LifeSpan.LONG)
                 .addToTemplate(Productivity.SLOWEST)
-                .setColor(new Color(0xeafff3), new Color(0xffdc16))),
-        VENGEFUL(BeeBranches.VENGEFUL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xeafff3), new Color(0xffdc16))
+                .build(BeeBranches.VENGEFUL)),
+        VENGEFUL(AlleleSpecies.getBuilder()
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Productivity.SLUGGISH)
-                .setColor(new Color(0xc2de00), new Color(0xffdc16))),
-        AVENGING(BeeBranches.VENGEFUL, BeeSpeciesProperties.get()
+                .setColor(new Color(0xc2de00), new Color(0xffdc16))
+                .build(BeeBranches.VENGEFUL)),
+        AVENGING(AlleleSpecies.getBuilder()
                 .addToTemplate(LifeSpan.ETERNAL)
                 .addToTemplate(Productivity.SLUGGISH)
-                .setColor(new Color(0xddff00), new Color(0xffdc16)).setFoil()),
-
-        // Agrarian branch
-        RURAL(BeeBranches.AGRARIAN, BeeSpeciesProperties.get()
-                .setColor(new Color(0xfeff8f), new Color(0xffdc16))),
-        FARMER(BeeBranches.AGRARIAN, BeeSpeciesProperties.get()
-                .setColor(new Color(0xd39728), new Color(0xffdc16)), true),
-        AGRARIAN(BeeBranches.AGRARIAN, BeeSpeciesProperties.get()
+                .setColor(new Color(0xddff00), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.VENGEFUL)),
+        // endregion
+        // region Agrarian branch
+        RURAL(AlleleSpecies.getBuilder()
+                .setColor(new Color(0xfeff8f), new Color(0xffdc16))
+                .build(BeeBranches.AGRARIAN)),
+        FARMER(AlleleSpecies.getBuilder()
+                .setColor(new Color(0xd39728), new Color(0xffdc16))
+                .build(BeeBranches.AGRARIAN), true),
+        AGRARIAN(AlleleSpecies.getBuilder()
                 .addToTemplate(HumidityTolerance.BOTH_2)
-                .setColor(new Color(0xffca75), new Color(0xffdc16)).setFoil(), true),
-
-        // Boggy branch
-        MARSHY(BeeBranches.BOGGY, BeeSpeciesProperties.get()
+                .setColor(new Color(0xffca75), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.AGRARIAN), true),
+        // endregion
+        // region Boggy branch
+        MARSHY(AlleleSpecies.getBuilder()
                 .setHumidity(EnumHumidity.DAMP)
-                .setColor(new Color(0x546626), new Color(0xffdc16)), true),
-        MIRY(BeeBranches.BOGGY, BeeSpeciesProperties.get()
+                .setColor(new Color(0x546626), new Color(0xffdc16))
+                .build(BeeBranches.BOGGY), true),
+        MIRY(AlleleSpecies.getBuilder()
                 .addToTemplate(RainTolerance.TRUE)
                 .addToTemplate(Behavior.CREPUSCULAR)
                 .setHumidity(EnumHumidity.DAMP)
-                .setColor(new Color(0x92af42), new Color(0xffdc16))),
-        BOGGY(BeeBranches.BOGGY, BeeSpeciesProperties.get()
+                .setColor(new Color(0x92af42), new Color(0xffdc16))
+                .build(BeeBranches.BOGGY)),
+        BOGGY(AlleleSpecies.getBuilder()
                 .addToTemplate(RainTolerance.TRUE)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .setHumidity(EnumHumidity.DAMP)
-                .setColor(new Color(0x698948), new Color(0xffdc16)).setFoil()),
-
-        // Monastic branch
-        MONASTIC(BeeBranches.MONASTIC, BeeSpeciesProperties.get()
-                .setColor(new Color(0x42371c), new Color(0xfff7b6))),
-        SECLUDED(BeeBranches.MONASTIC, BeeSpeciesProperties.get()
-                .setColor(new Color(0x7b6634), new Color(0xfff7b6)), true),
-        HERMITIC(BeeBranches.MONASTIC, BeeSpeciesProperties.get()
-                .setColor(new Color(0xffd46c), new Color(0xfff7b6)).setFoil()),
-
-        // Player specified branch
-        EMILIAS(BeeBranches.EMILY, BeeSpeciesProperties.get()
-                .setColor(new Color(0xd7bee5), new Color(0xfd58ab)).setFoil()),
-        AKINAPIS(BeeBranches.AKINA, BeeSpeciesProperties.get()
-                .setColor(new Color(0xa976ff), new Color(0xdc77ff)).setFoil());
-
+                .setColor(new Color(0x698948), new Color(0xffdc16)).setFoil()
+                .build(BeeBranches.BOGGY)),
+        // endregion
+        // region Monastic branch
+        MONASTIC(AlleleSpecies.getBuilder()
+                .setColor(new Color(0x42371c), new Color(0xfff7b6))
+                .build(BeeBranches.MONASTIC)),
+        SECLUDED(AlleleSpecies.getBuilder()
+                .setColor(new Color(0x7b6634), new Color(0xfff7b6))
+                .build(BeeBranches.MONASTIC), true),
+        HERMITIC(AlleleSpecies.getBuilder()
+                .setColor(new Color(0xffd46c), new Color(0xfff7b6)).setFoil()
+                .build(BeeBranches.MONASTIC)),
+        // endregion
+        // region Player specified branch
+        EMILIAS(AlleleSpecies.getBuilder()
+                .setColor(new Color(0xd7bee5), new Color(0xfd58ab)).setFoil()
+                .build(BeeBranches.EMILY)),
+        AKINAPIS(AlleleSpecies.getBuilder()
+                .setColor(new Color(0xa976ff), new Color(0xdc77ff)).setFoil()
+                .build(BeeBranches.AKINA));
+        // endregion
         // region InternalMethods
         private final boolean dominant;
-        private final BeeBranches branch;
-        private final int firstColor;
-        private final int secondColor;
-        private final boolean isFoil;
-        private final EnumTemperature temperature;
-        private final EnumHumidity humidity;
-        private final HashMap<Class<? extends IChromosomeType>, IChromosomeType> template;
+        private final AlleleSpecies species;
 
-        Species(BeeBranches branch, BeeSpeciesProperties properties){
-            this(branch, properties, false);
+        Species(AlleleSpecies species){
+            this(species, false);
         }
-        Species(BeeBranches branch, BeeSpeciesProperties builder, boolean dominant){
+        Species(AlleleSpecies species, boolean dominant){
             this.dominant = dominant;
-            this.firstColor = builder.firstColor;
-            this.secondColor = builder.secondColor;
-            this.branch = branch;
-            this.isFoil = builder.isFoil;
-            this.temperature = builder.temperature;
-            this.humidity = builder.humidity;
-            this.template = builder.template;
-            for(Class<? extends IChromosomeType> key : branch.getTemplate().keySet()){
-                if(!template.containsKey(key)){
-                    template.put(key, branch.getTemplate().get(key));
-                }
-            }
+            this.species = species;
         }
         @Override
         public String toString(){
-            return "species." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -248,91 +276,35 @@ public class Chromosomes {
             return dominant;
         }
 
-        public int getColor(int tintIndex){
-            return tintIndex == 0 ? firstColor : tintIndex == 1 ? secondColor : 0xffffff;
-        }
-
-        public boolean isFoil(){
-            return isFoil;
-        }
-
-        public EnumTemperature getTemperature() {
-            return temperature;
-        }
-
-        public EnumHumidity getHumidity() {
-            return humidity;
-        }
-
-        public HashMap<Class<? extends IChromosomeType>, IChromosomeType> getTemplate() {
-            return template;
-        }
-
-        public BeeBranches getBranch(){
-            return branch;
-        }
-
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.species.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             components.add(Component.translatable("tooltip.branch")
                     .append(": ")
-                    .append(Component.translatable("branch." + getBranch().name().toLowerCase(Locale.ENGLISH)).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getValue().getBranch().getName()).withStyle(ChatFormatting.YELLOW)));
             return components;
         }
 
-        private static class BeeSpeciesProperties {
-            public int firstColor = 0x000000;
-            public int secondColor = 0xffffff;
-            public boolean isFoil = false;
-            public EnumTemperature temperature = EnumTemperature.NORMAL;
-            public EnumHumidity humidity = EnumHumidity.NORMAL;
-            public HashMap<Class<? extends IChromosomeType>, IChromosomeType> template = new HashMap<>();
-
-            private BeeSpeciesProperties(){
-
-            }
-
-            public BeeSpeciesProperties setColor(Color first, Color second){
-                this.firstColor = first.getRGB();
-                this.secondColor = second.getRGB();
-                return this;
-            }
-
-            public BeeSpeciesProperties setFoil(){
-                this.isFoil = true;
-                return this;
-            }
-
-            public BeeSpeciesProperties setTemperature(EnumTemperature temperature){
-                this.temperature = temperature;
-                return this;
-            }
-
-            public BeeSpeciesProperties setHumidity(EnumHumidity humidity){
-                this.humidity = humidity;
-                return this;
-            }
-
-            public BeeSpeciesProperties addToTemplate(IChromosomeType type){
-                template.put(type.getClass(), type);
-                return this;
-            }
-
-            public static BeeSpeciesProperties get(){
-                return new BeeSpeciesProperties();
-            }
+        @Override
+        public AlleleSpecies getValue() {
+            return species;
         }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.SPECIES;
+        }
+
         // endregion
     }
-    public enum LifeSpan implements IChromosomeType {
+    public enum LifeSpan implements IAllele<Integer> {
         HYPER(10),
         RAPID(15),
         SHORT(20, true),
@@ -353,35 +325,42 @@ public class Chromosomes {
         }
         @Override
         public String toString(){
-            return "lifespan." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
         public boolean isDominant(){
             return dominant;
         }
-        public int getMaxHealth(){
-            return span;
-        }
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.lifespan.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             components.add(Component.translatable("tooltip.max_health")
                     .append(": ")
-                    .append(Component.literal(getMaxHealth() * 30 + "s").withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.literal(span * 30 + "s").withStyle(ChatFormatting.YELLOW)));
             return components;
+        }
+
+        @Override
+        public Integer getValue() {
+            return span;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.LIFESPAN;
         }
         // endregion
     }
-    public enum Productivity implements IChromosomeType {
+    public enum Productivity implements IAllele<Float> {
         SLUGGISH(0.2f),
         SLOWEST(0.5f, true),
         SLOW(0.8f, true),
@@ -403,7 +382,7 @@ public class Chromosomes {
         }
         @Override
         public String toString(){
-            return "productivity." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -411,28 +390,34 @@ public class Chromosomes {
             return dominant;
         }
 
-        public float getProductivity(){
-            return productivity;
-        }
-
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.productivity.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             components.add(Component.translatable("tooltip.productivity")
                     .append(": ")
-                    .append(Component.literal(getProductivity() + "x").withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.literal(productivity + " x").withStyle(ChatFormatting.YELLOW)));
             return components;
+        }
+
+        @Override
+        public Float getValue() {
+            return productivity;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.PRODUCTIVITY;
         }
         // endregion
     }
-    public enum Fertility implements IChromosomeType {
+    public enum Fertility implements IAllele<Integer> {
         STERILE(0),
         INFERTILE(1, true),
         UNLUCKY(2, true),
@@ -455,7 +440,7 @@ public class Chromosomes {
 
         @Override
         public String toString(){
-            return "fertility." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -463,25 +448,31 @@ public class Chromosomes {
             return dominant;
         }
 
-        public int getFertility() {
-            return fertility;
-        }
-
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.fertility.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             return components;
         }
+
+        @Override
+        public Integer getValue() {
+            return fertility;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.FERTILITY;
+        }
         // endregion
     }
-    public enum Behavior implements IChromosomeType {
+    public enum Behavior implements IAllele<Function<Long, Boolean>> {
         DIURNAL(true), NOCTURNAL(true), CREPUSCULAR, CATHEMERAL;
         // region InternalMethods
         private final boolean dominant;
@@ -494,14 +485,14 @@ public class Chromosomes {
         }
         @Override
         public String toString(){
-            return "behavior." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
         public boolean isDominant(){
             return dominant;
         }
-        public boolean canWork(long time){
+        private boolean canWork(long time){
             if(this == DIURNAL){
                 return time > 1000 && time < 13000;
             }
@@ -516,11 +507,11 @@ public class Chromosomes {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.behavior.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -534,9 +525,19 @@ public class Chromosomes {
             components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + this).withStyle(color)));
             return components;
         }
+
+        @Override
+        public Function<Long, Boolean> getValue() {
+            return this::canWork;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.BEHAVIOR;
+        }
         // endregion
     }
-    public enum RainTolerance implements IChromosomeType {
+    public enum RainTolerance implements IAllele<Boolean> {
         TRUE, FALSE;
         // region InternalMethods
         private final boolean dominant;
@@ -548,32 +549,39 @@ public class Chromosomes {
         }
         @Override
         public String toString(){
-            return "rain_tolerance." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
         @Override
         public boolean isDominant() {
             return dominant;
         }
 
-        public boolean toleratesRain(){
-            return this == TRUE;
-        }
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.rain_tolerance.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             return components;
         }
+
+        @Override
+        public Boolean getValue() {
+            return this == TRUE;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.RAIN_TOLERANCE;
+        }
         // endregion
     }
-    public enum CaveDwelling implements IChromosomeType {
+    public enum CaveDwelling implements IAllele<Boolean> {
         TRUE, FALSE;
         // region InternalMethods
         private final boolean dominant;
@@ -585,32 +593,38 @@ public class Chromosomes {
         }
         @Override
         public String toString(){
-            return "cave_dwelling." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
         @Override
         public boolean isDominant() {
             return dominant;
         }
 
-        public boolean isCaveDwelling(){
-            return this == TRUE;
-        }
-
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.cave_dwelling.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             return components;
         }
+
+        @Override
+        public Boolean getValue() {
+            return this == TRUE;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.CAVE_DWELLING;
+        }
         // endregion
     }
-    public enum AcceptedFlowers implements IChromosomeType {
+    public enum AcceptedFlowers implements IAllele<FlowerProvider> {
         VANILLA(new FlowerProvider(), true),
         NETHER(new FlowerProvider()),
         CACTI(new FlowerProvider()),
@@ -635,7 +649,7 @@ public class Chromosomes {
 
         @Override
         public String toString(){
-            return "accepted_flowers." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -649,19 +663,29 @@ public class Chromosomes {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.accepted_flowers.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             return components;
         }
+
+        @Override
+        public FlowerProvider getValue() {
+            return provider;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.ACCEPTED_FLOWERS;
+        }
         // endregion
     }
-    public enum TemperatureTolerance implements IChromosomeType {
+    public enum TemperatureTolerance implements IAllele<BiFunction<EnumTemperature, EnumTemperature, Boolean>> {
         NONE,
         BOTH_1, BOTH_2, BOTH_3, BOTH_4, BOTH_5,
         UP_1(true), UP_2, UP_3, UP_4, UP_5,
@@ -676,18 +700,18 @@ public class Chromosomes {
         }
         TemperatureTolerance(boolean dominant){
             this.dominant = dominant;
-            String name = this.name().toLowerCase(Locale.ENGLISH);
-            if(name.contains("none")){
+            String name = this.name();
+            if(name.contains("NONE")){
                 toleranceUp = 0;
                 toleranceDown = 0;
             }
             else {
                 int tolerance = Integer.parseInt(name.substring(name.length() - 1));
-                if(name.contains("up")){
+                if(name.contains("UP")){
                     toleranceUp = tolerance;
                     toleranceDown = 0;
                 }
-                else if(name.contains("down")){
+                else if(name.contains("DOWN")){
                     toleranceUp = 0;
                     toleranceDown = tolerance;
                 }
@@ -700,7 +724,7 @@ public class Chromosomes {
 
         @Override
         public String toString(){
-            return "temperature_tolerance." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -708,7 +732,7 @@ public class Chromosomes {
             return dominant;
         }
 
-        public boolean canTolerate(EnumTemperature environment, EnumTemperature self){
+        private boolean canTolerate(EnumTemperature environment, EnumTemperature self){
             if(environment == EnumTemperature.NONE){
                 return false;
             }
@@ -718,19 +742,21 @@ public class Chromosomes {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
-            List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.temperature_tolerance.class")
-                    .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
-            for(String str : strings){
-                components.add(Component.literal(str));
-            }
-            return components;
+            return Collections.emptyList();
+        }
+
+        @Override
+        public BiFunction<EnumTemperature, EnumTemperature, Boolean> getValue() {
+            return this::canTolerate;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.TEMPERATURE_TOLERANCE;
         }
         // endregion
     }
-    public enum HumidityTolerance implements IChromosomeType {
+    public enum HumidityTolerance implements IAllele<BiFunction<EnumHumidity, EnumHumidity, Boolean>> {
         NONE,
         BOTH_1, BOTH_2,
         UP_1(true), UP_2,
@@ -745,18 +771,18 @@ public class Chromosomes {
         }
         HumidityTolerance(boolean dominant){
             this.dominant = dominant;
-            String name = this.name().toLowerCase(Locale.ENGLISH);
-            if(name.contains("none")){
+            String name = this.name();
+            if(name.contains("NONE")){
                 toleranceUp = 0;
                 toleranceDown = 0;
             }
             else {
                 int tolerance = Integer.parseInt(name.substring(name.length() - 1));
-                if(name.contains("up")){
+                if(name.contains("UP")){
                     toleranceUp = tolerance;
                     toleranceDown = 0;
                 }
-                else if(name.contains("down")){
+                else if(name.contains("DOWN")){
                     toleranceUp = 0;
                     toleranceDown = tolerance;
                 }
@@ -769,7 +795,7 @@ public class Chromosomes {
 
         @Override
         public String toString(){
-            return "humidity_tolerance." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -777,7 +803,7 @@ public class Chromosomes {
             return dominant;
         }
 
-        public boolean canTolerate(EnumHumidity environment, EnumHumidity self){
+        private boolean canTolerate(EnumHumidity environment, EnumHumidity self){
             if(environment == EnumHumidity.NONE){
                 return false;
             }
@@ -787,19 +813,21 @@ public class Chromosomes {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
-            List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.humidity_tolerance.class")
-                    .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
-            for(String str : strings){
-                components.add(Component.literal(str));
-            }
-            return components;
+            return Collections.emptyList();
+        }
+
+        @Override
+        public BiFunction<EnumHumidity, EnumHumidity, Boolean> getValue() {
+            return this::canTolerate;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.HUMIDITY_TOLERANCE;
         }
         // endregion
     }
-    public enum Territory implements IChromosomeType {
+    public enum Territory implements IAllele<Vec3i> {
         AVERAGE(9, 6, 9),
         LARGE(11, 8, 11),
         LARGER(13, 12, 13),
@@ -827,7 +855,7 @@ public class Chromosomes {
 
         @Override
         public String toString(){
-            return "territory." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -835,28 +863,34 @@ public class Chromosomes {
             return dominant;
         }
 
-        public Vec3i getTerritory() {
-            return territory;
-        }
-
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.territory.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             components.add(Component.translatable("tooltip.territory")
                     .append(": ")
-                    .append(Component.literal(getTerritory().getX() + " x " + getTerritory().getY() + " x " + getTerritory().getZ()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.literal(territory.getX() + " x " + territory.getY() + " x " + territory.getZ()).withStyle(ChatFormatting.YELLOW)));
             return components;
+        }
+
+        @Override
+        public Vec3i getValue() {
+            return territory;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.TERRITORY;
         }
         // endregion
     }
-    public enum Effect implements IChromosomeType {
+    public enum Effect implements IAllele<EffectProvider> {
         NONE(new EffectProvider());
 
         // region InternalMethods
@@ -874,7 +908,7 @@ public class Chromosomes {
 
         @Override
         public String toString(){
-            return "effect." + this.name().toLowerCase(Locale.ENGLISH);
+            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -882,21 +916,27 @@ public class Chromosomes {
             return dominant;
         }
 
-        public EffectProvider getProvider() {
-            return provider;
-        }
-
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable("chromosomes." + this + ".description").getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("chromosomes.effect.class")
+            components.add(Component.translatable(getType().getName())
                     .append(": ")
-                    .append(Component.translatable("chromosomes." + this).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             return components;
+        }
+
+        @Override
+        public EffectProvider getValue() {
+            return provider;
+        }
+
+        @Override
+        public IAlleleType getType() {
+            return AlleleTypes.EFFECT;
         }
         // endregion
     }

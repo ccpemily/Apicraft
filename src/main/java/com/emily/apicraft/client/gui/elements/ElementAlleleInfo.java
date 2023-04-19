@@ -2,8 +2,8 @@ package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 
@@ -15,10 +15,10 @@ public class ElementAlleleInfo extends ElementText{
     private static final int RECESSIVE_COLOR = 0x3687ec;
 
     protected final Supplier<Optional<Bee>> beeSupplier;
-    protected final Class<? extends IChromosomeType> type;
+    protected final IAlleleType type;
     protected final boolean active;
 
-    public ElementAlleleInfo(IGuiAccess gui, int posX, int posY, Supplier<Optional<Bee>> supplier, Class<? extends IChromosomeType> type, boolean active) {
+    public ElementAlleleInfo(IGuiAccess gui, int posX, int posY, Supplier<Optional<Bee>> supplier, IAlleleType type, boolean active) {
         super(gui, posX, posY);
         this.beeSupplier = supplier;
         this.type = type;
@@ -29,18 +29,18 @@ public class ElementAlleleInfo extends ElementText{
     public void drawBackground(PoseStack stack, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = beeSupplier.get();
         if(beeOptional.isPresent()){
-            IChromosomeType chromosome = beeOptional.get().getGenome().getChromosomeValue(type, active);
-            setText(Component.translatable("chromosomes." + chromosome.toString()).getString(), getColor(chromosome.isDominant()));
+            IAllele<?> allele = beeOptional.get().getGenome().getAllele(type, active);
+            setText(Component.translatable(allele.getName()).getString(), getColor(allele.isDominant()));
             super.drawBackground(stack, mouseX, mouseY);
         }
     }
 
-    public Optional<IChromosomeType> getCurrentChromosome(){
+    public Optional<IAllele<?>> getCurrentChromosome(){
         if(beeSupplier.get().isEmpty()){
             return Optional.empty();
         }
         else{
-            return Optional.of(beeSupplier.get().get().getGenome().getChromosomeValue(type, active));
+            return Optional.of(beeSupplier.get().get().getGenome().getAllele(type, active));
         }
     }
 

@@ -3,7 +3,7 @@ package com.emily.apicraft.client.gui.elements;
 import cofh.core.client.gui.IGuiAccess;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.Chromosomes;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 
@@ -25,8 +25,8 @@ public class ElementHumidityInfo extends ElementText {
     public void drawBackground(PoseStack stack, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = supplier.get();
         if(beeOptional.isPresent()){
-            Chromosomes.Species chromosome = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
-            setText(Component.translatable(chromosome.getHumidity().getName()).getString(), getColor(chromosome.isDominant()));
+            Alleles.Species allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
+            setText(Component.translatable(allele.getValue().getHumidity().getName()).getString(), getColor(allele.isDominant()));
             super.drawBackground(stack, mouseX, mouseY);
         }
     }
@@ -34,8 +34,8 @@ public class ElementHumidityInfo extends ElementText {
     public EnumHumidity getHumidity(){
         Optional<Bee> beeOptional = supplier.get();
         if(beeOptional.isPresent()) {
-            Chromosomes.Species chromosome = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
-            return chromosome.getHumidity();
+            Alleles.Species allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
+            return allele.getValue().getHumidity();
         }
         return EnumHumidity.NONE;
     }

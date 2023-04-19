@@ -1,11 +1,12 @@
 package com.emily.apicraft.capabilities;
 
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.BeeKaryotype;
-import com.emily.apicraft.genetics.Chromosomes;
+import com.emily.apicraft.genetics.alleles.AlleleTypes;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.core.Direction;
@@ -43,22 +44,21 @@ public class BeeProviderCapability implements IBeeProvider, ICapabilityProvider 
 
     @Override
     @Nonnull
-    public Chromosomes.Species getBeeSpeciesDirectly(boolean active) {
-        Chromosomes.Species species = getBeeChromosomeDirectly(Chromosomes.Species.class, active);
-        return species == null ? Chromosomes.Species.FOREST : species;
+    public Alleles.Species getBeeSpeciesDirectly(boolean active) {
+        Alleles.Species species = (Alleles.Species) getBeeChromosomeDirectly(AlleleTypes.SPECIES, active);
+        return species == null ? Alleles.Species.FOREST : species;
     }
 
     @Override
     @Nullable
-    @SuppressWarnings("unchecked")
-    public <T extends IChromosomeType> T getBeeChromosomeDirectly(Class<T> type, boolean active) {
+    public IAllele<?> getBeeChromosomeDirectly(IAlleleType type, boolean active) {
         if (container.hasTag()) {
             assert container.getTag() != null;
             CompoundTag beeTag = container.getTag().getCompound(Tags.TAG_BEE);
             if (beeTag.contains(Tags.TAG_GENOME)) {
                 ListTag chromosomeTag = beeTag.getCompound(Tags.TAG_GENOME).getList(Tags.TAG_CHROMOSOMES, Tag.TAG_COMPOUND);
                 CompoundTag chromosome = chromosomeTag.getCompound(BeeKaryotype.INSTANCE.getIndex(type));
-                return (T) Registries.CHROMOSOMES.get(active ? chromosome.getString(Tags.TAG_ACTIVE) : chromosome.getString(Tags.TAG_INACTIVE));
+                return Registries.ALLELES.get(active ? chromosome.getString(Tags.TAG_ACTIVE) : chromosome.getString(Tags.TAG_INACTIVE));
             }
         }
         return null;

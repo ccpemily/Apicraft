@@ -3,7 +3,6 @@ package com.emily.apicraft.client.gui.elements;
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.client.gui.element.ElementBase;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.Font;
 
 public class ElementText extends ElementBase {
     protected String text = "";

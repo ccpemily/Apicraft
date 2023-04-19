@@ -1,7 +1,7 @@
 package com.emily.apicraft.items;
 
 import cofh.core.item.ItemCoFH;
-import com.emily.apicraft.inventory.containers.PortableAnalyzerContainer;
+import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,6 +43,6 @@ public class PortableAnalyzer extends ItemCoFH implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
-        return new PortableAnalyzerContainer(i, inventory, player);
+        return new PortableAnalyzerMenu(i, inventory, player);
     }
 }

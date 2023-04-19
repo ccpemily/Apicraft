@@ -3,9 +3,7 @@ package com.emily.apicraft.compat.jei;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.BeeGenome;
-import com.emily.apicraft.genetics.BeeKaryotype;
-import com.emily.apicraft.genetics.Chromosomes;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.registry.Registries;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -17,12 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-
-import java.util.Locale;
-import java.util.Optional;
-
-import static com.mojang.logging.LogUtils.getLogger;
 
 @OnlyIn(Dist.CLIENT)
 @JeiPlugin
@@ -49,7 +41,7 @@ public class ApicraftJeiPlugin implements IModPlugin {
             if(!stack.hasTag()){
                 return IIngredientSubtypeInterpreter.NONE;
             }
-            Bee bee = BeeProviderCapability.get(stack).getBeeIndividual().orElse(Bee.getPure(Chromosomes.Species.FOREST));
+            Bee bee = BeeProviderCapability.get(stack).getBeeIndividual().orElse(Bee.getPure(Alleles.Species.FOREST));
             return bee.getGenome().getSpecies().toString();
         }
     }

@@ -2,10 +2,15 @@ package com.emily.apicraft.registry;
 
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.block.Apiary;
+import com.emily.apicraft.block.entity.ApiaryEntity;
 import com.emily.apicraft.genetics.BeeKaryotype;
-import com.emily.apicraft.genetics.Chromosomes;
-import com.emily.apicraft.interfaces.genetics.IChromosomeType;
-import com.emily.apicraft.inventory.containers.PortableAnalyzerContainer;
+import com.emily.apicraft.genetics.alleles.AlleleTypes;
+import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
+import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.items.BeeItem;
 import com.emily.apicraft.items.BeeTypes;
 import com.emily.apicraft.items.PortableAnalyzer;
@@ -14,6 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -27,6 +34,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 import static cofh.core.util.ProxyUtils.getClientPlayer;
+import static cofh.core.util.ProxyUtils.getClientWorld;
 import static com.mojang.logging.LogUtils.getLogger;
 
 public class Registries {
@@ -35,27 +43,31 @@ public class Registries {
     public static final DeferredRegisterCoFH<Item> ITEMS = DeferredRegisterCoFH.create(ForgeRegistries.ITEMS, Apicraft.MODID);
     public static final DeferredRegisterCoFH<Block> BLOCKS = DeferredRegisterCoFH.create(ForgeRegistries.BLOCKS, Apicraft.MODID);
     public static final DeferredRegisterCoFH<BlockEntityType<?>> TILE_ENTITIES = DeferredRegisterCoFH.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<MenuType<?>> CONTAINERS = DeferredRegisterCoFH.create(ForgeRegistries.MENU_TYPES, Apicraft.MODID);
+    public static final DeferredRegisterCoFH<MenuType<?>> MENUS = DeferredRegisterCoFH.create(ForgeRegistries.MENU_TYPES, Apicraft.MODID);
+    public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, Apicraft.MODID);
+    public static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, Apicraft.MODID);
 
     // Custom Registries
-    public static final DeferredRegisterCoFH<IChromosomeType> CHROMOSOMES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "chromosomes"), Apicraft.MODID);
+    public static final DeferredRegisterCoFH<IAllele<?>> ALLELES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "alleles"), Apicraft.MODID);
 
     public static void initRegistry(IEventBus modEventBus){
-        CHROMOSOMES.makeRegistry(RegistryBuilder::new);
-        // 向事件总线注册DeferredRegister
+        ALLELES.makeRegistry(RegistryBuilder::new);
+        // Attach DeferredRegister to ModEventBus
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
         TILE_ENTITIES.register(modEventBus);
-        CONTAINERS.register(modEventBus);
-        CHROMOSOMES.register(modEventBus);
+        MENUS.register(modEventBus);
+        RECIPE_TYPES.register(modEventBus);
+        RECIPE_SERIALIZERS.register(modEventBus);
+        ALLELES.register(modEventBus);
     }
     public static void register(){
         logger.debug("Apiculture Registry: starting register:");
         registerItems();
         registerBlocks();
-        registerTileEntities();
-        registerContainers();
-        registerChromosomeTypes();
+        registerBlockEntities();
+        registerMenus();
+        registerAlleles();
         logger.debug("Apiculture Registry: registration completed.");
     }
 
@@ -66,25 +78,29 @@ public class Registries {
         registerItem("portable_analyzer", PortableAnalyzer::new);
     }
     private static void registerBlocks(){
+        registerBlock("apiary", Apiary::new);
     }
-    private static void registerTileEntities(){
+    private static void registerBlockEntities(){
+        registerBlockEntity("apiary", () -> BlockEntityType.Builder.of(ApiaryEntity::new, BLOCKS.get("apiary")).build(null));
     }
-    private static void registerContainers(){
-        registerContainer("portable_analyzer", () -> IForgeMenuType.create(((windowId, inv, data) -> new PortableAnalyzerContainer(windowId, inv, getClientPlayer()))));
+    private static void registerMenus(){
+        registerMenu("portable_analyzer", () -> IForgeMenuType.create(((windowId, inv, data) -> new PortableAnalyzerMenu(windowId, inv, getClientPlayer()))));
+
+        registerMenu("apiary", () -> IForgeMenuType.create((((windowId, inv, data) -> new ApiaryMenu(windowId, getClientWorld(), data.readBlockPos(), inv, getClientPlayer())))));
     }
-    private static void registerChromosomeTypes(){
-        registerChromosomeType(Chromosomes.Species.class, Chromosomes.Species.FOREST);
-        registerChromosomeType(Chromosomes.LifeSpan.class, Chromosomes.LifeSpan.SHORT);
-        registerChromosomeType(Chromosomes.Productivity.class, Chromosomes.Productivity.SLOWEST);
-        registerChromosomeType(Chromosomes.Fertility.class, Chromosomes.Fertility.FERTILE);
-        registerChromosomeType(Chromosomes.Behavior.class, Chromosomes.Behavior.DIURNAL);
-        registerChromosomeType(Chromosomes.RainTolerance.class, Chromosomes.RainTolerance.FALSE);
-        registerChromosomeType(Chromosomes.CaveDwelling.class, Chromosomes.CaveDwelling.FALSE);
-        registerChromosomeType(Chromosomes.AcceptedFlowers.class, Chromosomes.AcceptedFlowers.VANILLA);
-        registerChromosomeType(Chromosomes.TemperatureTolerance.class, Chromosomes.TemperatureTolerance.NONE);
-        registerChromosomeType(Chromosomes.HumidityTolerance.class, Chromosomes.HumidityTolerance.NONE);
-        registerChromosomeType(Chromosomes.Territory.class, Chromosomes.Territory.AVERAGE);
-        registerChromosomeType(Chromosomes.Effect.class, Chromosomes.Effect.NONE);
+    private static void registerAlleles(){
+        registerAllele(Alleles.Species.class, AlleleTypes.SPECIES, Alleles.Species.FOREST);
+        registerAllele(Alleles.LifeSpan.class, AlleleTypes.LIFESPAN, Alleles.LifeSpan.SHORT);
+        registerAllele(Alleles.Productivity.class, AlleleTypes.PRODUCTIVITY, Alleles.Productivity.SLOWEST);
+        registerAllele(Alleles.Fertility.class, AlleleTypes.FERTILITY, Alleles.Fertility.FERTILE);
+        registerAllele(Alleles.Behavior.class, AlleleTypes.BEHAVIOR, Alleles.Behavior.DIURNAL);
+        registerAllele(Alleles.RainTolerance.class, AlleleTypes.RAIN_TOLERANCE, Alleles.RainTolerance.FALSE);
+        registerAllele(Alleles.CaveDwelling.class, AlleleTypes.CAVE_DWELLING, Alleles.CaveDwelling.FALSE);
+        registerAllele(Alleles.AcceptedFlowers.class, AlleleTypes.ACCEPTED_FLOWERS, Alleles.AcceptedFlowers.VANILLA);
+        registerAllele(Alleles.TemperatureTolerance.class, AlleleTypes.TEMPERATURE_TOLERANCE, Alleles.TemperatureTolerance.NONE);
+        registerAllele(Alleles.HumidityTolerance.class, AlleleTypes.HUMIDITY_TOLERANCE, Alleles.HumidityTolerance.NONE);
+        registerAllele(Alleles.Territory.class, AlleleTypes.TERRITORY, Alleles.Territory.AVERAGE);
+        registerAllele(Alleles.Effect.class, AlleleTypes.EFFECT, Alleles.Effect.NONE);
     }
 
     private static void registerItem(String name, Supplier<Item> supplier){
@@ -97,22 +113,22 @@ public class Registries {
         logger.debug("Registering blockitem: " + name);
         ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(CreativeTabs.TAB_BLOCKS)));
     }
-    private static void registerTileEntity(String name, Supplier<BlockEntityType<?>> supplier){
-        logger.debug("Registering tile entity type: " + name);
+    private static void registerBlockEntity(String name, Supplier<BlockEntityType<?>> supplier){
+        logger.debug("Registering block entity type: " + name);
         TILE_ENTITIES.register(name, supplier);
     }
 
-    private static void registerContainer(String name, Supplier<MenuType<?>> supplier){
-        logger.debug("Registering container type: " + name);
-        CONTAINERS.register(name, supplier);
+    private static void registerMenu(String name, Supplier<MenuType<?>> supplier){
+        logger.debug("Registering menu type: " + name);
+        MENUS.register(name, supplier);
     }
 
-    private static void registerChromosomeType(Class<? extends IChromosomeType> type, IChromosomeType defaultValue){
-        logger.debug("Registering chromosome type: " + type.getSimpleName());
-        IChromosomeType[] types = type.getEnumConstants();
+    private static void registerAllele(Class<? extends IAllele<?>> alleleClass, IAlleleType type, IAllele<?> defaultValue){
+        logger.debug("Registering allele type: " + type.getName());
+        IAllele<?>[] types = alleleClass.getEnumConstants();
         BeeKaryotype.INSTANCE.registerToKaryotype(type, defaultValue);
-        for(IChromosomeType t : types){
-            CHROMOSOMES.register(t.toString(), () -> t);
+        for(IAllele<?> t : types){
+            ALLELES.register(t.toString(), () -> t);
         }
     }
 }

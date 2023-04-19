@@ -2,8 +2,8 @@ package com.emily.apicraft.client;
 
 import cofh.lib.api.item.IColorableItem;
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.client.gui.menus.PortableAnalyzerScreen;
-import com.emily.apicraft.inventory.containers.PortableAnalyzerContainer;
+import com.emily.apicraft.client.gui.screens.PortableAnalyzerScreen;
+import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
@@ -33,9 +33,10 @@ public class ClientSetupEvents {
 
     @SuppressWarnings("unchecked")
     private static void registerScreens(){
-        MenuScreens.register((MenuType<PortableAnalyzerContainer>)Registries.CONTAINERS.get("portable_analyzer"), PortableAnalyzerScreen::new);
+        MenuScreens.register((MenuType<PortableAnalyzerMenu>)Registries.MENUS.get("portable_analyzer"), PortableAnalyzerScreen::new);
     }
     @SubscribeEvent
+    @SuppressWarnings("deprecated")
     public static void colorSetupItem(final RegisterColorHandlersEvent.Item event) {
         ItemColors colors = event.getItemColors();
         for (Item colorable : COLORABLE_ITEMS) {

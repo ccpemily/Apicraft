@@ -1,7 +1,8 @@
-package com.emily.apicraft.client.gui.elements;
+package com.emily.apicraft.client.gui.elements.tooltip;
 
 import cofh.core.client.gui.element.ElementBase;
 import cofh.core.client.gui.element.ITooltipFactory;
+import com.emily.apicraft.client.gui.elements.ElementHumidityInfo;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collections;

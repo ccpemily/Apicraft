@@ -217,8 +217,8 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     }
     private void addTemperatureInfoLine(){
         addElement(new ElementText(this, COLUMN_0, getRowY(2))
-                .setText(Component.translatable("climatology.temperature").getString())
-                .setTooltipFactory(new SimpleTooltip(Component.translatable("climatology.temperature.description")))
+                .setText(Component.translatable("climatology.baseTemperature").getString())
+                .setTooltipFactory(new SimpleTooltip(Component.translatable("climatology.baseTemperature.description")))
                 .setVisible(() -> this.selected == 2)
         );
         addElement(new ElementTemperatureInfo(this, COLUMN_1, getRowY(2), this::getBeeIndividual, true)
@@ -232,8 +232,8 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     }
     private void addHumidityInfoLine(){
         addElement(new ElementText(this, COLUMN_0, getRowY(4))
-                .setText(Component.translatable("climatology.humidity").getString())
-                .setTooltipFactory(new SimpleTooltip(Component.translatable("climatology.humidity.description")))
+                .setText(Component.translatable("climatology.baseHumidity").getString())
+                .setTooltipFactory(new SimpleTooltip(Component.translatable("climatology.baseHumidity.description")))
                 .setVisible(() -> this.selected == 2)
         );
         addElement(new ElementHumidityInfo(this, COLUMN_1, getRowY(4), this::getBeeIndividual, true)

@@ -1,12 +1,17 @@
 package com.emily.apicraft.interfaces.block;
 
 import com.emily.apicraft.interfaces.climatology.IClimateProvider;
+import com.emily.apicraft.inventory.BeeHousingItemInv;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
-public interface IBeeHousing extends IClimateProvider {
+import java.util.Optional;
+
+public interface IBeeHousing extends IClimateProvider, IBeeBreeder {
     Level getBeeHousingLevel();
     BlockPos getBeeHousingPos();
-    Biome getBeeHousingBiome();
+    Optional<Biome> getBeeHousingBiome();
+    BeeHousingItemInv getBeeHousingInv();
+    String getBeeHousingOwnerName();
 }

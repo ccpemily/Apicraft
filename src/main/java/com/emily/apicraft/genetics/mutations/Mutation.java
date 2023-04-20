@@ -1,7 +1,7 @@
 package com.emily.apicraft.genetics.mutations;
 
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.genetics.mutations.IMutationCondition;
+import com.emily.apicraft.interfaces.genetics.mutations.IBeeCondition;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class Mutation {
     private final Alleles.Species speciesSecond;
     private final Alleles.Species speciesResult;
     private final int baseChance;
-    private final List<IMutationCondition> conditions;
+    private final List<IBeeCondition> conditions;
 
     private Mutation(MutationBuilder builder){
         this.speciesFirst = builder.speciesFirst;
@@ -38,8 +38,8 @@ public class Mutation {
 
     public float getConditionalChance(IBeeHousing housing){
         float result = baseChance;
-        for(IMutationCondition condition : conditions){
-            result = condition.getModifier(housing).apply(result);
+        for(IBeeCondition condition : conditions){
+            result = condition.applyModifier(housing, result);
         }
         return result;
     }
@@ -49,7 +49,7 @@ public class Mutation {
         private Alleles.Species speciesSecond;
         private Alleles.Species speciesResult;
         private int baseChance = 0;
-        private final List<IMutationCondition> conditions = new ArrayList<>();
+        private final List<IBeeCondition> conditions = new ArrayList<>();
 
         public MutationBuilder(){
 
@@ -78,7 +78,7 @@ public class Mutation {
             return this;
         }
 
-        public MutationBuilder addCondition(IMutationCondition condition){
+        public MutationBuilder addCondition(IBeeCondition condition){
             this.conditions.add(condition);
             return this;
         }

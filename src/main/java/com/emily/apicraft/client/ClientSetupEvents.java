@@ -2,12 +2,17 @@ package com.emily.apicraft.client;
 
 import cofh.lib.api.item.IColorableItem;
 import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.client.gui.screens.ApiaryScreen;
+import com.emily.apicraft.client.gui.screens.BeeHouseScreen;
 import com.emily.apicraft.client.gui.screens.PortableAnalyzerScreen;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
+import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
+import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -33,10 +38,11 @@ public class ClientSetupEvents {
 
     @SuppressWarnings("unchecked")
     private static void registerScreens(){
-        MenuScreens.register((MenuType<PortableAnalyzerMenu>)Registries.MENUS.get("portable_analyzer"), PortableAnalyzerScreen::new);
+        MenuScreens.register((MenuType<PortableAnalyzerMenu>) Registries.MENUS.get("portable_analyzer"), PortableAnalyzerScreen::new);
+        MenuScreens.register((MenuType<BeeHouseMenu>) Registries.MENUS.get("bee_house"), BeeHouseScreen::new);
+        MenuScreens.register((MenuType<ApiaryMenu>) Registries.MENUS.get("apiary"), ApiaryScreen::new);
     }
     @SubscribeEvent
-    @SuppressWarnings("deprecated")
     public static void colorSetupItem(final RegisterColorHandlersEvent.Item event) {
         ItemColors colors = event.getItemColors();
         for (Item colorable : COLORABLE_ITEMS) {

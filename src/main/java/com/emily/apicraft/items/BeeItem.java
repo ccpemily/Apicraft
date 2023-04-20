@@ -8,6 +8,7 @@ import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.items.IBeeItem;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
+import com.emily.apicraft.items.subtype.BeeTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.NonNullList;

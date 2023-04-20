@@ -3,7 +3,7 @@ package com.emily.apicraft.interfaces.items;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
-import com.emily.apicraft.items.BeeTypes;
+import com.emily.apicraft.items.subtype.BeeTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;

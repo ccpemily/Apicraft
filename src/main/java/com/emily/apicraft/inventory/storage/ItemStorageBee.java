@@ -2,7 +2,7 @@ package com.emily.apicraft.inventory.storage;
 
 import cofh.lib.inventory.ItemStorageCoFH;
 import com.emily.apicraft.items.BeeItem;
-import com.emily.apicraft.items.BeeTypes;
+import com.emily.apicraft.items.subtype.BeeTypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;

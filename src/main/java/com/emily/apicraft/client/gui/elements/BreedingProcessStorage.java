@@ -4,6 +4,7 @@ import cofh.lib.api.IResourceStorage;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class BreedingProcessStorage implements IResourceStorage, INBTSerializable<CompoundTag> {
@@ -62,7 +63,7 @@ public class BreedingProcessStorage implements IResourceStorage, INBTSerializabl
 
     @Override
     public String getUnit() {
-        return "";
+        return Component.translatable("gui.tooltip.health_remaining").getString();
     }
 
     public void readFromBuffer(FriendlyByteBuf buf){

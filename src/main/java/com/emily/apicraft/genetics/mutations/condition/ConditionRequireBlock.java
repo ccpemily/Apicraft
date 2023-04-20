@@ -1,15 +1,14 @@
 package com.emily.apicraft.genetics.mutations.condition;
 
 import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.mutations.IMutationCondition;
+import com.emily.apicraft.interfaces.genetics.mutations.IBeeCondition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
-import java.util.function.Function;
 
-public class ConditionRequireBlock implements IMutationCondition {
+public class ConditionRequireBlock implements IBeeCondition {
     private final Block resourceType;
 
     public ConditionRequireBlock(Block type){
@@ -17,7 +16,7 @@ public class ConditionRequireBlock implements IMutationCondition {
     }
 
     @Override
-    public Function<Float, Float> getModifier(IBeeHousing beeHousing) {
+    public float applyModifier(IBeeHousing beeHousing, float chance) {
         BlockPos pos = beeHousing.getBeeHousingPos();
         do{
             pos = pos.below();
@@ -25,7 +24,7 @@ public class ConditionRequireBlock implements IMutationCondition {
         while(beeHousing.getBeeHousingLevel().getBlockEntity(pos) instanceof IBeeHousing);
 
         BlockPos finalPos = pos;
-        return (x) -> beeHousing.getBeeHousingLevel().getBlockState(finalPos).getBlock() == resourceType ? x : 0;
+        return beeHousing.getBeeHousingLevel().getBlockState(finalPos).getBlock() == resourceType ? chance : 0;
     }
 
     @Override

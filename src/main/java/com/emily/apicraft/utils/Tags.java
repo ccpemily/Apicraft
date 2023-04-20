@@ -18,4 +18,14 @@ public class Tags {
     public static final String TAG_MAX_BREEDING_PROCESS = "MaxBreeding";
     public static final String TAG_BREEDING_PROCESS = "BreedingProcess";
     // endregion
+
+    // region Menu
+    public static final String TAG_BEEHOUSING_INV = "BeeHousingInv";
+    // endregion
+
+    // region TileEntity
+    public static final String TAG_STATE = "State";
+    public static final String TAG_THROTTLE = "TickThrottle";
+    public static final String TAG_PENDING_PRODUCT = "PendingProduct";
+    // endregion
 }

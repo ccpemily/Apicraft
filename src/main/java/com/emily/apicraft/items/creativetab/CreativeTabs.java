@@ -21,16 +21,14 @@ public class CreativeTabs {
     public static final CreativeModeTab TAB_BLOCKS = new CreativeModeTab("apicraft.blocks") {
         @Override
         public @NotNull ItemStack makeIcon() {
-            return ItemStack.EMPTY;
-            //return new ItemStack(Registries.ITEMS.get("block_apiary"));
+            return new ItemStack(Registries.ITEMS.get("apiary"));
         }
     };
 
     public static final CreativeModeTab TAB_ITEMS = new CreativeModeTab("apicraft.items") {
         @Override
         public @NotNull ItemStack makeIcon() {
-            return ItemStack.EMPTY;
-            //return new ItemStack(Registries.ITEMS.get("bee_comb_honey"));
+            return new ItemStack(Registries.ITEMS.get("bee_comb_honey"));
         }
     };
 }

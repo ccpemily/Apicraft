@@ -3,7 +3,9 @@ package com.emily.apicraft.registry;
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.block.Apiary;
+import com.emily.apicraft.block.BeeHouse;
 import com.emily.apicraft.block.entity.ApiaryEntity;
+import com.emily.apicraft.block.entity.BeeHouseEntity;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
@@ -11,10 +13,12 @@ import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
-import com.emily.apicraft.items.BeeItem;
-import com.emily.apicraft.items.BeeTypes;
-import com.emily.apicraft.items.PortableAnalyzer;
+import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
+import com.emily.apicraft.items.*;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
+import com.emily.apicraft.items.subtype.BeeCombTypes;
+import com.emily.apicraft.items.subtype.BeeTypes;
+import com.emily.apicraft.items.subtype.FrameTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -75,17 +79,26 @@ public class Registries {
         for(BeeTypes type : BeeTypes.values()){
             registerItem("bee_" + type.name().toLowerCase(Locale.ENGLISH), () -> new BeeItem(type));
         }
+        for(BeeCombTypes type : BeeCombTypes.values()){
+            registerItem(type.getName(), () -> new BeeCombItem(type));
+        }
+        for(FrameTypes type : FrameTypes.values()){
+            registerItem(type.getName(), () -> new FrameItem(type));
+        }
         registerItem("portable_analyzer", PortableAnalyzer::new);
     }
     private static void registerBlocks(){
+        registerBlock("bee_house", BeeHouse::new);
         registerBlock("apiary", Apiary::new);
     }
     private static void registerBlockEntities(){
+        registerBlockEntity("bee_house", () -> BlockEntityType.Builder.of(BeeHouseEntity::new, BLOCKS.get("bee_house")).build(null));
         registerBlockEntity("apiary", () -> BlockEntityType.Builder.of(ApiaryEntity::new, BLOCKS.get("apiary")).build(null));
     }
     private static void registerMenus(){
         registerMenu("portable_analyzer", () -> IForgeMenuType.create(((windowId, inv, data) -> new PortableAnalyzerMenu(windowId, inv, getClientPlayer()))));
 
+        registerMenu("bee_house", () -> IForgeMenuType.create((((windowId, inv, data) -> new BeeHouseMenu(windowId, getClientWorld(), data.readBlockPos(), inv, getClientPlayer())))));
         registerMenu("apiary", () -> IForgeMenuType.create((((windowId, inv, data) -> new ApiaryMenu(windowId, getClientWorld(), data.readBlockPos(), inv, getClientPlayer())))));
     }
     private static void registerAlleles(){
@@ -103,6 +116,8 @@ public class Registries {
         registerAllele(Alleles.Effect.class, AlleleTypes.EFFECT, Alleles.Effect.NONE);
     }
 
+
+    // region Single Register Method
     private static void registerItem(String name, Supplier<Item> supplier){
         logger.debug("Registering item: " + name);
         ITEMS.register(name, supplier);
@@ -131,4 +146,5 @@ public class Registries {
             ALLELES.register(t.toString(), () -> t);
         }
     }
+    // endregion
 }

@@ -2,13 +2,12 @@ package com.emily.apicraft.genetics.mutations.condition;
 
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.mutations.IMutationCondition;
+import com.emily.apicraft.interfaces.genetics.mutations.IBeeCondition;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
-import java.util.function.Function;
 
-public class ConditionHumidity implements IMutationCondition {
+public class ConditionHumidity implements IBeeCondition {
     private final EnumHumidity humidityStart;
     private final EnumHumidity humidityEnd;
 
@@ -17,9 +16,9 @@ public class ConditionHumidity implements IMutationCondition {
         humidityEnd = start.ordinal() > end.ordinal() ? start : end;
     }
     @Override
-    public Function<Float, Float> getModifier(IBeeHousing beeHousing) {
+    public float applyModifier(IBeeHousing beeHousing, float chance) {
         EnumHumidity humidity = beeHousing.getHumidity();
-        return (x) -> humidity.ordinal() <= humidityEnd.ordinal() && humidity.ordinal() >= humidityStart.ordinal() ? x : 0;
+        return humidity.ordinal() <= humidityEnd.ordinal() && humidity.ordinal() >= humidityStart.ordinal() ? chance : 0;
     }
 
     @Override

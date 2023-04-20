@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ApiaryEntity extends AbstractBeeHousingBlockEntity {
     public ApiaryEntity(BlockPos pos, BlockState state) {
-        super(Registries.TILE_ENTITIES.get("apiary"), pos, state);
+        super(Registries.TILE_ENTITIES.get("apiary"), pos, state, 7, 3, 0);
     }
 
     // region IMenuProvider

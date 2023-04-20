@@ -58,11 +58,12 @@ public class ClimatePanel extends PanelBase {
     @Override
     public void addTooltip(List<Component> tooltipList, int mouseX, int mouseY) {
         if (!fullyOpen) {
-            tooltipList.add(Component.translatable("gui.climate.tooltip").withStyle(ChatFormatting.YELLOW));
+            tooltipList.add(Component.translatable("gui.climate.tooltip"));
             tooltipList.add(Component.literal("T: ")
                     .append(Component.translatable(provider.getTemperature().getName()))
                     .append(Component.literal(" / H: "))
                     .append(Component.translatable(provider.getHumidity().getName()))
+                    .withStyle(ChatFormatting.YELLOW)
             );
         }
     }

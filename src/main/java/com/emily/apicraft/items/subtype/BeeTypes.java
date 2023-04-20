@@ -1,4 +1,4 @@
-package com.emily.apicraft.items;
+package com.emily.apicraft.items.subtype;
 
 import java.util.Locale;
 

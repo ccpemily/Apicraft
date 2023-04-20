@@ -4,9 +4,8 @@ import com.emily.apicraft.interfaces.block.IBeeHousing;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
-import java.util.function.Function;
 
-public interface IMutationCondition {
-    Function<Float, Float> getModifier(IBeeHousing beeHousing);
+public interface IBeeCondition {
+    float applyModifier(IBeeHousing beeHousing, float chance);
     List<Component> getConditionTooltip();
 }

@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.List;
+import java.util.Random;
 
 import static com.emily.apicraft.utils.Tags.*;
 
@@ -138,9 +139,12 @@ public class Bee {
     // endregion
 
     // region BeeBehavior
-    public void age(){
+    public void age(int modifier){
         if(this.health > 0){
-            health--;
+            this.health = (int)Math.ceil(health - modifier);
+        }
+        if(this.health < 0){
+            this.health = 0;
         }
     }
 

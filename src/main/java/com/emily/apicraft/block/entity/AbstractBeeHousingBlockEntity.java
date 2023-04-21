@@ -2,11 +2,13 @@ package com.emily.apicraft.block.entity;
 
 import cofh.core.block.entity.SecurableBlockEntity;
 import cofh.core.network.packet.client.TileControlPacket;
+import cofh.core.network.packet.client.TileGuiPacket;
 import cofh.core.util.control.RedstoneControlModule;
 import cofh.lib.api.block.entity.ITickableTile;
 import cofh.lib.inventory.ItemStorageCoFH;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.client.gui.elements.BreedingProcessStorage;
+import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 import com.emily.apicraft.inventory.BeeHousingItemInv;
@@ -15,6 +17,7 @@ import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -40,8 +43,11 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     protected final BeeHousingItemInv inventory;
     protected Stack<ItemStack> pendingStack = new Stack<>();
     // Logic
+    protected boolean isBreeding = false;
     protected int tickThrottle = 0;
-    protected BreedingProcessStorage processStorage = new BreedingProcessStorage(0, 0);
+    protected QueenCanWorkCache canWorkCache = new QueenCanWorkCache();
+    protected BreedingProcessStorage processStorage = new BreedingProcessStorage(0, 0, () -> isBreeding);
+    protected ErrorStates errorState = ErrorStates.NONE;
     // State
     protected boolean isActive = false;
     // Climate
@@ -62,36 +68,56 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     protected boolean canWork(){
         boolean hasSpace = addPendingProducts();
         if(!hasSpace){
-            return false;
+            errorState = ErrorStates.INVENTORY_FULL;
+            return false; // Has no space
         }
         ItemStack queenStack = inventory.getQueen();
+        if(queenStack.isEmpty()){
+            processStorage.clear();
+            processStorage.setCapacity(0);
+            errorState = ErrorStates.NO_QUEEN;
+            return false; // No queen or princess drone
+        }
         Optional<BeeTypes> typeOptional = queenStack.getItem() instanceof BeeItem ? Optional.of(((BeeItem) queenStack.getItem()).getBeeType()) : Optional.empty();
         if(typeOptional.isEmpty()){
-            return false;
+            errorState = ErrorStates.ILLEGAL_STATE;
+            return false; // Invalid bee individual (exceptional)
         }
         BeeTypes type = typeOptional.get();
         if(type == BeeTypes.DRONE){
             ItemStack droneStack = inventory.getDrone();
-            return droneStack.getItem() instanceof BeeItem && ((BeeItem) droneStack.getItem()).getBeeType() == BeeTypes.DRONE;
+            if(droneStack.getItem() instanceof BeeItem && ((BeeItem) droneStack.getItem()).getBeeType() == BeeTypes.DRONE){
+                errorState = ErrorStates.NONE;
+                return true;
+            }
+            errorState = ErrorStates.NO_DRONE;
+            return false; // Has drone to mate
         }
         else if(type == BeeTypes.QUEEN){
+            Optional<Bee> queenOptional = BeeProviderCapability.get(queenStack).getBeeIndividual();
+            if(queenOptional.isEmpty()){
+                errorState = ErrorStates.ILLEGAL_STATE;
+                return false; // Invalid bee individual (exceptional)
+            }
             if(!isQueenAlive()){
-                // TODO add queen death logic
-                Optional<Bee> dyingQueenOptional = BeeProviderCapability.get(queenStack).getBeeIndividual();
-                if(dyingQueenOptional.isPresent()){
-
-                }
+                queenOptional.ifPresent(bee -> pendingStack.addAll(bee.getOffspring(this)));
                 inventory.getQueenSlot().extractItem(0, 1, false);
                 processStorage.clear();
                 processStorage.setCapacity(0);
-                return false;
+
+                errorState = ErrorStates.NO_QUEEN;
+                return false; // Queen dead
             }
+
+            return canWorkCache.queenCanWork(queenOptional.get(), this);
         }
-        return true;
+        errorState = ErrorStates.ILLEGAL_STATE;
+        return false;
     }
 
     protected void doWork(){
         if(inventory.getQueen().isEmpty()){
+            isBreeding = false;
             return;
         }
         if(inventory.getQueen().getItem() instanceof BeeItem beeItem){
@@ -99,6 +125,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 tickBreed();
             }
             else if(beeItem.getBeeType() == BeeTypes.QUEEN){
+                isBreeding = false;
                 tickWork();
             }
         }
@@ -143,6 +170,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 return;
             }
             processStorage.setCapacity(MAX_BREEDING_PROGRESS);
+            isBreeding = true;
             if(!processStorage.isFull()){
                 processStorage.modify(1);
             }
@@ -161,6 +189,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 inventory.getDroneSlot().extractItem(1, 1, false);
                 processStorage.setCapacity(princess.getMaxHealth());
                 processStorage.modify(princess.getHealth());
+                isBreeding = false;
             }
         }
     }
@@ -176,8 +205,9 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             tickThrottle = 0;
             Bee queen = queenOptional.get();
 
-            queen.age(inventory.applyLifespanModifier(10));
+            queen.age(inventory.applyLifespanModifier(1));
             BeeProviderCapability.get(inventory.getQueen()).setBeeIndividual(queen);
+            markChunkUnsaved();
         }
         processStorage.setCapacity(queenOptional.get().getMaxHealth());
         processStorage.clear();
@@ -197,6 +227,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         for(int i = 0; i < list.size(); i++){
             pendingStack.add(ItemStack.of(list.getCompound(i)));
         }
+        errorState = ErrorStates.values()[nbt.getInt(Tags.TAG_ERROR_STATE)];
     }
 
     @Override
@@ -215,6 +246,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             list.add(itemTag);
         }
         nbt.put(Tags.TAG_PENDING_PRODUCT, list);
+        nbt.putInt(Tags.TAG_ERROR_STATE, errorState.ordinal());
     }
 
     @Override
@@ -233,6 +265,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             list.add(itemTag);
         }
         nbt.put(Tags.TAG_PENDING_PRODUCT, list);
+        nbt.putInt(Tags.TAG_ERROR_STATE, errorState.ordinal());
         return super.createItemStackTag(stack);
     }
     // endregion
@@ -241,6 +274,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     @Override
     public void tickServer() {
         updateClimateState();
+
         if(canWork()){
             doWork();
         }
@@ -278,6 +312,14 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     public String getBeeHousingOwnerName(){
         return hasSecurity() ? securityControl.getOwnerName() : "_";
     }
+    @Override
+    public ErrorStates getErrorState(){
+        return errorState;
+    }
+    @Override
+    public void setErrorState(ErrorStates errorState){
+        this.errorState = errorState;
+    }
     // endregion
 
     // region GuiPacket
@@ -287,6 +329,8 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         buffer.writeInt(actualTemperature);
         buffer.writeInt(actualHumidity);
         processStorage.writeToBuffer(buffer);
+        buffer.writeBoolean(isBreeding);
+        buffer.writeInt(errorState.ordinal());
         return buffer;
     }
 
@@ -296,6 +340,8 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         actualTemperature = buffer.readInt();
         actualHumidity = buffer.readInt();
         processStorage.readFromBuffer(buffer);
+        isBreeding = buffer.readBoolean();
+        errorState = ErrorStates.values()[buffer.readInt()];
     }
     // endregion
 
@@ -354,5 +400,52 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     // endregion
 
     // region Augments
+    @Override
+    public float applyProductivityModifier(float val) {
+        return inventory.applyProductivityModifier(val);
+    }
+
+    @Override
+    public int applyLifespanModifier(int val) {
+        return inventory.applyLifespanModifier(val);
+    }
+
+    @Override
+    public float applyMutationModifier(float val) {
+        return inventory.applyMutationModifier(val);
+    }
+
+    @Override
+    public Vec3i applyTerritoryModifier(Vec3i val) {
+        return inventory.applyTerritoryModifier(val);
+    }
+
+    @Override
+    public int applyFertilityModifier(int val) {
+        return inventory.applyFertilityModifier(val);
+    }
     // endregion
+
+    protected static class QueenCanWorkCache {
+        private static final int ticksPerCheckQueenCanWork = 10;
+
+        private boolean queenCanWorkCached = false;
+        private int queenCanWorkCooldown = 0;
+
+        public boolean queenCanWork(Bee queen, IBeeHousing beeHousing) {
+            if (queenCanWorkCooldown <= 0) {
+                queenCanWorkCached = queen.canWork(beeHousing);
+                queenCanWorkCooldown = ticksPerCheckQueenCanWork;
+            } else {
+                queenCanWorkCooldown--;
+            }
+
+            return queenCanWorkCached;
+        }
+
+        public void clear() {
+            queenCanWorkCached = false;
+            queenCanWorkCooldown = 0;
+        }
+    }
 }

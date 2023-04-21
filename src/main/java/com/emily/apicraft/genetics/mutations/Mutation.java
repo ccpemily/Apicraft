@@ -44,7 +44,7 @@ public class Mutation {
         return result;
     }
 
-    private static class MutationBuilder {
+    public static class MutationBuilder {
         private Alleles.Species speciesFirst;
         private Alleles.Species speciesSecond;
         private Alleles.Species speciesResult;

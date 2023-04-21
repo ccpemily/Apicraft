@@ -27,5 +27,6 @@ public class Tags {
     public static final String TAG_STATE = "State";
     public static final String TAG_THROTTLE = "TickThrottle";
     public static final String TAG_PENDING_PRODUCT = "PendingProduct";
+    public static final String TAG_ERROR_STATE = "ErrorState";
     // endregion
 }

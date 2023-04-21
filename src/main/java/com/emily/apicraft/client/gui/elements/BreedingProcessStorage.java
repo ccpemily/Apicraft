@@ -7,18 +7,23 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import java.util.function.Supplier;
+
 public class BreedingProcessStorage implements IResourceStorage, INBTSerializable<CompoundTag> {
     protected int capacity;
     protected int process;
+    protected Supplier<Boolean> isBreeding;
 
-    public BreedingProcessStorage(int capacity){
+    public BreedingProcessStorage(int capacity, Supplier<Boolean> isBreeding){
         this.capacity = capacity;
         this.process = 0;
+        this.isBreeding = isBreeding;
     }
 
-    public BreedingProcessStorage(int stored, int capacity){
+    public BreedingProcessStorage(int stored, int capacity, Supplier<Boolean> isBreeding){
         this.capacity = capacity;
         this.process = stored;
+        this.isBreeding = isBreeding;
     }
 
     @Override
@@ -63,7 +68,9 @@ public class BreedingProcessStorage implements IResourceStorage, INBTSerializabl
 
     @Override
     public String getUnit() {
-        return Component.translatable("gui.tooltip.health_remaining").getString();
+        return isBreeding.get() ?
+                Component.translatable("gui.tooltip.breeding_progress").getString() :
+                Component.translatable("gui.tooltip.health_remaining").getString();
     }
 
     public void readFromBuffer(FriendlyByteBuf buf){

@@ -7,9 +7,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ElementBreedingProcess extends ElementResourceStorage {
     private final static int LAYERS = 6;
+    private Supplier<Boolean> isBreeding;
     public ElementBreedingProcess(IGuiAccess gui, int posX, int posY, BreedingProcessStorage storage) {
         super(gui, posX, posY, storage);
         clearable = () -> true;

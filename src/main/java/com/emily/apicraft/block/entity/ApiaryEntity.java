@@ -3,6 +3,7 @@ package com.emily.apicraft.block.entity;
 import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

@@ -1,17 +1,29 @@
 package com.emily.apicraft.genetics;
 
+import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.climatology.EnumHumidity;
+import com.emily.apicraft.climatology.EnumTemperature;
+import com.emily.apicraft.core.lib.ErrorStates;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.block.IBeeHousing;
+import com.emily.apicraft.registry.Registries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.emily.apicraft.utils.Tags.*;
 
@@ -72,7 +84,11 @@ public class Bee {
         Alleles.Species speciesInactive = genome.getInactiveSpecies();
         if(speciesActive != speciesInactive){
             components.add(
-                    Component.translatable(speciesActive.getName()).append("-").append(Component.translatable(speciesInactive.getName()).append(Component.translatable("bee.tooltip.hybrid")).withStyle(ChatFormatting.BLUE))
+                    Component.translatable(speciesActive.getName())
+                            .append("-")
+                            .append(Component.translatable(speciesInactive.getName())
+                                    .append(Component.translatable("bee.tooltip.hybrid"))
+                            ).withStyle(ChatFormatting.BLUE)
             );
         }
         if(generation > 0){
@@ -86,7 +102,8 @@ public class Bee {
             } else {
                 rarity = Rarity.COMMON;
             }
-            components.add(Component.literal(String.format(Component.translatable("bee.tooltip.generation").toString(), generation)).withStyle(rarity.getStyleModifier()));
+            components.add(Component.translatable("bee.tooltip.generation", generation)
+            .withStyle(rarity.getStyleModifier().apply(Style.EMPTY)));
         }
         components.add(Component.translatable(genome.getAllele(AlleleTypes.LIFESPAN, true).getName()).withStyle(ChatFormatting.GRAY));
         components.add(Component.translatable(genome.getAllele(AlleleTypes.PRODUCTIVITY, true).getName()).withStyle(ChatFormatting.GRAY));
@@ -158,6 +175,90 @@ public class Bee {
         }
     }
 
+    public List<ItemStack> getOffspring(IBeeHousing housing){
+        if(this.mate == null){
+            Apicraft.LOGGER.error("Detected queen with no mate try to get offspring.");
+            return Collections.emptyList();
+        }
+        int fertility = housing.applyFertilityModifier(getGenome().getFertility());
+        List<ItemStack> beeList = new ArrayList<>();
+        for (int i = 0; i < fertility; i++){
+            ItemStack stack = new ItemStack(Registries.ITEMS.get("bee_drone"));
+            Bee bee = new Bee(getGenome().inheritWith(mate, housing), null, generation + 1);
+            BeeProviderCapability.get(stack).setBeeIndividual(bee);
+            beeList.add(stack);
+        }
+        return beeList;
+    }
+
+    public boolean canWork(IBeeHousing housing){
+        Optional<Level> levelOptional = Optional.ofNullable(housing.getBeeHousingLevel());
+        if(levelOptional.isEmpty()){
+            return false; // Null level (exceptional)
+        }
+        Level level = levelOptional.get();
+        boolean isRainingAside = level.isRainingAt(housing.getBeeHousingPos().above())
+                || level.isRainingAt(housing.getBeeHousingPos().east())
+                || level.isRainingAt(housing.getBeeHousingPos().west())
+                || level.isRainingAt(housing.getBeeHousingPos().north())
+                || level.isRainingAt(housing.getBeeHousingPos().south());
+        if(!this.getGenome().toleratesRain() && isRainingAside){
+            housing.setErrorState(ErrorStates.IS_RAINING);
+            return false; // Raining
+        }
+        int skylight = 15 - level.getSkyDarken();
+        Alleles.Behavior alleleBehavior = (Alleles.Behavior) getGenome().getAllele(AlleleTypes.BEHAVIOR, true);
+        Function<Integer, Boolean> behavior = alleleBehavior.getValue();
+        if(!behavior.apply(skylight)){
+            if(skylight <= 11 && alleleBehavior == Alleles.Behavior.DIURNAL){
+                housing.setErrorState(ErrorStates.TOO_DARK);
+            }
+            else if(skylight >= 11 && alleleBehavior == Alleles.Behavior.NOCTURNAL){
+                housing.setErrorState(ErrorStates.TOO_BRIGHT);
+            }
+            else if(skylight <= 8 && alleleBehavior == Alleles.Behavior.CREPUSCULAR){
+                housing.setErrorState(ErrorStates.TOO_DARK);
+            }
+            else if(skylight >= 13 && alleleBehavior == Alleles.Behavior.CREPUSCULAR){
+                housing.setErrorState(ErrorStates.TOO_BRIGHT);
+            }
+            return false; // Time not suitable for behavior
+        }
+        if(!level.dimensionType().hasCeiling()){
+            if(!getGenome().isCaveDwelling() && !level.canSeeSkyFromBelowWater(housing.getBeeHousingPos())){
+                housing.setErrorState(ErrorStates.CANT_SEE_SKY);
+                return false; // Not cave dwelling but in cave
+            }
+        }
+        EnumTemperature temperature = housing.getTemperature();
+        EnumHumidity humidity = housing.getHumidity();
+        EnumTemperature speciesTemperature = getGenome().getSpecies().getValue().getTemperature();
+        EnumHumidity speciesHumidity = getGenome().getSpecies().getValue().getHumidity();
+        BiFunction<EnumTemperature, EnumTemperature, Boolean> temperatureTolerance =
+                ((Alleles.TemperatureTolerance) getGenome().getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true)).getValue();
+        BiFunction<EnumHumidity, EnumHumidity, Boolean> humidityTolerance =
+                ((Alleles.HumidityTolerance) getGenome().getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true)).getValue();
+        if(!temperatureTolerance.apply(temperature, speciesTemperature)){
+            if(temperature.ordinal() > speciesTemperature.ordinal()){
+                housing.setErrorState(ErrorStates.TOO_HOT);
+            }
+            else {
+                housing.setErrorState(ErrorStates.TOO_COLD);
+            }
+            return false; // Climate not suitable.
+        }
+        else if(!humidityTolerance.apply(humidity, speciesHumidity)){
+            if(humidity.ordinal() > speciesHumidity.ordinal()){
+                housing.setErrorState(ErrorStates.TOO_DAMP);
+            }
+            else {
+                housing.setErrorState(ErrorStates.TOO_DRY);
+            }
+            return false;
+        }
+        housing.setErrorState(ErrorStates.NONE);
+        return true;
+    }
     // endregion
 
     // region Helpers

@@ -7,7 +7,9 @@ import java.util.Locale;
 import java.util.function.Function;
 
 public enum FrameTypes {
-    UNTREATED(10), IMPREGNATED(15), PROVEN(20);
+    UNTREATED(10),
+    IMPREGNATED(15, 2.0f, 2.0f, 1.0f, 1.0f, 1),
+    PROVEN(20, 4.0f, 4.0f, 2.0f, 1.0f, 2);
 
     public final int maxUse;
     public final float productivityModifier;

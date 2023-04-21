@@ -1,10 +1,15 @@
 package com.emily.apicraft.items;
 
 import cofh.core.item.ItemCoFH;
+import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.genetics.Bee;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.FrameTypes;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +39,19 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
         return 0xf5eac1;
     }
 
+    @Override
+    public boolean isBarVisible(@NotNull ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        if(this.allowedIn(group)){
+            ItemStack stack = new ItemStack(this);
+            stack.setDamageValue(this.type.maxUse);
+            items.add(stack);
+        }
+    }
 
     // region IBeeModifierProvider
     @Override

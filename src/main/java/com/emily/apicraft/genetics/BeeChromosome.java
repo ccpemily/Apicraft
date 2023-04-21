@@ -6,6 +6,7 @@ import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class BeeChromosome {
@@ -66,5 +67,9 @@ public class BeeChromosome {
         else{
             return first.isDominant() ? new BeeChromosome(first, second, this.getType()) : new BeeChromosome(second, first, this.getType());
         }
+    }
+
+    public boolean isPure(){
+        return this.active == this.inactive;
     }
 }

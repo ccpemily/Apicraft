@@ -472,7 +472,7 @@ public class Alleles {
         }
         // endregion
     }
-    public enum Behavior implements IAllele<Function<Long, Boolean>> {
+    public enum Behavior implements IAllele<Function<Integer, Boolean>> {
         DIURNAL(true), NOCTURNAL(true), CREPUSCULAR, CATHEMERAL;
         // region InternalMethods
         private final boolean dominant;
@@ -492,15 +492,15 @@ public class Alleles {
         public boolean isDominant(){
             return dominant;
         }
-        private boolean canWork(long time){
+        private boolean canWork(int skylight){
             if(this == DIURNAL){
-                return time > 1000 && time < 13000;
+                return skylight > 11;
             }
             else if(this == NOCTURNAL){
-                return time < 1000 || time > 13000;
+                return skylight < 11;
             }
             else if(this == CREPUSCULAR){
-                return time < 1000 || (time > 13000 && time < 16000) || time > 22000;
+                return skylight > 8 && skylight < 13;
             }
             return true;
         }
@@ -527,7 +527,7 @@ public class Alleles {
         }
 
         @Override
-        public Function<Long, Boolean> getValue() {
+        public Function<Integer, Boolean> getValue() {
             return this::canWork;
         }
 

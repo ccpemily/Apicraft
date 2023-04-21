@@ -63,7 +63,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
             return;
         }
         Bee bee = beeOptional.get();
-        if(Screen.hasShiftDown()){
+        if(!Screen.hasShiftDown()){
             bee.addTooltip(components);
         }
         else{

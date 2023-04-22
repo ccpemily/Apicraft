@@ -1,7 +1,7 @@
-package com.emily.apicraft.genetics.mutations.condition;
+package com.emily.apicraft.genetics.condition;
 
 import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.mutations.IBeeCondition;
+import com.emily.apicraft.interfaces.genetics.IBeeCondition;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;

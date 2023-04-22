@@ -1,4 +1,4 @@
-package com.emily.apicraft.interfaces.genetics.mutations;
+package com.emily.apicraft.interfaces.genetics;
 
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 import net.minecraft.network.chat.Component;

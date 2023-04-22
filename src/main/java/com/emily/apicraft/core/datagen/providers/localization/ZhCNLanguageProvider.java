@@ -11,15 +11,15 @@ import java.util.Locale;
 import static com.mojang.logging.LogUtils.getLogger;
 
 public class ZhCNLanguageProvider extends LanguageProvider {
-    public static final HashMap<String, String> BeeTypes = new HashMap<>(){{
+    public static final HashMap<String, String> BEE_TYPES = new HashMap<>(){{
         put("drone", "工蜂");
         put("queen", "蜂后");
         put("larva", "幼虫");
     }};
-    public static final HashMap<String, String> AlleleNames = new HashMap<>(){{
+    public static final HashMap<String, String> ALLELE_NAMES = new HashMap<>(){{
 
     }};
-    public static final HashMap<String, String> BeeTooltips = new HashMap<>(){{
+    public static final HashMap<String, String> BEE_TOOLTIPS = new HashMap<>(){{
 
     }};
     public ZhCNLanguageProvider(DataGenerator gen, String locale) {
@@ -28,5 +28,8 @@ public class ZhCNLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        for(String key : BEE_TYPES.keySet()){
+            add("bee.type." + key, BEE_TYPES.get(key));
+        }
     }
 }

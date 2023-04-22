@@ -6,10 +6,12 @@ import cofh.core.network.packet.client.TileGuiPacket;
 import cofh.core.util.control.RedstoneControlModule;
 import cofh.lib.api.block.entity.ITickableTile;
 import cofh.lib.inventory.ItemStorageCoFH;
+import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.client.gui.elements.BreedingProcessStorage;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
+import com.emily.apicraft.genetics.flowers.FlowersCache;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 import com.emily.apicraft.inventory.BeeHousingItemInv;
 import com.emily.apicraft.items.BeeItem;
@@ -29,6 +31,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static cofh.lib.util.constants.NBTTags.TAG_BLOCK_ENTITY;
@@ -45,6 +48,9 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     // Logic
     protected boolean isBreeding = false;
     protected int tickThrottle = 0;
+    protected FlowersCache flowersCache;
+    @Nullable
+    protected Bee currentQueen;
     protected QueenCanWorkCache canWorkCache = new QueenCanWorkCache();
     protected BreedingProcessStorage processStorage = new BreedingProcessStorage(0, 0, () -> isBreeding);
     protected ErrorStates errorState = ErrorStates.NONE;
@@ -75,13 +81,14 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         if(queenStack.isEmpty()){
             processStorage.clear();
             processStorage.setCapacity(0);
+            currentQueen = null;
             errorState = ErrorStates.NO_QUEEN;
             return false; // No queen or princess drone
         }
         Optional<BeeTypes> typeOptional = queenStack.getItem() instanceof BeeItem ? Optional.of(((BeeItem) queenStack.getItem()).getBeeType()) : Optional.empty();
         if(typeOptional.isEmpty()){
             errorState = ErrorStates.ILLEGAL_STATE;
-            return false; // Invalid bee individual (exceptional)
+            return false; // Invalid bee type (exceptional)
         }
         BeeTypes type = typeOptional.get();
         if(type == BeeTypes.DRONE){
@@ -97,6 +104,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             Optional<Bee> queenOptional = BeeProviderCapability.get(queenStack).getBeeIndividual();
             if(queenOptional.isEmpty()){
                 errorState = ErrorStates.ILLEGAL_STATE;
+                currentQueen = null;
                 return false; // Invalid bee individual (exceptional)
             }
             if(!isQueenAlive()){
@@ -104,9 +112,17 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 inventory.getQueenSlot().extractItem(0, 1, false);
                 processStorage.clear();
                 processStorage.setCapacity(0);
-
+                currentQueen = null;
                 errorState = ErrorStates.NO_QUEEN;
                 return false; // Queen dead
+            }
+            if(currentQueen == null || !currentQueen.isGeneticEqual(queenOptional.get())){
+                currentQueen = queenOptional.get();
+                processStorage.setCapacity(currentQueen.getMaxHealth());
+                processStorage.clear();
+                processStorage.modify(currentQueen.getHealth());
+                Apicraft.LOGGER.debug("Detected new queen in apiary: " + pos());
+                flowersCache.onNewQueen(this, currentQueen);
             }
 
             return canWorkCache.queenCanWork(queenOptional.get(), this);
@@ -154,9 +170,6 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             return false;
         }
         CompoundTag beeTag = tag.getCompound(Tags.TAG_BEE);
-        if(beeTag == null){
-            return false;
-        }
         return beeTag.getInt(Tags.TAG_HEALTH) > 0;
 
     }
@@ -342,6 +355,21 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         processStorage.readFromBuffer(buffer);
         isBreeding = buffer.readBoolean();
         errorState = ErrorStates.values()[buffer.readInt()];
+    }
+    // endregion
+
+    // region StatePacket
+    @Override
+    public FriendlyByteBuf getStatePacket(FriendlyByteBuf buffer){
+        super.getStatePacket(buffer);
+        isActive = buffer.readBoolean();
+        return buffer;
+    }
+
+    @Override
+    public void handleStatePacket(FriendlyByteBuf buffer){
+        super.handleStatePacket(buffer);
+        buffer.writeBoolean(isActive);
     }
     // endregion
 

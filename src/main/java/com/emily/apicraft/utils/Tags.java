@@ -29,4 +29,9 @@ public class Tags {
     public static final String TAG_PENDING_PRODUCT = "PendingProduct";
     public static final String TAG_ERROR_STATE = "ErrorState";
     // endregion
+
+    // region Flowers
+    public static final String TAG_FLOWERS_CACHE = "FlowersCache";
+    public static final String TAG_FLOWERS = "Flowers";
+    // endregion
 }

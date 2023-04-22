@@ -1,5 +1,6 @@
 package com.emily.apicraft.genetics;
 
+import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
@@ -75,7 +76,7 @@ public class BeeGenome {
     }
     public float getProductivity() { return ((Alleles.Productivity) getAllele(AlleleTypes.PRODUCTIVITY, true)).getValue(); }
     public int getFertility() { return ((Alleles.Fertility) getAllele(AlleleTypes.FERTILITY, true)).getValue(); }
-    public boolean canWork(int time) { return ((Alleles.Behavior) getAllele(AlleleTypes.BEHAVIOR, true)).getValue().apply(time); }
+    public ErrorStates canWork(int skylight) { return ((Alleles.Behavior) getAllele(AlleleTypes.BEHAVIOR, true)).getValue().apply(skylight); }
     public boolean toleratesRain(){
         return ((Alleles.RainTolerance) getAllele(AlleleTypes.RAIN_TOLERANCE, true)).getValue();
     }
@@ -96,19 +97,27 @@ public class BeeGenome {
         }
         BeeChromosome speciesChromosome = chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)];
 
+        // If earned hybrid species, check for mutations
         if(!speciesChromosome.isPure()){
-            Optional<List<Mutation>> mutationOptional = MutationManager.findMutations((Alleles.Species) speciesChromosome.getActive(), (Alleles.Species) speciesChromosome.getInactive());
-            if(mutationOptional.isPresent()){
-                int mutationId = random.nextInt(mutationOptional.get().size());
-                float chance = mutationOptional.get().get(mutationId).getConditionalChance(beeHousing);
+            // Find available mutation list
+            List<Mutation> mutations = MutationManager.findMutations((Alleles.Species) speciesChromosome.getActive(), (Alleles.Species) speciesChromosome.getInactive());
+            if(!mutations.isEmpty()){
                 IAllele<?>[] activeAlleles = getAllActive(chromosomes);
                 IAllele<?>[] inactiveAlleles = getAllInactive(chromosomes);
-                if(random.nextFloat() * 100 < chance){
-                    activeAlleles = karyotype.defaultTemplate(mutationOptional.get().get(mutationId).getResult());
+                // Randomly select a mutation (uniformly distributed)
+                int mutationIdActive = random.nextInt(mutations.size());
+                float chanceActive = mutations.get(mutationIdActive).getConditionalChance(beeHousing);
+                // Mutate active genome if in chance
+                if(random.nextFloat() * 100 < chanceActive){
+                    activeAlleles = karyotype.defaultTemplate(mutations.get(mutationIdActive).getResult());
                 }
-                if(random.nextFloat() * 100 < chance){
-                    inactiveAlleles = karyotype.defaultTemplate(mutationOptional.get().get(mutationId).getResult());
+
+                int mutationIdInactive = random.nextInt(mutations.size());
+                float chanceInactive = mutations.get(mutationIdInactive).getConditionalChance(beeHousing);
+                if(random.nextFloat() * 100 < chanceInactive){
+                    inactiveAlleles = karyotype.defaultTemplate(mutations.get(mutationIdInactive).getResult());
                 }
+
                 setTemplate(chromosomes, activeAlleles, inactiveAlleles);
             }
         }
@@ -117,6 +126,18 @@ public class BeeGenome {
     // endregion
 
     // region Helpers
+    public boolean isEqualTo(BeeGenome other){
+        if(this.karyotype != other.karyotype){
+            // Karyotype must be singleton to use ==
+            return false;
+        }
+        for(int i = 0; i < karyotype.size(); i++){
+            if(!chromosomes[i].isEqualTo(other.chromosomes[i])){
+                return false;
+            }
+        }
+        return true;
+    }
     private static void setTemplate(BeeChromosome[] chromosomes, IAllele<?>[] templateActive, IAllele<?>[] templateInactive){
         if(chromosomes.length != templateActive.length){
             return;

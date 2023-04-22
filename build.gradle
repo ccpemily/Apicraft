@@ -52,7 +52,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                examplemod {
+                apicraft {
                     source sourceSets.main
                 }
             }
@@ -68,7 +68,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                examplemod {
+                apicraft {
                     source sourceSets.main
                 }
             }
@@ -87,7 +87,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                examplemod {
+                apicraft {
                     source sourceSets.main
                 }
             }
@@ -101,10 +101,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'apicraft', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                examplemod {
+                apicraft {
                     source sourceSets.main
                 }
             }
@@ -174,11 +174,6 @@ publishing {
     }
     repositories {
         mavenLocal()
-        maven { url 'https://maven.covers1624.net/' }
-        maven { url 'https://maven.tterrag.com/' }
-        maven { url 'https://dvs1.progwml6.com/files/maven/' }
-        maven { url 'https://maven.blamejared.com/' }
-        maven { url 'https://maven.theillusivec4.top/' }
         maven { url "file://${project.projectDir}/mcmodsrepo" }
     }
 }

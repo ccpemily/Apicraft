@@ -72,4 +72,8 @@ public class BeeChromosome {
     public boolean isPure(){
         return this.active == this.inactive;
     }
+    public boolean isEqualTo(BeeChromosome other){
+        // Use == since allele is singleton (enum)
+        return this.active == other.active && this.inactive == other.inactive;
+    }
 }

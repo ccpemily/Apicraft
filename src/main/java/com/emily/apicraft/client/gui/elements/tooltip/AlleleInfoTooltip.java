@@ -5,6 +5,7 @@ import cofh.core.client.gui.element.ITooltipFactory;
 import com.emily.apicraft.client.gui.elements.ElementAlleleInfo;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
+import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IAllele;
@@ -38,7 +39,7 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                         boolean addedComment = false;
                         if(allele instanceof Alleles.TemperatureTolerance temperatureTolerance){
                             for(EnumTemperature temperature : EnumTemperature.values()){
-                                if(temperatureTolerance.getValue().apply(temperature, temperatureSelf)){
+                                if(temperatureTolerance.getValue().apply(temperature, temperatureSelf) != ErrorStates.NONE){
                                     if(addedComment){
                                         component.append(", ");
                                     }
@@ -52,7 +53,7 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                         else {
                             Alleles.HumidityTolerance humidityTolerance = (Alleles.HumidityTolerance) allele;
                             for(EnumHumidity humidity : EnumHumidity.values()){
-                                if(humidityTolerance.getValue().apply(humidity, humiditySelf)){
+                                if(humidityTolerance.getValue().apply(humidity, humiditySelf) != ErrorStates.NONE){
                                     if(addedComment){
                                         component.append(", ");
                                     }

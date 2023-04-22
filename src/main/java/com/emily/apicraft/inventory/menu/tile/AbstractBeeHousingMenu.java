@@ -31,4 +31,8 @@ public abstract class AbstractBeeHousingMenu extends TileContainer {
     public InvWrapperCoFH getInventory(){
         return invWrapper;
     }
+    @Override
+    protected int getMergeableSlotCount(){
+        return invWrapper.getContainerSize();
+    }
 }

@@ -5,10 +5,7 @@ import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class MutationManager {
     private static final HashMap<Combination<IAllele<AlleleSpecies>>, List<Mutation>> mutationMap = new HashMap<>();
@@ -38,11 +35,11 @@ public class MutationManager {
         return Optional.empty();
     }
 
-    public static Optional<List<Mutation>> findMutations(IAllele<AlleleSpecies> first, IAllele<AlleleSpecies> second){
+    public static List<Mutation> findMutations(IAllele<AlleleSpecies> first, IAllele<AlleleSpecies> second){
         Combination<IAllele<AlleleSpecies>> pair = new Combination<>(first, second);
         if(mutationMap.containsKey(pair)){
-            return Optional.of(mutationMap.get(pair));
+            return mutationMap.get(pair);
         }
-        return Optional.empty();
+        return Collections.emptyList();
     }
 }

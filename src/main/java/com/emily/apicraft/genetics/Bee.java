@@ -192,11 +192,14 @@ public class Bee {
     }
 
     public boolean canWork(IBeeHousing housing){
+        // Check for level absence.
         Optional<Level> levelOptional = Optional.ofNullable(housing.getBeeHousingLevel());
         if(levelOptional.isEmpty()){
+            housing.setErrorState(ErrorStates.ILLEGAL_STATE);
             return false; // Null level (exceptional)
         }
         Level level = levelOptional.get();
+        // Check weather
         boolean isRainingAside = level.isRainingAt(housing.getBeeHousingPos().above())
                 || level.isRainingAt(housing.getBeeHousingPos().east())
                 || level.isRainingAt(housing.getBeeHousingPos().west())
@@ -206,64 +209,49 @@ public class Bee {
             housing.setErrorState(ErrorStates.IS_RAINING);
             return false; // Raining
         }
+        // Check skylight
         int skylight = 15 - level.getSkyDarken();
-        Alleles.Behavior alleleBehavior = (Alleles.Behavior) getGenome().getAllele(AlleleTypes.BEHAVIOR, true);
-        Function<Integer, Boolean> behavior = alleleBehavior.getValue();
-        if(!behavior.apply(skylight)){
-            if(skylight <= 11 && alleleBehavior == Alleles.Behavior.DIURNAL){
-                housing.setErrorState(ErrorStates.TOO_DARK);
-            }
-            else if(skylight >= 11 && alleleBehavior == Alleles.Behavior.NOCTURNAL){
-                housing.setErrorState(ErrorStates.TOO_BRIGHT);
-            }
-            else if(skylight <= 8 && alleleBehavior == Alleles.Behavior.CREPUSCULAR){
-                housing.setErrorState(ErrorStates.TOO_DARK);
-            }
-            else if(skylight >= 13 && alleleBehavior == Alleles.Behavior.CREPUSCULAR){
-                housing.setErrorState(ErrorStates.TOO_BRIGHT);
-            }
-            return false; // Time not suitable for behavior
+        ErrorStates state = getGenome().canWork(skylight);
+        if(state != ErrorStates.NONE){
+            housing.setErrorState(state);
+            return false;
         }
+        // Check cave dwelling
         if(!level.dimensionType().hasCeiling()){
             if(!getGenome().isCaveDwelling() && !level.canSeeSkyFromBelowWater(housing.getBeeHousingPos())){
                 housing.setErrorState(ErrorStates.CANT_SEE_SKY);
                 return false; // Not cave dwelling but in cave
             }
         }
+        // Check climate
         EnumTemperature temperature = housing.getTemperature();
         EnumHumidity humidity = housing.getHumidity();
         EnumTemperature speciesTemperature = getGenome().getSpecies().getValue().getTemperature();
         EnumHumidity speciesHumidity = getGenome().getSpecies().getValue().getHumidity();
-        BiFunction<EnumTemperature, EnumTemperature, Boolean> temperatureTolerance =
-                ((Alleles.TemperatureTolerance) getGenome().getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true)).getValue();
-        BiFunction<EnumHumidity, EnumHumidity, Boolean> humidityTolerance =
-                ((Alleles.HumidityTolerance) getGenome().getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true)).getValue();
-        if(!temperatureTolerance.apply(temperature, speciesTemperature)){
-            if(temperature.ordinal() > speciesTemperature.ordinal()){
-                housing.setErrorState(ErrorStates.TOO_HOT);
-            }
-            else {
-                housing.setErrorState(ErrorStates.TOO_COLD);
-            }
+        ErrorStates temperatureState =
+                ((Alleles.TemperatureTolerance) getGenome().getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true)).getValue().apply(temperature, speciesTemperature);
+        ErrorStates humidityState =
+                ((Alleles.HumidityTolerance) getGenome().getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true)).getValue().apply(humidity, speciesHumidity);
+        if(temperatureState != ErrorStates.NONE){
+            housing.setErrorState(temperatureState);
             return false; // Climate not suitable.
         }
-        else if(!humidityTolerance.apply(humidity, speciesHumidity)){
-            if(humidity.ordinal() > speciesHumidity.ordinal()){
-                housing.setErrorState(ErrorStates.TOO_DAMP);
-            }
-            else {
-                housing.setErrorState(ErrorStates.TOO_DRY);
-            }
+        else if(humidityState != ErrorStates.NONE){
+            housing.setErrorState(humidityState);
             return false;
         }
         housing.setErrorState(ErrorStates.NONE);
-        return true;
+        return true; // No errors, queen can get work !
     }
     // endregion
 
     // region Helpers
     public static Bee getPure(Alleles.Species species){
         return new Bee(BeeKaryotype.INSTANCE.defaultGenome(species));
+    }
+
+    public boolean isGeneticEqual(Bee other){
+        return getGenome().isEqualTo(other.getGenome());
     }
     // endregion
 }

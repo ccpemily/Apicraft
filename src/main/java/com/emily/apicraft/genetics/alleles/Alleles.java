@@ -2,6 +2,7 @@ package com.emily.apicraft.genetics.alleles;
 
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
+import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.BeeBranches;
 import com.emily.apicraft.genetics.effects.EffectProvider;
 import com.emily.apicraft.genetics.flowers.FlowerProvider;
@@ -472,7 +473,7 @@ public class Alleles {
         }
         // endregion
     }
-    public enum Behavior implements IAllele<Function<Integer, Boolean>> {
+    public enum Behavior implements IAllele<Function<Integer, ErrorStates>> {
         DIURNAL(true), NOCTURNAL(true), CREPUSCULAR, CATHEMERAL;
         // region InternalMethods
         private final boolean dominant;
@@ -492,17 +493,17 @@ public class Alleles {
         public boolean isDominant(){
             return dominant;
         }
-        private boolean canWork(int skylight){
+        private ErrorStates canWork(int skylight){
             if(this == DIURNAL){
-                return skylight > 11;
+                return skylight > 11 ? ErrorStates.NONE : ErrorStates.TOO_DARK;
             }
             else if(this == NOCTURNAL){
-                return skylight < 11;
+                return skylight <= 11 ? ErrorStates.NONE : ErrorStates.TOO_BRIGHT;
             }
             else if(this == CREPUSCULAR){
-                return skylight > 8 && skylight < 13;
+                return skylight > 8 && skylight < 14 ? ErrorStates.NONE : (skylight <= 8 ? ErrorStates.TOO_DARK : ErrorStates.TOO_BRIGHT);
             }
-            return true;
+            return ErrorStates.NONE;
         }
 
         @Override
@@ -527,7 +528,7 @@ public class Alleles {
         }
 
         @Override
-        public Function<Integer, Boolean> getValue() {
+        public Function<Integer, ErrorStates> getValue() {
             return this::canWork;
         }
 
@@ -625,15 +626,15 @@ public class Alleles {
         // endregion
     }
     public enum AcceptedFlowers implements IAllele<FlowerProvider> {
-        VANILLA(new FlowerProvider(), true),
-        NETHER(new FlowerProvider()),
-        CACTI(new FlowerProvider()),
-        MUSHROOMS(new FlowerProvider()),
-        END(new FlowerProvider()),
-        JUNGLE(new FlowerProvider()),
-        SNOW(new FlowerProvider()),
-        WHEAT(new FlowerProvider()),
-        GOURD(new FlowerProvider());
+        VANILLA(new FlowerProvider("vanilla"), true),
+        NETHER(new FlowerProvider("nether")),
+        CACTI(new FlowerProvider("cacti")),
+        MUSHROOMS(new FlowerProvider("mushrooms")),
+        END(new FlowerProvider("end"), true),
+        JUNGLE(new FlowerProvider("jungle")),
+        SNOW(new FlowerProvider("snow")),
+        WHEAT(new FlowerProvider("wheat")),
+        GOURD(new FlowerProvider("gourd"));
 
         // region InternalMethods
         private final boolean dominant;
@@ -685,7 +686,7 @@ public class Alleles {
         }
         // endregion
     }
-    public enum TemperatureTolerance implements IAllele<BiFunction<EnumTemperature, EnumTemperature, Boolean>> {
+    public enum TemperatureTolerance implements IAllele<BiFunction<EnumTemperature, EnumTemperature, ErrorStates>> {
         NONE,
         BOTH_1, BOTH_2, BOTH_3, BOTH_4, BOTH_5,
         UP_1(true), UP_2, UP_3, UP_4, UP_5,
@@ -732,12 +733,12 @@ public class Alleles {
             return dominant;
         }
 
-        private boolean canTolerate(EnumTemperature environment, EnumTemperature self){
+        private ErrorStates canTolerate(EnumTemperature environment, EnumTemperature self){
             if(environment == EnumTemperature.NONE){
-                return false;
+                return ErrorStates.ILLEGAL_STATE;
             }
             int diff = environment.ordinal() - self.ordinal();
-            return diff <= toleranceUp && diff >= -toleranceDown;
+            return diff <= toleranceUp && diff >= -toleranceDown ? ErrorStates.NONE : (diff > toleranceUp ? ErrorStates.TOO_HOT : ErrorStates.TOO_COLD);
         }
 
         @Override
@@ -746,7 +747,7 @@ public class Alleles {
         }
 
         @Override
-        public BiFunction<EnumTemperature, EnumTemperature, Boolean> getValue() {
+        public BiFunction<EnumTemperature, EnumTemperature, ErrorStates> getValue() {
             return this::canTolerate;
         }
 
@@ -756,7 +757,7 @@ public class Alleles {
         }
         // endregion
     }
-    public enum HumidityTolerance implements IAllele<BiFunction<EnumHumidity, EnumHumidity, Boolean>> {
+    public enum HumidityTolerance implements IAllele<BiFunction<EnumHumidity, EnumHumidity, ErrorStates>> {
         NONE,
         BOTH_1, BOTH_2,
         UP_1(true), UP_2,
@@ -803,12 +804,12 @@ public class Alleles {
             return dominant;
         }
 
-        private boolean canTolerate(EnumHumidity environment, EnumHumidity self){
+        private ErrorStates canTolerate(EnumHumidity environment, EnumHumidity self){
             if(environment == EnumHumidity.NONE){
-                return false;
+                return ErrorStates.ILLEGAL_STATE;
             }
             int diff = environment.ordinal() - self.ordinal();
-            return diff <= toleranceUp && diff >= -toleranceDown;
+            return diff <= toleranceUp && diff >= -toleranceDown ? ErrorStates.NONE : (diff > toleranceUp ? ErrorStates.TOO_DAMP : ErrorStates.TOO_DRY);
         }
 
         @Override
@@ -817,7 +818,7 @@ public class Alleles {
         }
 
         @Override
-        public BiFunction<EnumHumidity, EnumHumidity, Boolean> getValue() {
+        public BiFunction<EnumHumidity, EnumHumidity, ErrorStates> getValue() {
             return this::canTolerate;
         }
 

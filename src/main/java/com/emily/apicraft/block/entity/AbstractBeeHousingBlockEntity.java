@@ -3,12 +3,14 @@ package com.emily.apicraft.block.entity;
 import cofh.core.block.entity.SecurableBlockEntity;
 import cofh.core.network.packet.client.TileControlPacket;
 import cofh.core.network.packet.client.TileGuiPacket;
+import cofh.core.network.packet.client.TileStatePacket;
 import cofh.core.util.control.RedstoneControlModule;
 import cofh.lib.api.block.entity.ITickableTile;
 import cofh.lib.inventory.ItemStorageCoFH;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.client.gui.elements.BreedingProcessStorage;
+import com.emily.apicraft.client.particles.ParticleRenderer;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.flowers.FlowersCache;
@@ -18,6 +20,8 @@ import com.emily.apicraft.items.BeeItem;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
+import com.mojang.math.Vector3d;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -48,7 +52,8 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     // Logic
     protected boolean isBreeding = false;
     protected int tickThrottle = 0;
-    protected FlowersCache flowersCache;
+    protected int clientTick = 0;
+    protected FlowersCache flowersCache = new FlowersCache();
     @Nullable
     protected Bee currentQueen;
     protected QueenCanWorkCache canWorkCache = new QueenCanWorkCache();
@@ -71,6 +76,13 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     }
 
     // region BeeKeeping
+    protected void setActive(boolean active){
+        if(isActive != active){
+            isActive = active;
+            onStateUpdate();
+        }
+    }
+
     protected boolean canWork(){
         boolean hasSpace = addPendingProducts();
         if(!hasSpace){
@@ -92,6 +104,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         }
         BeeTypes type = typeOptional.get();
         if(type == BeeTypes.DRONE){
+            setActive(false);
             ItemStack droneStack = inventory.getDrone();
             if(droneStack.getItem() instanceof BeeItem && ((BeeItem) droneStack.getItem()).getBeeType() == BeeTypes.DRONE){
                 errorState = ErrorStates.NONE;
@@ -121,11 +134,24 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 processStorage.setCapacity(currentQueen.getMaxHealth());
                 processStorage.clear();
                 processStorage.modify(currentQueen.getHealth());
-                Apicraft.LOGGER.debug("Detected new queen in apiary: " + pos());
+                //Apicraft.LOGGER.debug("Detected new queen in apiary: " + pos());
                 flowersCache.onNewQueen(this, currentQueen);
+                canWorkCache.clear();
             }
-
-            return canWorkCache.queenCanWork(queenOptional.get(), this);
+            // Check for bee working condition
+            boolean canWork =  canWorkCache.queenCanWork(currentQueen, this);
+            // Check for flowers
+            flowersCache.update(this, currentQueen);
+            boolean hasFlower = flowersCache.getFlowersPos().size() > 0;
+            boolean dirty = flowersCache.isDirty();
+            if(!hasFlower){
+                // Flower error comes first
+                errorState = ErrorStates.NO_FLOWER;
+            }
+            if(dirty){
+                onStateUpdate();
+            }
+            return hasFlower && canWork;
         }
         errorState = ErrorStates.ILLEGAL_STATE;
         return false;
@@ -142,6 +168,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             }
             else if(beeItem.getBeeType() == BeeTypes.QUEEN){
                 isBreeding = false;
+                setActive(true);
                 tickWork();
             }
         }
@@ -241,6 +268,10 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             pendingStack.add(ItemStack.of(list.getCompound(i)));
         }
         errorState = ErrorStates.values()[nbt.getInt(Tags.TAG_ERROR_STATE)];
+        flowersCache.deserializeNBT(nbt);
+        if(isActive){
+            TileStatePacket.sendToClient(this);
+        }
     }
 
     @Override
@@ -260,6 +291,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         }
         nbt.put(Tags.TAG_PENDING_PRODUCT, list);
         nbt.putInt(Tags.TAG_ERROR_STATE, errorState.ordinal());
+        flowersCache.writeToTag(nbt);
     }
 
     @Override
@@ -279,6 +311,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         }
         nbt.put(Tags.TAG_PENDING_PRODUCT, list);
         nbt.putInt(Tags.TAG_ERROR_STATE, errorState.ordinal());
+        flowersCache.writeToTag(nbt);
         return super.createItemStackTag(stack);
     }
     // endregion
@@ -291,11 +324,21 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         if(canWork()){
             doWork();
         }
+        else{
+            setActive(false);
+        }
     }
 
     @Override
     public void tickClient(){
-
+        if(isActive && !Minecraft.getInstance().isPaused() && currentQueen != null){
+            //Apicraft.LOGGER.debug("Client tick: " + clientTick);
+            if(clientTick % 5 == 0){
+                ParticleRenderer.addBeeHiveFX(this, currentQueen.getGenome(), flowersCache.getFlowersPos());
+            }
+        }
+        clientTick++;
+        clientTick %= 5;
     }
     // endregion
 
@@ -333,6 +376,21 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     public void setErrorState(ErrorStates errorState){
         this.errorState = errorState;
     }
+
+    public void clearCachedValue(){
+        if (!Objects.requireNonNull(this.getLevel()).isClientSide()) {
+            canWorkCache.clear();
+            canWork();
+            if (currentQueen!= null) {
+                flowersCache.forceLookForFlowers(currentQueen, this);
+            }
+        }
+    }
+
+    @Override
+    public Vector3d getBeeFXCoordinates() {
+        return new Vector3d(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5);
+    }
     // endregion
 
     // region GuiPacket
@@ -362,14 +420,29 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     @Override
     public FriendlyByteBuf getStatePacket(FriendlyByteBuf buffer){
         super.getStatePacket(buffer);
-        isActive = buffer.readBoolean();
+        buffer.writeBoolean(isActive);
+        if(isActive){
+            buffer.writeItem(inventory.getQueen());
+            flowersCache.writeToNetwork(buffer);
+        }
         return buffer;
     }
 
     @Override
     public void handleStatePacket(FriendlyByteBuf buffer){
         super.handleStatePacket(buffer);
-        buffer.writeBoolean(isActive);
+        isActive = buffer.readBoolean();
+        Apicraft.LOGGER.debug("Received state packet: Active = " + isActive);
+        if(isActive){
+            ItemStack queenStack = buffer.readItem();
+            Apicraft.LOGGER.debug("Received item stack: " + queenStack);
+            currentQueen = BeeProviderCapability.get(queenStack).getBeeIndividual().orElse(null);
+            if(currentQueen != null){
+                Apicraft.LOGGER.debug("Received bee: " + currentQueen.writeToTag(new CompoundTag()).toString());
+            }
+            flowersCache.fromNetwork(buffer);
+        }
+
     }
     // endregion
 
@@ -386,6 +459,12 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     public void onControlUpdate() {
         callNeighborStateChange();
         TileControlPacket.sendToClient(this);
+        markChunkUnsaved();
+    }
+
+    public void onStateUpdate() {
+        callNeighborStateChange();
+        TileStatePacket.sendToClient(this);
         markChunkUnsaved();
     }
     // endregion

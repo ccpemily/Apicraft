@@ -77,7 +77,12 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
         if(this.allowedIn(group)){
             for(Alleles.Species species : Alleles.Species.values()){
                 ItemStack stack = new ItemStack(this);
-                BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(species));
+                if(type == BeeTypes.QUEEN){
+                    BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPureMated(species));
+                }
+                else{
+                    BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(species));
+                }
                 items.add(stack);
             }
         }

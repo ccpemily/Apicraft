@@ -1,52 +1,109 @@
 package com.emily.apicraft.genetics.flowers;
 
+import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
+import com.emily.apicraft.utils.Tags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class FlowersCache implements INBTSerializable<CompoundTag> {
-    private static final int FLOWER_CHECK_INTERVAL = 200;
+    private static final int FLOWER_CHECK_INTERVAL = 100;
 
-    private int currentTick = 0;
+    private int currentTick;
     @Nullable
     private FlowerData flowerData = null;
-    private List<BlockPos> coordinates = new ArrayList<>();
+    private final List<BlockPos> coordinates = new ArrayList<>();
     private boolean dirty = false;
 
+    public FlowersCache(){
+        currentTick = new Random().nextInt(FLOWER_CHECK_INTERVAL);
+    }
+
+    // region NBTTag
     @Override
     public CompoundTag serializeNBT() {
-        return null;
+        CompoundTag tag = new CompoundTag();
+        ListTag list = new ListTag();
+        int i = 0;
+        for(BlockPos pos : coordinates){
+            CompoundTag coordinateTag = new CompoundTag();
+            coordinateTag.putInt("x", pos.getX());
+            coordinateTag.putInt("y", pos.getY());
+            coordinateTag.putInt("z", pos.getZ());
+            list.add(i, coordinateTag);
+            i++;
+        }
+        tag.put(Tags.TAG_FLOWERS_CACHE, list);
+        return tag;
+    }
+
+    public void writeToTag(CompoundTag nbt){
+        ListTag list = new ListTag();
+        int i = 0;
+        for(BlockPos pos : coordinates){
+            CompoundTag coordinateTag = new CompoundTag();
+            coordinateTag.putInt("x", pos.getX());
+            coordinateTag.putInt("y", pos.getY());
+            coordinateTag.putInt("z", pos.getZ());
+            list.add(i, coordinateTag);
+            i++;
+        }
+        nbt.put(Tags.TAG_FLOWERS_CACHE, list);
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-
+        ListTag list = nbt.getList(Tags.TAG_FLOWERS_CACHE, Tag.TAG_COMPOUND);
+        for(int i = 0; i < list.size(); i++){
+            CompoundTag coordinateTag = list.getCompound(i);
+            coordinates.add(new BlockPos(coordinateTag.getInt("x"), coordinateTag.getInt("y"), coordinateTag.getInt("z")));
+        }
+        dirty = true;
     }
+    // endregion
 
+    // region Network
     public void fromNetwork(FriendlyByteBuf buffer){
-
+        coordinates.clear();
+        int size = buffer.readInt();
+        while(size > 0){
+            int x = buffer.readInt();
+            int y = buffer.readInt();
+            int z = buffer.readInt();
+            coordinates.add(new BlockPos(x, y, z));
+            size--;
+        }
+        Apicraft.LOGGER.debug("Received flower cache packet: " + serializeNBT().toString());
     }
 
     public void writeToNetwork(FriendlyByteBuf buffer){
-
+        int size = coordinates.size();
+        buffer.writeInt(size);
+        for(BlockPos pos : coordinates){
+            buffer.writeInt(pos.getX());
+            buffer.writeInt(pos.getY());
+            buffer.writeInt(pos.getZ());
+        }
+        Apicraft.LOGGER.debug("Sent flower cache packet: " + serializeNBT().toString());
+        dirty = false;
     }
+    // endregion
 
+    // region Callback
     public void onNewQueen(IBeeHousing housing, Bee queen){
         if (this.flowerData != null) {
             BeeGenome genome = queen.getGenome();
@@ -59,6 +116,26 @@ public class FlowersCache implements INBTSerializable<CompoundTag> {
         }
     }
 
+    public void forceLookForFlowers(Bee queen, IBeeHousing housing) {
+        if (flowerData != null) {
+            coordinates.clear();
+            flowerData.resetIterator(housing, queen);
+            Level world = housing.getBeeHousingLevel();
+            while (flowerData.areaIterator.hasNext()) {
+                BlockPos.MutableBlockPos blockPos = flowerData.areaIterator.next();
+                if (flowerData.predicate.predicate(world, blockPos)) {
+                    coordinates.add(blockPos.immutable());
+                    dirty = true;
+                }
+            }
+        }
+    }
+    // endregion
+
+    public List<BlockPos> getFlowersPos(){
+        return Collections.unmodifiableList(coordinates);
+    }
+
     public void update(IBeeHousing housing, Bee queen){
         if(flowerData == null){
             flowerData = new FlowerData(housing, queen);
@@ -68,7 +145,6 @@ public class FlowersCache implements INBTSerializable<CompoundTag> {
         if(level == null){
             return;
         }
-        currentTick++;
         if(!coordinates.isEmpty() && currentTick % FLOWER_CHECK_INTERVAL == 0){
             Iterator<BlockPos> iterator = coordinates.iterator();
             while(iterator.hasNext()){
@@ -81,7 +157,7 @@ public class FlowersCache implements INBTSerializable<CompoundTag> {
         }
 
         int flowerCount = coordinates.size();
-        int ticksPerCheck = 1 + flowerCount * flowerCount;
+        int ticksPerCheck = flowerCount * flowerCount + 1;
         if(currentTick % ticksPerCheck == 0){
             if(flowerData.areaIterator.hasNext()){
                 BlockPos.MutableBlockPos pos = flowerData.areaIterator.next();
@@ -94,6 +170,11 @@ public class FlowersCache implements INBTSerializable<CompoundTag> {
                 flowerData.resetIterator(housing, queen);
             }
         }
+        currentTick++;
+    }
+
+    public boolean isDirty() {
+        return dirty;
     }
 
     private static class FlowerData {

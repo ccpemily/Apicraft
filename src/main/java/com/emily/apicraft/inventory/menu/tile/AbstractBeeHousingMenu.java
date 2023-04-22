@@ -21,6 +21,7 @@ public abstract class AbstractBeeHousingMenu extends TileContainer {
         if(beehousing == null){
             throw new IllegalArgumentException("Null block entity found.");
         }
+        beehousing.clearCachedValue();
         this.invWrapper = new InvWrapperCoFH(beehousing.getBeeHousingInv());
     }
 

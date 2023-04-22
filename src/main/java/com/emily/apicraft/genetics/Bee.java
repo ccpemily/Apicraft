@@ -5,7 +5,6 @@ import com.emily.apicraft.capabilities.BeeProviderCapability;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
@@ -22,8 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static com.emily.apicraft.utils.Tags.*;
 
@@ -165,13 +162,9 @@ public class Bee {
         }
     }
 
-    public boolean mate(@Nonnull BeeGenome mate){
-        if(this.mate != null){
-            return false;
-        }
-        else{
+    public void mate(@Nonnull BeeGenome mate){
+        if(this.mate == null){
             this.mate = mate;
-            return true;
         }
     }
 
@@ -248,6 +241,11 @@ public class Bee {
     // region Helpers
     public static Bee getPure(Alleles.Species species){
         return new Bee(BeeKaryotype.INSTANCE.defaultGenome(species));
+    }
+
+    public static Bee getPureMated(Alleles.Species species){
+        BeeGenome genome = BeeKaryotype.INSTANCE.defaultGenome(species);
+        return new Bee(genome, genome);
     }
 
     public boolean isGeneticEqual(Bee other){

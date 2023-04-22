@@ -6,6 +6,7 @@ import com.emily.apicraft.block.Apiary;
 import com.emily.apicraft.block.BeeHouse;
 import com.emily.apicraft.block.entity.ApiaryEntity;
 import com.emily.apicraft.block.entity.BeeHouseEntity;
+import com.emily.apicraft.client.particles.Particles;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
@@ -19,6 +20,7 @@ import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.BeeCombTypes;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.items.subtype.FrameTypes;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -50,6 +52,7 @@ public class Registries {
     public static final DeferredRegisterCoFH<MenuType<?>> MENUS = DeferredRegisterCoFH.create(ForgeRegistries.MENU_TYPES, Apicraft.MODID);
     public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, Apicraft.MODID);
     public static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, Apicraft.MODID);
+    public static final DeferredRegisterCoFH<ParticleType<?>> PARTICLE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.PARTICLE_TYPES, Apicraft.MODID);
 
     // Custom Registries
     public static final DeferredRegisterCoFH<IAllele<?>> ALLELES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "alleles"), Apicraft.MODID);
@@ -64,6 +67,10 @@ public class Registries {
         RECIPE_TYPES.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);
         ALLELES.register(modEventBus);
+        PARTICLE_TYPES.register(modEventBus);
+
+        // Call static classes to trigger classloading.
+        Particles.register();
     }
     public static void register(){
         logger.debug("Apiculture Registry: starting register:");

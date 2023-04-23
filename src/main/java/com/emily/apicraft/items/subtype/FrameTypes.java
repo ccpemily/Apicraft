@@ -7,10 +7,11 @@ import java.util.Locale;
 import java.util.function.Function;
 
 public enum FrameTypes {
-    UNTREATED(10),
-    IMPREGNATED(15, 2.0f, 2.0f, 1.0f, 1.0f, 1),
-    PROVEN(20, 4.0f, 4.0f, 2.0f, 1.0f, 2);
+    UNTREATED(1, 10),
+    IMPREGNATED(2, 15, 2.0f, 2.0f, 1.0f, 1.0f, 1),
+    PROVEN(3, 20, 4.0f, 4.0f, 2.0f, 1.0f, 2);
 
+    public final int tier;
     public final int maxUse;
     public final float productivityModifier;
     public final float lifespanModifier;
@@ -19,11 +20,12 @@ public enum FrameTypes {
     public final int fertilityModifier;
 
 
-    FrameTypes(int maxUse){
-        this(maxUse, 1.0f, 1.0f, 1.0f, 1.0f, 0);
+    FrameTypes(int tier, int maxUse){
+        this(tier, maxUse, 1.0f, 1.0f, 1.0f, 1.0f, 0);
     }
 
-    FrameTypes(int maxUse, float productivityModifier, float lifespanModifier, float mutationModifier, float territoryModifier, int fertilityModifier){
+    FrameTypes(int tier, int maxUse, float productivityModifier, float lifespanModifier, float mutationModifier, float territoryModifier, int fertilityModifier){
+        this.tier = tier;
         this.maxUse = maxUse;
         this.productivityModifier = productivityModifier;
         this.lifespanModifier = lifespanModifier;

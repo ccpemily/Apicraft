@@ -1,6 +1,6 @@
 package com.emily.apicraft.block;
 
-import com.emily.apicraft.block.entity.ApiaryEntity;
+import com.emily.apicraft.block.entity.beehousing.ApiaryEntity;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;

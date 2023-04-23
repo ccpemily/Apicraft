@@ -32,6 +32,12 @@ public class Tags {
 
     // region Flowers
     public static final String TAG_FLOWERS_CACHE = "FlowersCache";
-    public static final String TAG_FLOWERS = "Flowers";
+    // endregion
+
+    // region BeeProductData
+    public static final String TAG_PRODUCT_DATA = "ProductData";
+    public static final String TAG_PRODUCT_SPECIES = "Species";
+    public static final String TAG_NORMAL_COUNT = "Normal";
+    public static final String TAG_SPECIAL_COUNT = "Special";
     // endregion
 }

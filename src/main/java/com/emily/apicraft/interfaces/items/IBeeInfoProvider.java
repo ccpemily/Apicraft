@@ -1,6 +1,6 @@
 package com.emily.apicraft.interfaces.items;
 
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
 import com.emily.apicraft.items.subtype.BeeTypes;

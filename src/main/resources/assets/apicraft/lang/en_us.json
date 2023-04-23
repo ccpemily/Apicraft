@@ -4,6 +4,7 @@
   "itemGroup.apicraft.blocks" : "Apicraft | Blocks",
   "block.apicraft.bee_house": "简易蜂房",
   "block.apicraft.apiary": "Apiary",
+  "block.apicraft.thermal_apiary": "Thermal Apiary",
   "item.apicraft.portable_analyzer": "便携式分析仪",
   "item.apicraft.bee_comb_cocoa": "可可蜂窝",
   "item.apicraft.bee_comb_darkened": "暗黑蜂窝",
@@ -29,6 +30,7 @@
   "item.apicraft.frame_proven": "标定框架",
   "tile.apiary.name": "Apiary",
   "tile.bee_house.name": "简易蜂房",
+  "tile.thermal_apiary.name": "Thermal Apiary",
   "gui.tooltip.bee_housing_no_bee": "No princess or queen",
   "gui.tooltip.breeding_progress" : "Progress",
   "gui.climate.header": "Climate",
@@ -337,5 +339,13 @@
   "gui.portable_analyzer.page_1" : "I  : 普通",
   "gui.portable_analyzer.page_2" : "II : 环境",
   "gui.portable_analyzer.page_3" : "III: 产物",
-  "gui.portable_analyzer.page_4" : "IV : 进化"
+  "gui.portable_analyzer.page_4" : "IV : 进化",
+  "tooltip.frame.product_stored" : "已填充: %d / %d",
+  "tooltip.bee_modifier.title": "被动效果：",
+  "tooltip.bee_modifier.lifespan.mul" : "蜂后寿命: %fx",
+  "tooltip.bee_modifier.productivity.mul" : "工作速度: %fx",
+  "tooltip.bee_modifier.fertility.add" : "生育能力: +%d",
+  "tooltip.bee_modifier.fertility.sub" : "生育能力: -%d",
+  "tooltip.bee_modifier.mutation.mul" : "变异几率: %fx",
+  "tooltip.bee_modifier.territory.mul" : "活动范围: %fx"
 }

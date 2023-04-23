@@ -3,10 +3,13 @@ package com.emily.apicraft.inventory;
 import cofh.lib.api.IStorageCallback;
 import cofh.lib.inventory.ItemStorageCoFH;
 import cofh.lib.inventory.SimpleItemInv;
+import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
+import com.emily.apicraft.capabilities.Capabilities;
+import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.capabilities.IBeeProductContainer;
 import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
 import com.emily.apicraft.inventory.storage.ItemStorageBee;
 import com.emily.apicraft.inventory.storage.ItemStorageFrame;
-import com.emily.apicraft.items.FrameItem;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.core.Vec3i;
@@ -16,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
+import java.util.Random;
 
 public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProvider {
     protected ItemStorageBee queenInv;
@@ -31,7 +34,7 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
     protected IItemHandler outputHandler;
     protected IItemHandler accessibleHandler;
 
-    public BeeHousingItemInv(@Nullable IStorageCallback callback, int outputCount, int frameCount, int augmentCount) {
+    public BeeHousingItemInv(@Nullable IStorageCallback callback, int outputCount, int frameCount, int augmentCount, int maxFrameTier) {
         super(callback, Tags.TAG_BEEHOUSING_INV);
         queenInv = new ItemStorageBee(BeeTypes.QUEEN, BeeTypes.DRONE);
         queenInv.setCapacity(1);
@@ -47,7 +50,7 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
 
         frameInv = new ArrayList<>();
         for(int i = 0; i < frameCount; i++){
-            ItemStorageFrame frameSlot = new ItemStorageFrame();
+            ItemStorageFrame frameSlot = new ItemStorageFrame(maxFrameTier);
             frameInv.add(frameSlot);
             slots.add(frameSlot);
         }
@@ -104,8 +107,26 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
         return stack;
     }
 
-    public boolean tryAddFrameProduct(){
-        return false;
+    public void addFrameProduct(Alleles.Species species, boolean special){
+        Random random = new Random();
+        List<Integer> listFrame = new ArrayList<>();
+
+        // Randomly select a frame to add, except frames already full
+        for(int i = 0; i < frameInv.size(); i++){
+            if(frameInv.get(i).getItemStack().getCapability(Capabilities.PRODUCT_DATA_PROVIDER).isPresent()){
+                IBeeProductContainer container = BeeProductContainerCapability.get(frameInv.get(i).getItemStack());
+                if(container.getProductData().isPresent() && !container.getProductData().get().isFull()){
+                    listFrame.add(i);
+                }
+            }
+        }
+        if(listFrame.isEmpty()){
+            return;
+        }
+        int id = listFrame.get(random.nextInt(listFrame.size()));
+        if(frameInv.get(id).getItemStack().getCapability(Capabilities.PRODUCT_DATA_PROVIDER).isPresent()){
+            BeeProductContainerCapability.addProduct(frameInv.get(id).getItemStack(), species, special);
+        }
     }
 
     // region IBeeModifierProvider

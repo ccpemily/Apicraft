@@ -62,17 +62,22 @@ public class FlowersCache implements INBTSerializable<CompoundTag> {
             list.add(i, coordinateTag);
             i++;
         }
+        Apicraft.LOGGER.debug("Wrote flowers NBT data: " + list);
         nbt.put(Tags.TAG_FLOWERS_CACHE, list);
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         ListTag list = nbt.getList(Tags.TAG_FLOWERS_CACHE, Tag.TAG_COMPOUND);
+        if(list.size() <= 0){
+            return;
+        }
         for(int i = 0; i < list.size(); i++){
             CompoundTag coordinateTag = list.getCompound(i);
             coordinates.add(new BlockPos(coordinateTag.getInt("x"), coordinateTag.getInt("y"), coordinateTag.getInt("z")));
         }
         dirty = true;
+        Apicraft.LOGGER.debug("Read flowers data from NBT: " + this.serializeNBT());
     }
     // endregion
 

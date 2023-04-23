@@ -1,6 +1,6 @@
-package com.emily.apicraft.block.entity;
+package com.emily.apicraft.block.entity.beehousing;
 
-import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
+import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -11,19 +11,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BeeHouseEntity extends AbstractBeeHousingBlockEntity {
-    public BeeHouseEntity(BlockPos pos, BlockState state) {
-        super(Registries.TILE_ENTITIES.get("bee_house"), pos, state, 7, 0, 0);
+public class ApiaryEntity extends AbstractBeeHousingBlockEntity {
+    public ApiaryEntity(BlockPos pos, BlockState state) {
+        super(Registries.TILE_ENTITIES.get("apiary"), pos, state, 7, 3, 0, 2);
     }
 
+    // region IMenuProvider
     @Override
     public @NotNull Component getDisplayName() {
-        return Component.translatable("tile.bee_house.name");
+        return Component.translatable("tile.apiary.name");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
-        return new BeeHouseMenu(i, level, pos(), inventory, player);
+        return new ApiaryMenu(i, level, pos(), inventory, player);
     }
+    // endregion
 }

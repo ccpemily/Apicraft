@@ -1,7 +1,7 @@
 package com.emily.apicraft.genetics;
 
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
@@ -203,14 +203,14 @@ public class Bee {
             return false; // Raining
         }
         // Check skylight
-        int skylight = 15 - level.getSkyDarken();
+        int skylight = level.dimensionType().hasSkyLight() ? 15 - level.getSkyDarken() : 0;
         ErrorStates state = getGenome().canWork(skylight);
         if(state != ErrorStates.NONE){
             housing.setErrorState(state);
             return false;
         }
         // Check cave dwelling
-        if(!level.dimensionType().hasCeiling()){
+        if(!level.dimensionType().hasCeiling() && level.dimensionType().hasSkyLight()){
             if(!getGenome().isCaveDwelling() && !level.canSeeSkyFromBelowWater(housing.getBeeHousingPos())){
                 housing.setErrorState(ErrorStates.CANT_SEE_SKY);
                 return false; // Not cave dwelling but in cave
@@ -235,6 +235,14 @@ public class Bee {
         }
         housing.setErrorState(ErrorStates.NONE);
         return true; // No errors, queen can get work !
+    }
+
+    public boolean canProduceSpecial(IBeeHousing housing, boolean active){
+        EnumTemperature temperature = housing.getTemperature();
+        EnumHumidity humidity = housing.getHumidity();
+        EnumTemperature speciesTemperature = active ? getGenome().getSpecies().getValue().getTemperature() : getGenome().getInactiveSpecies().getValue().getTemperature();
+        EnumHumidity speciesHumidity = active ? getGenome().getSpecies().getValue().getHumidity() : getGenome().getInactiveSpecies().getValue().getHumidity();
+        return temperature == speciesTemperature && humidity == speciesHumidity;
     }
     // endregion
 

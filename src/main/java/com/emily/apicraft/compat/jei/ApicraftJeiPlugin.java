@@ -1,7 +1,7 @@
 package com.emily.apicraft.compat.jei;
 
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.registry.Registries;

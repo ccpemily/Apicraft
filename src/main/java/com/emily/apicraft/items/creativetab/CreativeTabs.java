@@ -1,6 +1,6 @@
 package com.emily.apicraft.items.creativetab;
 
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.registry.Registries;

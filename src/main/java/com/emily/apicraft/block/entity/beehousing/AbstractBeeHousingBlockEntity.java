@@ -1,18 +1,17 @@
-package com.emily.apicraft.block.entity;
+package com.emily.apicraft.block.entity.beehousing;
 
 import cofh.core.block.entity.SecurableBlockEntity;
 import cofh.core.network.packet.client.TileControlPacket;
-import cofh.core.network.packet.client.TileGuiPacket;
 import cofh.core.network.packet.client.TileStatePacket;
-import cofh.core.util.control.RedstoneControlModule;
 import cofh.lib.api.block.entity.ITickableTile;
-import cofh.lib.inventory.ItemStorageCoFH;
+import cofh.lib.util.constants.BlockStatePropertiesCoFH;
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.gui.elements.BreedingProcessStorage;
 import com.emily.apicraft.client.particles.ParticleRenderer;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
+import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.flowers.FlowersCache;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 import com.emily.apicraft.inventory.BeeHousingItemInv;
@@ -34,6 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -46,6 +47,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     // Constants
     protected static final int MAX_BREEDING_PROGRESS = 100;
     protected static final int TICK_PERIOD = 600;
+    protected static final int CLIENT_TICK_PERIOD = 600;
     // Inventory
     protected final BeeHousingItemInv inventory;
     protected Stack<ItemStack> pendingStack = new Stack<>();
@@ -70,14 +72,18 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
 
     // endregion
 
-    public AbstractBeeHousingBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int outputCount, int frameCount, int augmentCount) {
+    public AbstractBeeHousingBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state, int outputCount, int frameCount, int augmentCount, int maxFrameTier) {
         super(tileEntityTypeIn, pos, state);
-        inventory = new BeeHousingItemInv(this, outputCount, frameCount, augmentCount);
+        inventory = new BeeHousingItemInv(this, outputCount, frameCount, augmentCount, maxFrameTier);
     }
 
     // region BeeKeeping
     protected void setActive(boolean active){
         if(isActive != active){
+            Apicraft.LOGGER.debug("Turning state from " + isActive + " to " + active);
+            if(getBlockState().hasProperty(BlockStatePropertiesCoFH.ACTIVE) && level != null){
+                level.setBlockAndUpdate(worldPosition, getBlockState().setValue(BlockStatePropertiesCoFH.ACTIVE, active));
+            }
             isActive = active;
             onStateUpdate();
         }
@@ -134,7 +140,6 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 processStorage.setCapacity(currentQueen.getMaxHealth());
                 processStorage.clear();
                 processStorage.modify(currentQueen.getHealth());
-                //Apicraft.LOGGER.debug("Detected new queen in apiary: " + pos());
                 flowersCache.onNewQueen(this, currentQueen);
                 canWorkCache.clear();
             }
@@ -148,7 +153,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
                 // Flower error comes first
                 errorState = ErrorStates.NO_FLOWER;
             }
-            if(dirty){
+            if(isActive && dirty){
                 onStateUpdate();
             }
             return hasFlower && canWork;
@@ -186,6 +191,25 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             }
         }
         return hasSpace;
+    }
+
+    protected void doProduction(){
+        if(currentQueen != null && level != null){
+            boolean active = level.random.nextBoolean();
+            Alleles.Species species = active ? currentQueen.getGenome().getSpecies() : currentQueen.getGenome().getInactiveSpecies();
+            boolean special = currentQueen.canProduceSpecial(this, active);
+
+            float chanceBase = applyProductivityModifier(currentQueen.getGenome().getProductivity());
+            int count = (int) Math.floor(chanceBase);
+            float chance = chanceBase - count;
+
+            if(level.random.nextFloat() < chance){
+                count++;
+            }
+            for(int i = 0; i < count; i++){
+                inventory.addFrameProduct(species, special);
+            }
+        }
     }
 
     protected boolean isQueenAlive(){
@@ -244,7 +268,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         if(tickThrottle >= TICK_PERIOD){
             tickThrottle = 0;
             Bee queen = queenOptional.get();
-
+            doProduction();
             queen.age(inventory.applyLifespanModifier(1));
             BeeProviderCapability.get(inventory.getQueen()).setBeeIndividual(queen);
             markChunkUnsaved();
@@ -297,7 +321,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     @Override
     public ItemStack createItemStackTag(ItemStack stack) {
         CompoundTag nbt = stack.getOrCreateTagElement(TAG_BLOCK_ENTITY);
-        nbt.putBoolean(Tags.TAG_STATE, isActive);
+        nbt.putBoolean(Tags.TAG_STATE, false);
         nbt.putInt(Tags.TAG_THROTTLE, tickThrottle);
         processStorage.writeToTag(nbt);
         inventory.write(nbt);
@@ -311,7 +335,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         }
         nbt.put(Tags.TAG_PENDING_PRODUCT, list);
         nbt.putInt(Tags.TAG_ERROR_STATE, errorState.ordinal());
-        flowersCache.writeToTag(nbt);
+        //flowersCache.writeToTag(nbt);
         return super.createItemStackTag(stack);
     }
     // endregion
@@ -333,12 +357,31 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     public void tickClient(){
         if(isActive && !Minecraft.getInstance().isPaused() && currentQueen != null){
             //Apicraft.LOGGER.debug("Client tick: " + clientTick);
-            if(clientTick % 5 == 0){
+            if(clientTick % 4 == 0){
                 ParticleRenderer.addBeeHiveFX(this, currentQueen.getGenome(), flowersCache.getFlowersPos());
+            }
+            if(clientTick% 50 == 3 && level != null){
+                doPollenFX(level, pos().getX(), pos().getY(), pos().getZ());
             }
         }
         clientTick++;
-        clientTick %= 5;
+        clientTick %= CLIENT_TICK_PERIOD;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void doPollenFX(Level world, double x, double y, double z) {
+        double fxX = x + 0.5F;
+        double fxY = y + 0.25F;
+        double fxZ = z+ 0.5F;
+        float distanceFromCenter = 0.6F;
+        float leftRightSpreadFromCenter = distanceFromCenter * (world.random.nextFloat() - 0.5F);
+        float upSpread = world.random.nextFloat() * 6F / 16F;
+        fxY += upSpread;
+
+        ParticleRenderer.addEntityHoneyDustFX(world, fxX - distanceFromCenter, fxY, fxZ + leftRightSpreadFromCenter);
+        ParticleRenderer.addEntityHoneyDustFX(world, fxX + distanceFromCenter, fxY, fxZ + leftRightSpreadFromCenter);
+        ParticleRenderer.addEntityHoneyDustFX(world, fxX + leftRightSpreadFromCenter, fxY, fxZ - distanceFromCenter);
+        ParticleRenderer.addEntityHoneyDustFX(world, fxX + leftRightSpreadFromCenter, fxY, fxZ + distanceFromCenter);
     }
     // endregion
 
@@ -421,6 +464,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     public FriendlyByteBuf getStatePacket(FriendlyByteBuf buffer){
         super.getStatePacket(buffer);
         buffer.writeBoolean(isActive);
+        Apicraft.LOGGER.debug("Sent state packet: Active = " + isActive);
         if(isActive){
             buffer.writeItem(inventory.getQueen());
             flowersCache.writeToNetwork(buffer);
@@ -482,8 +526,8 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
 
     protected void updateClimateState(){
         tryUpdateBiome();
-        this.actualTemperature = baseTemperature;
-        this.actualHumidity = baseHumidity;
+        this.actualTemperature = this.applyTemperatureModifier(baseTemperature);
+        this.actualHumidity = this.applyHumidityModifier(baseHumidity);
     }
 
     @Override
@@ -530,6 +574,16 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     @Override
     public int applyFertilityModifier(int val) {
         return inventory.applyFertilityModifier(val);
+    }
+
+    @Override
+    public int applyTemperatureModifier(int val) {
+        return val;
+    }
+
+    @Override
+    public int applyHumidityModifier(int val) {
+        return val;
     }
     // endregion
 

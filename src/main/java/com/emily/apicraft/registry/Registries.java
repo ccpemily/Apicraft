@@ -4,8 +4,10 @@ import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.block.Apiary;
 import com.emily.apicraft.block.BeeHouse;
-import com.emily.apicraft.block.entity.ApiaryEntity;
-import com.emily.apicraft.block.entity.BeeHouseEntity;
+import com.emily.apicraft.block.ThermalApiary;
+import com.emily.apicraft.block.entity.beehousing.ApiaryEntity;
+import com.emily.apicraft.block.entity.beehousing.BeeHouseEntity;
+import com.emily.apicraft.block.entity.beehousing.ThermalApiaryEntity;
 import com.emily.apicraft.client.particles.Particles;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
@@ -15,6 +17,7 @@ import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
+import com.emily.apicraft.inventory.menu.tile.ThermalApiaryMenu;
 import com.emily.apicraft.items.*;
 import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.BeeCombTypes;
@@ -97,16 +100,19 @@ public class Registries {
     private static void registerBlocks(){
         registerBlock("bee_house", BeeHouse::new);
         registerBlock("apiary", Apiary::new);
+        registerBlock("thermal_apiary", ThermalApiary::new);
     }
     private static void registerBlockEntities(){
         registerBlockEntity("bee_house", () -> BlockEntityType.Builder.of(BeeHouseEntity::new, BLOCKS.get("bee_house")).build(null));
         registerBlockEntity("apiary", () -> BlockEntityType.Builder.of(ApiaryEntity::new, BLOCKS.get("apiary")).build(null));
+        registerBlockEntity("thermal_apiary", () -> BlockEntityType.Builder.of(ThermalApiaryEntity::new, BLOCKS.get("thermal_apiary")).build(null));
     }
     private static void registerMenus(){
         registerMenu("portable_analyzer", () -> IForgeMenuType.create(((windowId, inv, data) -> new PortableAnalyzerMenu(windowId, inv, getClientPlayer()))));
 
         registerMenu("bee_house", () -> IForgeMenuType.create((((windowId, inv, data) -> new BeeHouseMenu(windowId, getClientWorld(), data.readBlockPos(), inv, getClientPlayer())))));
         registerMenu("apiary", () -> IForgeMenuType.create((((windowId, inv, data) -> new ApiaryMenu(windowId, getClientWorld(), data.readBlockPos(), inv, getClientPlayer())))));
+        registerMenu("thermal_apiary", () -> IForgeMenuType.create((((windowId, inv, data) -> new ThermalApiaryMenu(windowId, getClientWorld(), data.readBlockPos(), inv, getClientPlayer())))));
     }
     private static void registerAlleles(){
         registerAllele(Alleles.Species.class, AlleleTypes.SPECIES, Alleles.Species.FOREST);

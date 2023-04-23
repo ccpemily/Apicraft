@@ -1,4 +1,4 @@
-package com.emily.apicraft.capabilities;
+package com.emily.apicraft.capabilities.empty;
 
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;

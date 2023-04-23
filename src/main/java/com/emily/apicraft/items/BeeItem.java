@@ -1,7 +1,7 @@
 package com.emily.apicraft.items;
 
 import cofh.core.item.ItemCoFH;
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.ClientSetupEvents;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
@@ -31,7 +31,6 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
     public BeeItem(BeeTypes type) {
         super(type == BeeTypes.QUEEN ? new Properties().tab(CreativeTabs.TAB_BEES).stacksTo(1) : new Properties().tab(CreativeTabs.TAB_BEES));
         this.type = type;
-        this.showInGroups = () -> false;
         ClientSetupEvents.addColorable(this);
     }
 

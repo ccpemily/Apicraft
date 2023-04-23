@@ -1,8 +1,5 @@
 package com.emily.apicraft.client.gui.screens;
 
-import cofh.core.client.gui.ContainerScreenCoFH;
-import com.emily.apicraft.block.entity.ApiaryEntity;
-import com.emily.apicraft.client.gui.panels.ClimatePanel;
 import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

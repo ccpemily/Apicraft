@@ -5,12 +5,14 @@ import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.client.gui.screens.ApiaryScreen;
 import com.emily.apicraft.client.gui.screens.BeeHouseScreen;
 import com.emily.apicraft.client.gui.screens.PortableAnalyzerScreen;
+import com.emily.apicraft.client.gui.screens.ThermalApiaryScreen;
 import com.emily.apicraft.client.particles.Particles;
 import com.emily.apicraft.client.particles.implementation.BeeExploreParticle;
 import com.emily.apicraft.client.particles.implementation.BeeRoundTripParticle;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
+import com.emily.apicraft.inventory.menu.tile.ThermalApiaryMenu;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
@@ -48,6 +50,7 @@ public class ClientSetupEvents {
         MenuScreens.register((MenuType<PortableAnalyzerMenu>) Registries.MENUS.get("portable_analyzer"), PortableAnalyzerScreen::new);
         MenuScreens.register((MenuType<BeeHouseMenu>) Registries.MENUS.get("bee_house"), BeeHouseScreen::new);
         MenuScreens.register((MenuType<ApiaryMenu>) Registries.MENUS.get("apiary"), ApiaryScreen::new);
+        MenuScreens.register((MenuType<ThermalApiaryMenu>) Registries.MENUS.get("thermal_apiary"), ThermalApiaryScreen::new);
     }
     @SubscribeEvent
     @SuppressWarnings("deprecation")

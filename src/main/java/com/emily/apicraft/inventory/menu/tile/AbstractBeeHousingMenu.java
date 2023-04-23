@@ -2,8 +2,7 @@ package com.emily.apicraft.inventory.menu.tile;
 
 import cofh.core.inventory.container.TileContainer;
 import cofh.lib.inventory.wrapper.InvWrapperCoFH;
-import com.emily.apicraft.block.AbstractBeeHousingBlock;
-import com.emily.apicraft.block.entity.AbstractBeeHousingBlockEntity;
+import com.emily.apicraft.block.entity.beehousing.AbstractBeeHousingBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

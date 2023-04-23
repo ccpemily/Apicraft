@@ -3,7 +3,7 @@ package com.emily.apicraft.client.gui.screens;
 import cofh.core.client.gui.ContainerScreenCoFH;
 import cofh.core.client.gui.element.*;
 import cofh.lib.inventory.wrapper.InvWrapperCoFH;
-import com.emily.apicraft.capabilities.BeeProviderCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.gui.elements.*;
 import com.emily.apicraft.client.gui.elements.tooltip.AlleleInfoTooltip;
 import com.emily.apicraft.client.gui.elements.tooltip.AlleleTypeToolTip;

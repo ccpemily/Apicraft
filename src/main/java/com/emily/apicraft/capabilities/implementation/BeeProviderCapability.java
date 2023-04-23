@@ -1,5 +1,7 @@
-package com.emily.apicraft.capabilities;
+package com.emily.apicraft.capabilities.implementation;
 
+import com.emily.apicraft.capabilities.Capabilities;
+import com.emily.apicraft.capabilities.empty.EmptyBeeProvider;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;

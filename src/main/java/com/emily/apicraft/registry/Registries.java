@@ -14,6 +14,8 @@ import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
+import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
@@ -23,6 +25,12 @@ import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.BeeCombTypes;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.items.subtype.FrameTypes;
+import com.emily.apicraft.utils.recipes.RecipeManagerBus;
+import com.emily.apicraft.utils.recipes.RecipeManagers;
+import com.emily.apicraft.utils.recipes.RecipeSerializers;
+import com.emily.apicraft.utils.recipes.RecipeTypes;
+import com.emily.apicraft.utils.recipes.conditions.ConditionSerializers;
+import com.emily.apicraft.utils.recipes.conditions.Conditions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -59,9 +67,23 @@ public class Registries {
 
     // Custom Registries
     public static final DeferredRegisterCoFH<IAllele<?>> ALLELES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "alleles"), Apicraft.MODID);
+    public static final DeferredRegisterCoFH<IConditionType<?>> CONDITION_TYPES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "conditions"), Apicraft.MODID);
+    public static final DeferredRegisterCoFH<IConditionSerializer<?>> CONDITION_SERIALIZERS = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "condition_serializers"), Apicraft.MODID);
+
+    static {
+        // Call static classes to trigger classloading.
+        Particles.register();
+        RecipeTypes.register();
+        RecipeSerializers.register();
+        RecipeManagers.register();
+        Conditions.register();
+        ConditionSerializers.register();
+    }
 
     public static void initRegistry(IEventBus modEventBus){
         ALLELES.makeRegistry(RegistryBuilder::new);
+        CONDITION_TYPES.makeRegistry(RegistryBuilder::new);
+        CONDITION_SERIALIZERS.makeRegistry(RegistryBuilder::new);
         // Attach DeferredRegister to ModEventBus
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
@@ -71,9 +93,8 @@ public class Registries {
         RECIPE_SERIALIZERS.register(modEventBus);
         ALLELES.register(modEventBus);
         PARTICLE_TYPES.register(modEventBus);
-
-        // Call static classes to trigger classloading.
-        Particles.register();
+        CONDITION_TYPES.register(modEventBus);
+        CONDITION_SERIALIZERS.register(modEventBus);
     }
     public static void register(){
         logger.debug("Apiculture Registry: starting register:");

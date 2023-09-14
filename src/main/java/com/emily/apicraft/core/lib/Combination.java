@@ -9,6 +9,14 @@ public class Combination<T> {
         this.second = second;
     }
 
+    public T getFirst(){
+        return first;
+    }
+
+    public T getSecond(){
+        return second;
+    }
+
     @Override
     public int hashCode(){
         return first.hashCode() + second.hashCode();

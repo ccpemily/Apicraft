@@ -2,7 +2,7 @@ package com.emily.apicraft.interfaces.utils.recipes;
 
 import net.minecraft.world.item.crafting.RecipeManager;
 
-public interface IManager {
+public interface ICustomManager {
     default void config() {
 
     }

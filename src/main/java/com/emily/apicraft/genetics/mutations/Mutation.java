@@ -1,7 +1,7 @@
 package com.emily.apicraft.genetics.mutations;
 
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.genetics.IBeeCondition;
+import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 
 import java.util.ArrayList;

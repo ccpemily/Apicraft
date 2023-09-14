@@ -1,8 +1,12 @@
-package com.emily.apicraft.genetics.condition;
+package com.emily.apicraft.genetics.conditions;
 
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.IBeeCondition;
+import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
+import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
+import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
+import com.emily.apicraft.utils.recipes.conditions.ConditionSerializers;
+import com.emily.apicraft.utils.recipes.conditions.Conditions;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -24,5 +28,15 @@ public class ConditionHumidity implements IBeeCondition {
     @Override
     public List<Component> getConditionTooltip() {
         return null;
+    }
+
+    @Override
+    public IConditionType<?> getType() {
+        return Conditions.HUMIDITY.get();
+    }
+
+    @Override
+    public IConditionSerializer<?> getSerializer() {
+        return ConditionSerializers.HUMIDITY_SERIALIZER.get();
     }
 }

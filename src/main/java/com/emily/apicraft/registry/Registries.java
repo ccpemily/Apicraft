@@ -21,11 +21,9 @@ import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
 import com.emily.apicraft.inventory.menu.tile.BeeHouseMenu;
 import com.emily.apicraft.inventory.menu.tile.ThermalApiaryMenu;
 import com.emily.apicraft.items.*;
-import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.BeeCombTypes;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.items.subtype.FrameTypes;
-import com.emily.apicraft.utils.recipes.RecipeManagerBus;
 import com.emily.apicraft.utils.recipes.RecipeManagers;
 import com.emily.apicraft.utils.recipes.RecipeSerializers;
 import com.emily.apicraft.utils.recipes.RecipeTypes;
@@ -35,6 +33,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -56,19 +55,22 @@ import static com.mojang.logging.LogUtils.getLogger;
 
 public class Registries {
     private static final Logger logger = getLogger();
+    // Minecraft Registries
+    public static final DeferredRegisterCoFH<CreativeModeTab> CREATIVE_TABS = DeferredRegisterCoFH.create(net.minecraft.core.registries.Registries.CREATIVE_MODE_TAB, Apicraft.MOD_ID);
     // Forge Registries
-    public static final DeferredRegisterCoFH<Item> ITEMS = DeferredRegisterCoFH.create(ForgeRegistries.ITEMS, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<Block> BLOCKS = DeferredRegisterCoFH.create(ForgeRegistries.BLOCKS, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<BlockEntityType<?>> TILE_ENTITIES = DeferredRegisterCoFH.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<MenuType<?>> MENUS = DeferredRegisterCoFH.create(ForgeRegistries.MENU_TYPES, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, Apicraft.MODID);
-    public static final DeferredRegisterCoFH<ParticleType<?>> PARTICLE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.PARTICLE_TYPES, Apicraft.MODID);
+    public static final DeferredRegisterCoFH<Item> ITEMS = DeferredRegisterCoFH.create(ForgeRegistries.ITEMS, Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<Block> BLOCKS = DeferredRegisterCoFH.create(ForgeRegistries.BLOCKS, Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<BlockEntityType<?>> TILE_ENTITIES = DeferredRegisterCoFH.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<MenuType<?>> MENUS = DeferredRegisterCoFH.create(ForgeRegistries.MENU_TYPES, Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<RecipeType<?>> RECIPE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_TYPES, Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegisterCoFH.create(ForgeRegistries.RECIPE_SERIALIZERS, Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<ParticleType<?>> PARTICLE_TYPES = DeferredRegisterCoFH.create(ForgeRegistries.PARTICLE_TYPES, Apicraft.MOD_ID);
+
 
     // Custom Registries
-    public static final DeferredRegisterCoFH<IAllele<?>> ALLELES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "alleles"), Apicraft.MODID);
-    public static final DeferredRegisterCoFH<IConditionType<?>> CONDITION_TYPES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "conditions"), Apicraft.MODID);
-    public static final DeferredRegisterCoFH<IConditionSerializer<?>> CONDITION_SERIALIZERS = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MODID, "condition_serializers"), Apicraft.MODID);
+    public static final DeferredRegisterCoFH<IAllele<?>> ALLELES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MOD_ID, "alleles"), Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<IConditionType<?>> CONDITION_TYPES = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MOD_ID, "conditions"), Apicraft.MOD_ID);
+    public static final DeferredRegisterCoFH<IConditionSerializer<?>> CONDITION_SERIALIZERS = DeferredRegisterCoFH.create(new ResourceLocation(Apicraft.MOD_ID, "condition_serializers"), Apicraft.MOD_ID);
 
     static {
         // Call static classes to trigger classloading.
@@ -97,13 +99,13 @@ public class Registries {
         CONDITION_SERIALIZERS.register(modEventBus);
     }
     public static void register(){
-        logger.debug("Apiculture Registry: starting register:");
+        logger.debug("Apicraft Registry: starting register:");
         registerItems();
         registerBlocks();
         registerBlockEntities();
         registerMenus();
         registerAlleles();
-        logger.debug("Apiculture Registry: registration completed.");
+        logger.debug("Apicraft Registry: registration completed.");
     }
 
     private static void registerItems(){
@@ -160,7 +162,7 @@ public class Registries {
         logger.debug("Registering block: " + name);
         RegistryObject<? extends Block> block = BLOCKS.register(name, supplier);
         logger.debug("Registering blockitem: " + name);
-        ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(CreativeTabs.TAB_BLOCKS)));
+        ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
     private static void registerBlockEntity(String name, Supplier<BlockEntityType<?>> supplier){
         logger.debug("Registering block entity type: " + name);

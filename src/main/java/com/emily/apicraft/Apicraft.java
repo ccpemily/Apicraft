@@ -8,9 +8,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-@Mod(Apicraft.MODID)
+@Mod(Apicraft.MOD_ID)
 public class Apicraft {
-    public static final String MODID = "apicraft";
+    public static final String MOD_ID = "apicraft";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 

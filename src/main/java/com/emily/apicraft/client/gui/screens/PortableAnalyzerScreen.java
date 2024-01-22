@@ -14,7 +14,6 @@ import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -58,15 +57,15 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     }
 
     @Override
-    protected void renderBg(GuiGraphics stack, float partialTicks, int x, int y){
-        super.renderBg(stack, partialTicks, x, y);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y){
+        super.renderBg(graphics, partialTicks, x, y);
         if (selected == 0) {
-            drawCenteredString(stack, font, Component.translatable("gui.portable_analyzer.title"), getGuiLeft() + 116, getGuiTop() + getRowY(1), 0xffffff);
-            font.draw(stack, Component.translatable("gui.portable_analyzer.can_analyze"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(4), 0xffffff);
-            font.draw(stack, Component.translatable("gui.portable_analyzer.page_1"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(6), 0xffffff);
-            font.draw(stack, Component.translatable("gui.portable_analyzer.page_2"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(7), 0xffffff);
-            font.draw(stack, Component.translatable("gui.portable_analyzer.page_3"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(8), 0xffffff);
-            font.draw(stack, Component.translatable("gui.portable_analyzer.page_4"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(9), 0xffffff);
+            graphics.drawCenteredString(fontRenderer(), Component.translatable("gui.portable_analyzer.title"), getGuiLeft() + 116, getGuiTop() + getRowY(1), 0xffffff);
+            graphics.drawString(fontRenderer(), Component.translatable("gui.portable_analyzer.can_analyze"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(4), 0xffffff);
+            graphics.drawString(fontRenderer(), Component.translatable("gui.portable_analyzer.page_1"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(6), 0xffffff);
+            graphics.drawString(fontRenderer(), Component.translatable("gui.portable_analyzer.page_2"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(7), 0xffffff);
+            graphics.drawString(fontRenderer(), Component.translatable("gui.portable_analyzer.page_3"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(8), 0xffffff);
+            graphics.drawString(fontRenderer(), Component.translatable("gui.portable_analyzer.page_4"), getGuiLeft() + COLUMN_0, getGuiTop() + getRowY(9), 0xffffff);
         }
     }
 

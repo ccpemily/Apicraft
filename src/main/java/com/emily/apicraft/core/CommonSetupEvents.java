@@ -9,7 +9,7 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Apicraft.MODID)
+@Mod.EventBusSubscriber(modid = Apicraft.MOD_ID)
 public class CommonSetupEvents {
     private CommonSetupEvents(){
 

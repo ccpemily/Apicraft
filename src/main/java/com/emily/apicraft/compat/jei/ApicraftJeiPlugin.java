@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class ApicraftJeiPlugin implements IModPlugin {
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return new ResourceLocation(Apicraft.MODID);
+        return new ResourceLocation(Apicraft.MOD_ID);
     }
 
     @Override

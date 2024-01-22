@@ -5,10 +5,10 @@ import com.emily.apicraft.interfaces.climatology.IClimateModifierProvider;
 import com.emily.apicraft.interfaces.climatology.IClimateProvider;
 import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
 import com.emily.apicraft.inventory.BeeHousingItemInv;
-import com.mojang.math.Vector3d;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import org.joml.Vector3d;
 
 import java.util.Optional;
 

@@ -1,8 +1,8 @@
 package com.emily.apicraft.inventory;
 
 import cofh.lib.api.IStorageCallback;
-import cofh.lib.inventory.ItemStorageCoFH;
-import cofh.lib.inventory.SimpleItemInv;
+import cofh.lib.common.inventory.ItemStorageCoFH;
+import cofh.lib.common.inventory.SimpleItemInv;
 import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
 import com.emily.apicraft.capabilities.Capabilities;
 import com.emily.apicraft.genetics.alleles.Alleles;

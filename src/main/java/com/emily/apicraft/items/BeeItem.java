@@ -1,13 +1,12 @@
 package com.emily.apicraft.items;
 
-import cofh.core.item.ItemCoFH;
+import cofh.core.common.item.ItemCoFH;
 import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.ClientSetupEvents;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.items.IBeeItem;
-import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,7 +28,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
     private final BeeTypes type;
 
     public BeeItem(BeeTypes type) {
-        super(type == BeeTypes.QUEEN ? new Properties().tab(CreativeTabs.TAB_BEES).stacksTo(1) : new Properties().tab(CreativeTabs.TAB_BEES));
+        super(type == BeeTypes.QUEEN ? new Properties().stacksTo(1) : new Properties());
         this.type = type;
         ClientSetupEvents.addColorable(this);
     }
@@ -71,9 +70,9 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
         super.appendHoverText(stack, level, components, flag);
     }
 
-    @Override
+
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if(this.allowedIn(group)){
+        /*if(this.allowedIn(group)){
             for(Alleles.Species species : Alleles.Species.values()){
                 ItemStack stack = new ItemStack(this);
                 if(type == BeeTypes.QUEEN){
@@ -84,7 +83,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
                 }
                 items.add(stack);
             }
-        }
+        }*/
     }
 
     // region IColorableItem

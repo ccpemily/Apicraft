@@ -7,7 +7,7 @@ public class FlowerProvider {
     private final ResourceLocation name;
 
     public FlowerProvider(String name){
-        this.name = new ResourceLocation(Apicraft.MODID, name);
+        this.name = new ResourceLocation(Apicraft.MOD_ID, name);
     }
 
     public ResourceLocation getFlowerType(){

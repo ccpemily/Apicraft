@@ -2,7 +2,6 @@ package com.emily.apicraft.items;
 
 import cofh.core.common.item.ItemCoFH;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
-import com.emily.apicraft.items.creativetab.CreativeTabs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PortableAnalyzer extends ItemCoFH implements MenuProvider {
     public PortableAnalyzer() {
-        super(new Item.Properties().stacksTo(1));}//.tab(CreativeTabs.TAB_ITEMS));
+        super(new Item.Properties().stacksTo(1));//.tab(CreativeTabs.TAB_ITEMS));
     }
 
     @Override

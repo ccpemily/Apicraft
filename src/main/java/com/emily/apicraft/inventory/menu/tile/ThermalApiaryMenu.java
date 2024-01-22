@@ -1,8 +1,8 @@
 package com.emily.apicraft.inventory.menu.tile;
 
 
-import cofh.lib.inventory.container.slot.SlotCoFH;
-import cofh.lib.inventory.container.slot.SlotRemoveOnly;
+import cofh.lib.common.inventory.SlotCoFH;
+import cofh.lib.common.inventory.SlotRemoveOnly;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,5 +32,10 @@ public class ThermalApiaryMenu extends AbstractBeeHousingMenu {
     @Override
     protected int getPlayerInventoryVerticalOffset() {
         return 108;
+    }
+
+    @Override
+    public boolean stillValid(Player p_38874_) {
+        return false;
     }
 }

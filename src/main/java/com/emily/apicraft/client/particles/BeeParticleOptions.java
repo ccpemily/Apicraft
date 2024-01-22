@@ -1,5 +1,6 @@
 package com.emily.apicraft.client.particles;
 
+import com.emily.apicraft.registry.Registries;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -65,7 +66,7 @@ public class BeeParticleOptions implements ParticleOptions {
     @Nonnull
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%s %d %d %d %d", Registry.PARTICLE_TYPE.getKey(type), destination.getX(), destination.getY(), destination.getZ(), color);
+        return String.format(Locale.ROOT, "%s %d %d %d %d", type, destination.getX(), destination.getY(), destination.getZ(), color);
     }
 
     public static @NotNull Codec<BeeParticleOptions> codec(ParticleType<BeeParticleOptions> type) {

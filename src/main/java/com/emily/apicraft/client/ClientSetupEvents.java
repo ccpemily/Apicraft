@@ -17,7 +17,6 @@ import com.emily.apicraft.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +34,7 @@ import java.util.List;
 
 import static com.mojang.logging.LogUtils.getLogger;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Apicraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Apicraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetupEvents {
     private static final List<Item> COLORABLE_ITEMS = new ArrayList<>();
     private ClientSetupEvents(){}
@@ -65,8 +64,8 @@ public class ClientSetupEvents {
     public static void registerParticleProviders(final RegisterParticleProvidersEvent event){
         Logger logger = getLogger();
         logger.debug("Registering particle providers");
-        event.register(Particles.BEE_ROUND_TRIP_PARTICLE.get(), BeeRoundTripParticle.Provider::new);
-        event.register(Particles.BEE_EXPLORE_PARTICLE.get(), BeeExploreParticle.Provider::new);
+        event.registerSpriteSet(Particles.BEE_ROUND_TRIP_PARTICLE.get(), BeeRoundTripParticle.Provider::new);
+        event.registerSpriteSet(Particles.BEE_EXPLORE_PARTICLE.get(), BeeExploreParticle.Provider::new);
     }
 
     public static void addColorable(Item colorable) {

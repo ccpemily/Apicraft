@@ -4,8 +4,6 @@ import com.emily.apicraft.block.entity.beehousing.AbstractBeeHousingBlockEntity;
 import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,6 +16,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class ParticleRenderer {
         BlockPos playerPos = Minecraft.getInstance().player.getOnPos();
         Vector3d particleStartPos = housing.getBeeFXCoordinates();
 
-        double playerDistanceSq = playerPos.distSqr(new Vec3i(particleStartPos.x, particleStartPos.y, particleStartPos.z));
+        double playerDistanceSq = playerPos.distSqr(new Vec3i((int) particleStartPos.x, (int) particleStartPos.y, (int) particleStartPos.z));
         if (level.random.nextInt(1024) < playerDistanceSq) {
             return;
         }

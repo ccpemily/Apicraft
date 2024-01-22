@@ -1,13 +1,13 @@
 package com.emily.apicraft.client.particles.implementation;
 
 import com.emily.apicraft.client.particles.BeeParticleOptions;
-import com.mojang.math.Vector3d;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 
 public class BeeExploreParticle extends TextureSheetParticle {
     private final Vector3d origin;

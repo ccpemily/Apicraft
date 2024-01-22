@@ -13,5 +13,5 @@ public class RecipeTypes {
 
     }
 
-    public static final RegistryObject<SerializableRecipeType<MutationRecipe>> MUTATION_RECIPE = Registries.RECIPE_TYPES.register("mutation", () -> new SerializableRecipeType<>(Apicraft.MODID, "mutation"));
+    public static final RegistryObject<SerializableRecipeType<MutationRecipe>> MUTATION_RECIPE = Registries.RECIPE_TYPES.register("mutation", () -> new SerializableRecipeType<>(Apicraft.MOD_ID, "mutation"));
 }

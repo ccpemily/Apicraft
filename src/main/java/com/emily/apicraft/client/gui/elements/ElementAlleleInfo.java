@@ -5,6 +5,7 @@ import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.Optional;
@@ -26,12 +27,12 @@ public class ElementAlleleInfo extends ElementText{
     }
 
     @Override
-    public void drawBackground(PoseStack stack, int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics gui, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = beeSupplier.get();
         if(beeOptional.isPresent()){
             IAllele<?> allele = beeOptional.get().getGenome().getAllele(type, active);
             setText(Component.translatable(allele.getName()).getString(), getColor(allele.isDominant()));
-            super.drawBackground(stack, mouseX, mouseY);
+            super.drawBackground(gui, mouseX, mouseY);
         }
     }
 

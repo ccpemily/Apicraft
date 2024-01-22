@@ -1,8 +1,8 @@
 package com.emily.apicraft.core.lib;
 
 import com.emily.apicraft.client.gui.icons.Icons;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +16,7 @@ public enum ErrorStates {
         }
 
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_ILLEGAL;
         }
     },
@@ -27,7 +27,7 @@ public enum ErrorStates {
         }
 
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_TOO_DARK;
         }
     },
@@ -37,7 +37,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_TOO_BRIGHT;
         }
     },
@@ -47,7 +47,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_TOO_HOT;
         }
     },
@@ -57,7 +57,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_TOO_COLD;
         }
     },
@@ -67,7 +67,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_TOO_DRY;
         }
     },
@@ -77,7 +77,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_TOO_DAMP;
         }
     },
@@ -87,7 +87,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_IS_RAINING;
         }
     },
@@ -97,7 +97,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_NO_SKY;
         }
     },
@@ -107,7 +107,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_NO_SPACE;
         }
     },
@@ -117,7 +117,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_NO_QUEEN;
         }
     },
@@ -127,7 +127,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_NO_DRONE;
         }
     },
@@ -137,7 +137,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_NO_FLOWER;
         }
     },
@@ -147,7 +147,7 @@ public enum ErrorStates {
             return Collections.emptyList();
         }
         @Override
-        public TextureAtlasSprite getIcon() {
+        public ResourceLocation getIcon() {
             return Icons.ERROR_ILLEGAL;
         }
     };
@@ -155,5 +155,5 @@ public enum ErrorStates {
         return "errors." + this.name().toLowerCase(Locale.ENGLISH);
     }
     public abstract List<Component> getTooltips();
-    public abstract TextureAtlasSprite getIcon();
+    public abstract ResourceLocation getIcon();
 }

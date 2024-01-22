@@ -1,18 +1,14 @@
 package com.emily.apicraft.client.particles.implementation;
 
-
-import cofh.core.client.particle.impl.BeamParticle;
-import cofh.core.client.particle.options.BiColorParticleOptions;
 import com.emily.apicraft.client.particles.BeeParticleOptions;
-import com.mojang.math.Vector3d;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 
-import javax.annotation.Nonnull;
 
 public class BeeRoundTripParticle extends TextureSheetParticle {
     private final Vector3d origin;

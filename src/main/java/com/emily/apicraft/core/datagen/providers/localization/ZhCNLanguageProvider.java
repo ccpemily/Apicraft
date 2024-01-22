@@ -3,12 +3,8 @@ package com.emily.apicraft.core.datagen.providers.localization;
 import com.emily.apicraft.Apicraft;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
-import org.slf4j.Logger;
 
 import java.util.HashMap;
-import java.util.Locale;
-
-import static com.mojang.logging.LogUtils.getLogger;
 
 public class ZhCNLanguageProvider extends LanguageProvider {
     public static final HashMap<String, String> BEE_TYPES = new HashMap<>(){{
@@ -23,7 +19,7 @@ public class ZhCNLanguageProvider extends LanguageProvider {
 
     }};
     public ZhCNLanguageProvider(DataGenerator gen, String locale) {
-        super(gen, Apicraft.MODID, locale);
+        super(gen.getPackOutput(), Apicraft.MOD_ID, locale);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -31,15 +32,15 @@ public class ErrorPanel extends PanelBase {
         visible = () -> supplier.get() != ErrorStates.NONE;
     }
     @Override
-    protected void drawForeground(PoseStack matrixStack) {
-        drawPanelIcon(matrixStack, supplier.get().getIcon());
+    protected void drawForeground(GuiGraphics guiGraphics) {
+        drawPanelIcon(guiGraphics, supplier.get().getIcon());
         if (!fullyOpen) {
             return;
         }
-        fontRenderer().drawShadow(matrixStack, Component.translatable(supplier.get().getName()), sideOffset() + 22, 8, headerColor);
+        guiGraphics.drawString(fontRenderer(), Component.translatable(supplier.get().getName()), sideOffset() + 22, 8, headerColor);
         List<Component> components = supplier.get().getTooltips();
         for(int i = 0; i < components.size(); i++){
-            fontRenderer().drawShadow(matrixStack, components.get(i), sideOffset() + 22, 20 + 12 * i, 0xffffff);
+            guiGraphics.drawString(fontRenderer(), components.get(i), sideOffset() + 22, 20 + 12 * i, 0xffffff);
         }
     }
 

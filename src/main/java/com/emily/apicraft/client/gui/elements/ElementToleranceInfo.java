@@ -6,6 +6,7 @@ import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -21,7 +22,7 @@ public class ElementToleranceInfo extends ElementAlleleInfo{
     }
 
     @Override
-    public void drawBackground(PoseStack stack, int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics gui, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = beeSupplier.get();
         if(beeOptional.isPresent()){
             IAllele<?> allele = beeOptional.get().getGenome().getAllele(type, active);
@@ -31,7 +32,7 @@ public class ElementToleranceInfo extends ElementAlleleInfo{
                     .getString(), getColor(allele.isDominant()));
             int u = 0;
             int v = 0;
-            if(allele instanceof Enum tolerance){
+            if(allele instanceof Enum<?> tolerance){
                 if(tolerance.name().contains("UP")){
                     u = 16;
                 }
@@ -46,8 +47,8 @@ public class ElementToleranceInfo extends ElementAlleleInfo{
             if(visible()){
                 RenderHelper.setPosTexShader();
                 RenderHelper.setShaderTexture0(texture);
-                drawTexturedModalRect(stack, posX(), posY() - 3, u, v, 15, 15);
-                fontRenderer().draw(stack, text, posX() + 18, posY(), color);
+                drawTexturedModalRect(gui.pose(), posX(), posY() - 3, u, v, 15, 15);
+                gui.drawString(fontRenderer(), text, posX() + 18, posY(), color);
             }
             this.width = fontRenderer().width(text) + 18;
             this.height = 12;

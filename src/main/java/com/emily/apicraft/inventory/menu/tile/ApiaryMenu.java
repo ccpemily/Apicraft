@@ -1,7 +1,7 @@
 package com.emily.apicraft.inventory.menu.tile;
 
-import cofh.lib.common.inventory.container.slot.SlotCoFH;
-import cofh.lib.inventory.container.slot.SlotRemoveOnly;
+import cofh.lib.common.inventory.SlotCoFH;
+import cofh.lib.common.inventory.SlotRemoveOnly;
 import com.emily.apicraft.registry.Registries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,6 +36,6 @@ public class ApiaryMenu extends AbstractBeeHousingMenu {
 
     @Override
     public boolean stillValid(Player p_38874_) {
-        return false;
+        return true;
     }
 }

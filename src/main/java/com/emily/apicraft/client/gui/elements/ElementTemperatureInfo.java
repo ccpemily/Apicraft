@@ -5,6 +5,7 @@ import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.Optional;
@@ -22,12 +23,12 @@ public class ElementTemperatureInfo extends ElementText{
     }
 
     @Override
-    public void drawBackground(PoseStack stack, int mouseX, int mouseY) {
+    public void drawBackground(GuiGraphics gui, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = supplier.get();
         if(beeOptional.isPresent()){
             Alleles.Species allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
             setText(Component.translatable(allele.getValue().getTemperature().getName()).getString(), getColor(allele.isDominant()));
-            super.drawBackground(stack, mouseX, mouseY);
+            super.drawBackground(gui, mouseX, mouseY);
         }
     }
 

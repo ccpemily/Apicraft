@@ -1,6 +1,6 @@
 package com.emily.apicraft.inventory.storage;
 
-import cofh.lib.inventory.ItemStorageCoFH;
+import cofh.lib.common.inventory.ItemStorageCoFH;
 import com.emily.apicraft.items.BeeItem;
 import com.emily.apicraft.items.subtype.BeeTypes;
 

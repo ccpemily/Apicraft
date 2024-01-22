@@ -1,11 +1,9 @@
 package com.emily.apicraft.items;
 
-import cofh.core.item.ItemCoFH;
+import cofh.core.common.item.ItemCoFH;
 import com.emily.apicraft.bee.BeeProductData;
 import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
-import com.emily.apicraft.interfaces.capabilities.IBeeProductContainer;
 import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
-import com.emily.apicraft.items.creativetab.CreativeTabs;
 import com.emily.apicraft.items.subtype.FrameTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -35,7 +33,7 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
     private final float territoryModifier;
     private final int fertilityModifier;
     public FrameItem(FrameTypes type) {
-        super(new Properties().tab(CreativeTabs.TAB_ITEMS).durability(type.maxUse).setNoRepair());
+        super(new Properties().durability(type.maxUse).setNoRepair());
         this.type = type;
         this.productivityModifier = type.productivityModifier;
         this.lifespanModifier = type.lifespanModifier;
@@ -97,8 +95,8 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
         }
     }
 
-    @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
+        /*
         if(this.allowedIn(group)){
             ItemStack stack = new ItemStack(this);
             stack.setDamageValue(this.type.maxUse);
@@ -106,6 +104,7 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
             container.setProductData(new BeeProductData(this.type.maxUse));
             items.add(stack);
         }
+        */
     }
 
     @Override

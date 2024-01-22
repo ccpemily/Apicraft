@@ -35,6 +35,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.AxisAngle4d;
+import org.joml.Vector3d;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -520,7 +522,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         }
         else{
             this.baseTemperature = (int) Math.floor(biome.getBaseTemperature() * 100);
-            this.baseHumidity = (int) Math.floor(biome.getDownfall() * 100);
+            this.baseHumidity = (int) Math.floor(biome.getModifiedClimateSettings().downfall() * 100);
         }
     }
 

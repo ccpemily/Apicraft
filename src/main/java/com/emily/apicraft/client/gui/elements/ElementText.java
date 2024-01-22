@@ -3,6 +3,7 @@ package com.emily.apicraft.client.gui.elements;
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.client.gui.element.ElementBase;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class ElementText extends ElementBase {
     protected String text = "";
@@ -23,10 +24,10 @@ public class ElementText extends ElementBase {
     }
 
     @Override
-    public void drawBackground(PoseStack stack, int mouseX, int mouseY){
-        super.drawBackground(stack, mouseX, mouseY);
+    public void drawBackground(GuiGraphics gui, int mouseX, int mouseY){
+        super.drawBackground(gui, mouseX, mouseY);
         if(visible()){
-            fontRenderer().draw(stack, text, posX(), posY(), color);
+            gui.drawString(fontRenderer(), text, posX(), posY(), color);
         }
         this.width = fontRenderer().width(text);
         this.height = 12;

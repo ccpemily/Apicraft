@@ -8,7 +8,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class CreativeTabs {
+/*public class CreativeTabs {
     public static final CreativeModeTab TAB_BEES = new CreativeModeTab("apicraft.bees") {
         @Override
         public @NotNull ItemStack makeIcon() {
@@ -31,4 +31,4 @@ public class CreativeTabs {
             return new ItemStack(Registries.ITEMS.get("bee_comb_honey"));
         }
     };
-}
+}*/

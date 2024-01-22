@@ -11,8 +11,8 @@ public class Conditions {
 
     public static void register(){}
 
-    public static final RegistryObject<IConditionType<ConditionTemperature>> TEMPERATURE = Registries.CONDITION_TYPES.register("temperature", () -> new ConditionType<>(Apicraft.MODID, "temperature"));
-    public static final RegistryObject<IConditionType<ConditionHumidity>> HUMIDITY = Registries.CONDITION_TYPES.register("humidity", () -> new ConditionType<>(Apicraft.MODID, "humidity"));
-    public static final RegistryObject<IConditionType<ConditionRequireBlock>> REQUIRE_BLOCK = Registries.CONDITION_TYPES.register("require_block", () -> new ConditionType<>(Apicraft.MODID, "require_block"));
-    public static final RegistryObject<IConditionType<ConditionOwnerName>> REQUIRE_PLAYER = Registries.CONDITION_TYPES.register("require_player", () -> new ConditionType<>(Apicraft.MODID, "require_player"));
+    public static final RegistryObject<IConditionType<ConditionTemperature>> TEMPERATURE = Registries.CONDITION_TYPES.register("temperature", () -> new ConditionType<>(Apicraft.MOD_ID, "temperature"));
+    public static final RegistryObject<IConditionType<ConditionHumidity>> HUMIDITY = Registries.CONDITION_TYPES.register("humidity", () -> new ConditionType<>(Apicraft.MOD_ID, "humidity"));
+    public static final RegistryObject<IConditionType<ConditionRequireBlock>> REQUIRE_BLOCK = Registries.CONDITION_TYPES.register("require_block", () -> new ConditionType<>(Apicraft.MOD_ID, "require_block"));
+    public static final RegistryObject<IConditionType<ConditionOwnerName>> REQUIRE_PLAYER = Registries.CONDITION_TYPES.register("require_player", () -> new ConditionType<>(Apicraft.MOD_ID, "require_player"));
 }

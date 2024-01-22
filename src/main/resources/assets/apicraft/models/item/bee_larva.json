@@ -1,0 +1,8 @@
+{
+  "parent": "apicraft:item/mirror_hands",
+  "textures": {
+    "layer0": "apicraft:item/bees/default/larvae.outline",
+    "layer1": "apicraft:item/bees/default/larvae.body",
+    "layer2": "apicraft:item/bees/default/larvae.body2"
+  }
+}

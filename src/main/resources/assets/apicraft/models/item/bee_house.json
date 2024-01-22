@@ -1,0 +1,12 @@
+{
+    "parent": "minecraft:block/cube_all",
+    "textures": {
+      "particle": "apicraft:block/apiary_side",
+      "down": "apicraft:block/apiary_bottom",
+      "up": "apicraft:block/apiary_top",
+      "north": "apicraft:block/apiary_entrance",
+      "east": "apicraft:block/apiary_side",
+      "south": "apicraft:block/apiary_side",
+      "west": "apicraft:block/apiary_side"
+    }
+}

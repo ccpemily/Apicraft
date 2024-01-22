@@ -1,0 +1,19 @@
+{
+    "variants": {
+      "facing=north": {
+        "model": "apicraft:block/apiary"
+      },
+      "facing=east": {
+        "model": "apicraft:block/apiary",
+        "y": 90
+      },
+      "facing=south": {
+        "model": "apicraft:block/apiary",
+        "y": 180
+      },
+      "facing=west": {
+        "model": "apicraft:block/apiary",
+        "y": -90
+      }
+	}
+}

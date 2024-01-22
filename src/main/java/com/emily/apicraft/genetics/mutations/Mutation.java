@@ -1,6 +1,8 @@
 package com.emily.apicraft.genetics.mutations;
 
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 
@@ -10,9 +12,9 @@ import java.util.List;
 import static com.mojang.logging.LogUtils.getLogger;
 
 public class Mutation {
-    private final Alleles.Species speciesFirst;
-    private final Alleles.Species speciesSecond;
-    private final Alleles.Species speciesResult;
+    private final IAllele<AlleleSpecies> speciesFirst;
+    private final IAllele<AlleleSpecies> speciesSecond;
+    private final IAllele<AlleleSpecies> speciesResult;
     private final int baseChance;
     private final List<IBeeCondition> conditions;
 
@@ -24,15 +26,15 @@ public class Mutation {
         this.conditions = List.copyOf(builder.conditions);
     }
 
-    public Alleles.Species getFirst(){
+    public IAllele<AlleleSpecies> getFirst(){
         return speciesFirst;
     }
 
-    public Alleles.Species getSecond() {
+    public IAllele<AlleleSpecies> getSecond() {
         return speciesSecond;
     }
 
-    public Alleles.Species getResult() {
+    public IAllele<AlleleSpecies> getResult() {
         return speciesResult;
     }
 
@@ -45,9 +47,9 @@ public class Mutation {
     }
 
     public static class MutationBuilder {
-        private Alleles.Species speciesFirst;
-        private Alleles.Species speciesSecond;
-        private Alleles.Species speciesResult;
+        private IAllele<AlleleSpecies> speciesFirst;
+        private IAllele<AlleleSpecies> speciesSecond;
+        private IAllele<AlleleSpecies> speciesResult;
         private int baseChance = 0;
         private final List<IBeeCondition> conditions = new ArrayList<>();
 
@@ -62,13 +64,13 @@ public class Mutation {
             }
         }
 
-        public MutationBuilder setParent(Alleles.Species first, Alleles.Species second){
+        public MutationBuilder setParent(IAllele<AlleleSpecies> first, IAllele<AlleleSpecies> second){
             this.speciesFirst = first;
             this.speciesSecond = second;
             return this;
         }
 
-        public MutationBuilder setResult(Alleles.Species result){
+        public MutationBuilder setResult(IAllele<AlleleSpecies> result){
             this.speciesResult = result;
             return this;
         }

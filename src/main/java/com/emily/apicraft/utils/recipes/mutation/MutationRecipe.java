@@ -3,8 +3,10 @@ package com.emily.apicraft.utils.recipes.mutation;
 import cofh.lib.util.recipes.SerializableRecipe;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.mutations.Mutation;
+import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.utils.recipes.RecipeSerializers;
 import com.emily.apicraft.utils.recipes.RecipeTypes;
@@ -17,12 +19,12 @@ import java.util.List;
 
 public class MutationRecipe extends SerializableRecipe {
     protected static final float DEFAULT_MUTATE_CHANCE = 0.05f;
-    protected final Combination<Alleles.Species> parents;
-    protected final List<Alleles.Species> results = new ArrayList<>();
+    protected final Combination<IAllele<AlleleSpecies>> parents;
+    protected final List<IAllele<AlleleSpecies>> results = new ArrayList<>();
     protected final List<Float> baseChances = new ArrayList<>();
     protected final List<List<IBeeCondition>> conditions = new ArrayList<>();
 
-    public MutationRecipe(ResourceLocation id, Combination<Alleles.Species> parents, List<Alleles.Species> results, List<Float> chances, List<List<IBeeCondition>> conditions) {
+    public MutationRecipe(ResourceLocation id, Combination<IAllele<AlleleSpecies>> parents, List<IAllele<AlleleSpecies>> results, List<Float> chances, List<List<IBeeCondition>> conditions) {
         super(id);
         if(parents != null){
             this.parents = parents;
@@ -64,7 +66,7 @@ public class MutationRecipe extends SerializableRecipe {
         trim();
     }
 
-    public Combination<Alleles.Species> getParents(){
+    public Combination<IAllele<AlleleSpecies>> getParents(){
         return parents;
     }
 
@@ -84,7 +86,7 @@ public class MutationRecipe extends SerializableRecipe {
     }
 
     private void trim(){
-        ((ArrayList<Alleles.Species>)this.results).trimToSize();
+        ((ArrayList<IAllele<AlleleSpecies>>)this.results).trimToSize();
         ((ArrayList<Float>)this.baseChances).trimToSize();
         ((ArrayList<List<IBeeCondition>>)this.conditions).trimToSize();
     }

@@ -61,29 +61,13 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
             return;
         }
         Bee bee = beeOptional.get();
-        if(!Screen.hasShiftDown()){
+        if(Screen.hasShiftDown()){
             bee.addTooltip(components);
         }
         else{
             components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
         super.appendHoverText(stack, level, components, flag);
-    }
-
-
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        /*if(this.allowedIn(group)){
-            for(Alleles.Species species : Alleles.Species.values()){
-                ItemStack stack = new ItemStack(this);
-                if(type == BeeTypes.QUEEN){
-                    BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPureMated(species));
-                }
-                else{
-                    BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(species));
-                }
-                items.add(stack);
-            }
-        }*/
     }
 
     // region IColorableItem

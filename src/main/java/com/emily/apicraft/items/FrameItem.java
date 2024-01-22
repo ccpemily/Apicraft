@@ -95,18 +95,6 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
         }
     }
 
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        /*
-        if(this.allowedIn(group)){
-            ItemStack stack = new ItemStack(this);
-            stack.setDamageValue(this.type.maxUse);
-            IBeeProductContainer container = BeeProductContainerCapability.get(stack);
-            container.setProductData(new BeeProductData(this.type.maxUse));
-            items.add(stack);
-        }
-        */
-    }
-
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag tag){
         return new BeeProductContainerCapability(stack);

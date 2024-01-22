@@ -1,5 +1,6 @@
 package com.emily.apicraft.inventory.menu.tile;
 
+import cofh.core.common.inventory.BlockEntityCoFHMenu;
 import cofh.core.common.inventory.ContainerMenuCoFH;
 import cofh.lib.common.inventory.wrapper.InvWrapperCoFH;
 import com.emily.apicraft.block.entity.beehousing.AbstractBeeHousingBlockEntity;
@@ -10,12 +11,12 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractBeeHousingMenu extends ContainerMenuCoFH {
+public abstract class AbstractBeeHousingMenu extends BlockEntityCoFHMenu {
     protected final AbstractBeeHousingBlockEntity beehousing;
     protected InvWrapperCoFH invWrapper;
 
     public AbstractBeeHousingMenu(@Nullable MenuType<?> type, int windowId, Level world, BlockPos pos, Inventory inventory, Player player) {
-        super(type, windowId, inventory, player);
+        super(type, windowId, world, pos, inventory, player);
         this.beehousing = (AbstractBeeHousingBlockEntity) world.getBlockEntity(pos);
         if(beehousing == null){
             throw new IllegalArgumentException("Null block entity found.");

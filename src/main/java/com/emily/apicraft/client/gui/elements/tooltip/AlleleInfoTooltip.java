@@ -39,7 +39,7 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                         boolean addedComment = false;
                         if(allele instanceof Alleles.TemperatureTolerance temperatureTolerance){
                             for(EnumTemperature temperature : EnumTemperature.values()){
-                                if(temperatureTolerance.getValue().apply(temperature, temperatureSelf) != ErrorStates.NONE){
+                                if(temperatureTolerance.getValue().apply(temperature, temperatureSelf) == ErrorStates.NONE){
                                     if(addedComment){
                                         component.append(", ");
                                     }
@@ -53,7 +53,7 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                         else {
                             Alleles.HumidityTolerance humidityTolerance = (Alleles.HumidityTolerance) allele;
                             for(EnumHumidity humidity : EnumHumidity.values()){
-                                if(humidityTolerance.getValue().apply(humidity, humiditySelf) != ErrorStates.NONE){
+                                if(humidityTolerance.getValue().apply(humidity, humiditySelf) == ErrorStates.NONE){
                                     if(addedComment){
                                         component.append(", ");
                                     }

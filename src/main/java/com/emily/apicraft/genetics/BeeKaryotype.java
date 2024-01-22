@@ -1,5 +1,6 @@
 package com.emily.apicraft.genetics;
 
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IAllele;
@@ -40,7 +41,7 @@ public class BeeKaryotype {
         defaultTemplate.put(type, defaultValue);
     }
 
-    public IAllele<?>[] defaultTemplate(Alleles.Species species){
+    public IAllele<?>[] defaultTemplate(IAllele<AlleleSpecies> species){
         IAllele<?>[] alleles = new IAllele[karyotype.size()];
         for(int i = 0; i < karyotype.size(); i++){
             IAlleleType type = karyotype.get(i);

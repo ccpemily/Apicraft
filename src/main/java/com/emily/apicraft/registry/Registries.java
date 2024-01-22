@@ -2,16 +2,24 @@ package com.emily.apicraft.registry;
 
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.bee.BeeProductData;
 import com.emily.apicraft.block.Apiary;
 import com.emily.apicraft.block.BeeHouse;
 import com.emily.apicraft.block.ThermalApiary;
 import com.emily.apicraft.block.entity.beehousing.ApiaryEntity;
 import com.emily.apicraft.block.entity.beehousing.BeeHouseEntity;
 import com.emily.apicraft.block.entity.beehousing.ThermalApiaryEntity;
+import com.emily.apicraft.capabilities.empty.EmptyBeeProductContainer;
+import com.emily.apicraft.capabilities.empty.EmptyBeeProvider;
+import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.particles.Particles;
+import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.BeeKaryotype;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.interfaces.capabilities.IBeeProductContainer;
+import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
@@ -30,11 +38,13 @@ import com.emily.apicraft.utils.recipes.RecipeTypes;
 import com.emily.apicraft.utils.recipes.conditions.ConditionSerializers;
 import com.emily.apicraft.utils.recipes.conditions.Conditions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +56,8 @@ import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -57,6 +69,9 @@ public class Registries {
     private static final Logger logger = getLogger();
     // Minecraft Registries
     public static final DeferredRegisterCoFH<CreativeModeTab> CREATIVE_TABS = DeferredRegisterCoFH.create(net.minecraft.core.registries.Registries.CREATIVE_MODE_TAB, Apicraft.MOD_ID);
+    private static final List<RegistryObject<Item>> TAB_BEES = new ArrayList<>();
+    private static final List<RegistryObject<Item>> TAB_BLOCKS = new ArrayList<>();
+    private static final List<RegistryObject<Item>> TAB_ITEMS = new ArrayList<>();
     // Forge Registries
     public static final DeferredRegisterCoFH<Item> ITEMS = DeferredRegisterCoFH.create(ForgeRegistries.ITEMS, Apicraft.MOD_ID);
     public static final DeferredRegisterCoFH<Block> BLOCKS = DeferredRegisterCoFH.create(ForgeRegistries.BLOCKS, Apicraft.MOD_ID);
@@ -89,6 +104,7 @@ public class Registries {
         // Attach DeferredRegister to ModEventBus
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
+        CREATIVE_TABS.register(modEventBus);
         TILE_ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
         RECIPE_TYPES.register(modEventBus);
@@ -102,6 +118,7 @@ public class Registries {
         logger.debug("Apicraft Registry: starting register:");
         registerItems();
         registerBlocks();
+        registerCreativeModeTabs();
         registerBlockEntities();
         registerMenus();
         registerAlleles();
@@ -110,20 +127,74 @@ public class Registries {
 
     private static void registerItems(){
         for(BeeTypes type : BeeTypes.values()){
-            registerItem("bee_" + type.name().toLowerCase(Locale.ENGLISH), () -> new BeeItem(type));
+            registerItem("bee_" + type.name().toLowerCase(Locale.ENGLISH), () -> new BeeItem(type), TAB_BEES);
         }
         for(BeeCombTypes type : BeeCombTypes.values()){
-            registerItem(type.getName(), () -> new BeeCombItem(type));
+            registerItem(type.getName(), () -> new BeeCombItem(type), TAB_ITEMS);
         }
         for(FrameTypes type : FrameTypes.values()){
-            registerItem(type.getName(), () -> new FrameItem(type));
+            registerItem(type.getName(), () -> new FrameItem(type), TAB_ITEMS);
         }
-        registerItem("portable_analyzer", PortableAnalyzer::new);
+        registerItem("portable_analyzer", PortableAnalyzer::new, TAB_ITEMS);
     }
     private static void registerBlocks(){
-        registerBlock("bee_house", BeeHouse::new);
-        registerBlock("apiary", Apiary::new);
-        registerBlock("thermal_apiary", ThermalApiary::new);
+        registerBlock("bee_house", BeeHouse::new, TAB_BLOCKS);
+        registerBlock("apiary", Apiary::new, TAB_BLOCKS);
+        registerBlock("thermal_apiary", ThermalApiary::new, TAB_BLOCKS);
+    }
+
+    public static void registerCreativeModeTabs(){
+        CREATIVE_TABS.register(Apicraft.MOD_ID + ".bees",
+                () -> CreativeModeTab.builder()
+                        .title(Component.translatable("itemGroup.apicraft.bees"))
+                        .icon(() -> {
+                            ItemStack stack = new ItemStack(ITEMS.get("bee_drone"));
+                            BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(Alleles.Species.FOREST));
+                            return stack;
+                        })
+                        .displayItems((pParameters, pOutput) -> TAB_BEES.forEach((item) -> {
+                            ItemStack stack = new ItemStack(item.get());
+                            IBeeProvider provider = BeeProviderCapability.get(stack);
+                            if (provider instanceof EmptyBeeProvider) {
+                                pOutput.accept(new ItemStack(item.get()));
+                            } else {
+                                for (Alleles.Species species : Alleles.Species.values()) {
+                                    ItemStack bee = new ItemStack(item.get());
+                                    IBeeProvider beeProvider = BeeProviderCapability.get(bee);
+                                    beeProvider.setBeeIndividual(Bee.getPure(species));
+                                    pOutput.accept(bee);
+                                }
+                            }
+                        })
+                        )
+                        .build()
+        );
+        CREATIVE_TABS.register(Apicraft.MOD_ID + ".blocks",
+                () -> CreativeModeTab.builder()
+                        .title(Component.translatable("itemGroup.apicraft.blocks"))
+                        .icon(() -> new ItemStack(ITEMS.get("apiary")))
+                        .displayItems((pParameters, pOutput) -> TAB_BLOCKS.forEach((item) -> pOutput.accept(new ItemStack(item.get()))))
+                        .build()
+        );
+        CREATIVE_TABS.register(Apicraft.MOD_ID + ".items",
+                () -> CreativeModeTab.builder()
+                        .title(Component.translatable("itemGroup.apicraft.items"))
+                        .icon(() -> new ItemStack(ITEMS.get("bee_comb_honey")))
+                        .displayItems((pParameters, pOutput) -> TAB_ITEMS.forEach((item) -> {
+                            ItemStack stack = new ItemStack(item.get());
+                            IBeeProductContainer container = BeeProductContainerCapability.get(stack);
+                            if(container instanceof EmptyBeeProductContainer){
+                                pOutput.accept(stack);
+                            }
+                            else {
+                                FrameTypes type = ((FrameItem)(stack.getItem())).getType();
+                                container.setProductData(new BeeProductData(type.maxUse));
+                                stack.setDamageValue(type.maxUse);
+                                pOutput.accept(stack);
+                            }
+                        }))
+                        .build()
+        );
     }
     private static void registerBlockEntities(){
         registerBlockEntity("bee_house", () -> BlockEntityType.Builder.of(BeeHouseEntity::new, BLOCKS.get("bee_house")).build(null));
@@ -154,16 +225,25 @@ public class Registries {
 
 
     // region Single Register Method
-    private static void registerItem(String name, Supplier<Item> supplier){
+    private static RegistryObject<Item> registerItem(String name, Supplier<Item> supplier){
         logger.debug("Registering item: " + name);
-        ITEMS.register(name, supplier);
+        return ITEMS.register(name, supplier);
     }
-    private static void registerBlock(String name, Supplier<Block> supplier){
+    private static void registerItem(String name, Supplier<Item> supplier, List<RegistryObject<Item>> creativeTab){
+        creativeTab.add(registerItem(name, supplier));
+    }
+
+    private static RegistryObject<Item> registerBlock(String name, Supplier<Block> supplier){
         logger.debug("Registering block: " + name);
         RegistryObject<? extends Block> block = BLOCKS.register(name, supplier);
         logger.debug("Registering blockitem: " + name);
-        ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        return ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
+    private static void registerBlock(String name, Supplier<Block> supplier, List<RegistryObject<Item>> creativeTab){
+        creativeTab.add(registerBlock(name, supplier));
+    }
+
+
     private static void registerBlockEntity(String name, Supplier<BlockEntityType<?>> supplier){
         logger.debug("Registering block entity type: " + name);
         TILE_ENTITIES.register(name, supplier);

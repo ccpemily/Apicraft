@@ -1,12 +1,12 @@
 {
   "type": "apicraft:mutation",
   "parents": {
-    "first": "forest",
-    "second": "meadows"
+    "first": "apicraft:species.forest",
+    "second": "apicraft:species.meadows"
   },
-  "result": [
+  "results": [
     {
-      "species": "common",
+      "species": "apicraft:species.common",
       "chance": 0.12,
       "conditions": [
         {

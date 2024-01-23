@@ -1,12 +1,9 @@
 package com.emily.apicraft.genetics;
 
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 
-import java.util.Optional;
 import java.util.Random;
 
 public class BeeChromosome {

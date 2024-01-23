@@ -2,9 +2,6 @@ package com.emily.apicraft.genetics;
 
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
-import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
 
 import java.util.ArrayList;
 import java.util.HashMap;

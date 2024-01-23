@@ -1,10 +1,9 @@
 package com.emily.apicraft.genetics.flowers;
 
-import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.block.IBeeHousing;
+import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.google.common.collect.AbstractIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

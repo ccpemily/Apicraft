@@ -5,8 +5,8 @@ import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.mutations.Mutation;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.recipes.RecipeSerializers;
 import com.emily.apicraft.recipes.RecipeTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -19,16 +19,16 @@ import java.util.List;
 public class MutationRecipe extends SerializableRecipe {
     protected static final float DEFAULT_MUTATE_CHANCE = 0.05f;
     protected final Combination<IAllele<AlleleSpecies>> parents;
-    protected final List<IAllele<AlleleSpecies>> results = new ArrayList<>();
-    protected final List<Float> baseChances = new ArrayList<>();
-    protected final List<List<IBeeCondition>> conditions = new ArrayList<>();
+    protected final IAllele<AlleleSpecies> result;
+    protected final float baseChance;
+    protected final List<IBeeCondition> conditions = new ArrayList<>();
 
     public MutationRecipe(
             ResourceLocation id,
             Combination<IAllele<AlleleSpecies>> parents,
-            List<IAllele<AlleleSpecies>> results,
-            List<Float> chances,
-            List<List<IBeeCondition>> conditions
+            IAllele<AlleleSpecies> result,
+            float chance,
+            List<IBeeCondition> conditions
     ) {
         super(id);
         if(parents != null){
@@ -38,32 +38,22 @@ public class MutationRecipe extends SerializableRecipe {
             Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null parents.");
             throw new IllegalArgumentException("Parents must be existed in mutation recipe.");
         }
-        if(results != null){
-            this.results.addAll(results);
+        if(result != null){
+            this.result = result;
         }
         else{
+            this.result = null;
             Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null ");
         }
-        if(chances != null){
-            this.baseChances.addAll(chances);
-            if(this.baseChances.size() < this.results.size()){
-                for(int i = 0; i < this.results.size() - this.baseChances.size(); i++){
-                    this.baseChances.add(DEFAULT_MUTATE_CHANCE);
-                }
-            }
+        if(chance > 0 && chance <= 1){
+            this.baseChance = chance;
         }
         else{
+            this.baseChance = DEFAULT_MUTATE_CHANCE;
             Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null chance.");
         }
-        if(conditions != null){
-            for(List<IBeeCondition> cList : conditions){
-                this.conditions.add(List.copyOf(cList));
-            }
-            if(this.conditions.size() < this.results.size()){
-                for(int i = 0; i < this.results.size() - this.conditions.size(); i++){
-                    this.conditions.add(new ArrayList<>());
-                }
-            }
+        if(conditions != null && !conditions.isEmpty()){
+            this.conditions.addAll(conditions);
         }
         else{
             Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null conditions.");
@@ -75,25 +65,16 @@ public class MutationRecipe extends SerializableRecipe {
         return parents;
     }
 
-    public List<Mutation> getResults(){
-        List<Mutation> list = new ArrayList<>();
-        for(int i = 0; i < results.size(); i++){
+    public Mutation getResult(){
             Mutation.MutationBuilder builder = new Mutation.MutationBuilder();
-            builder.setParent(parents.getFirst(), parents.getSecond());
-            builder.setResult(results.get(i));
-            builder.setChance((int)Math.floor(baseChances.get(i) * 100));
-            for(IBeeCondition condition : conditions.get(i)){
-                builder.addCondition(condition);
-            }
-            list.add(builder.build());
-        }
-        return list;
+        return builder.setParent(parents.getFirst(), parents.getSecond())
+                .setResult(result)
+                .setChance((int)Math.floor(baseChance * 100))
+                .addConditions(conditions).build();
     }
 
     private void trim(){
-        ((ArrayList<IAllele<AlleleSpecies>>)this.results).trimToSize();
-        ((ArrayList<Float>)this.baseChances).trimToSize();
-        ((ArrayList<List<IBeeCondition>>)this.conditions).trimToSize();
+        ((ArrayList<IBeeCondition>)conditions).trimToSize();
     }
 
     @Override

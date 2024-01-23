@@ -1,27 +1,23 @@
 package com.emily.apicraft.genetics.conditions;
 
-import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
+import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.emily.apicraft.recipes.conditions.Conditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.tags.ITag;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class ConditionRequireBlock implements IBeeCondition {
-    private final List<Block> resourceType = new ArrayList<>();
+    private final Set<Block> resourceType = new HashSet<>();
+    private final Set<TagKey<Block>> tags = new HashSet<>();
 
-    public ConditionRequireBlock(Collection<? extends Block> type){
-        this.resourceType.addAll(type);
-    }
-
-    public ConditionRequireBlock(List<ITag<? extends Block>> list){
-        list.forEach((tag) -> this.resourceType.addAll(tag.stream().toList()));
+    public ConditionRequireBlock(Collection<Block> blocks, Collection<TagKey<Block>> tags){
+        this.resourceType.addAll(blocks);
+        this.tags.addAll(tags);
     }
 
     @Override
@@ -33,7 +29,18 @@ public class ConditionRequireBlock implements IBeeCondition {
         while(beeHousing.getBeeHousingLevel().getBlockEntity(pos) instanceof IBeeHousing);
 
         BlockPos finalPos = pos;
-        return resourceType.contains(beeHousing.getBeeHousingLevel().getBlockState(finalPos).getBlock()) ? chance : 0;
+        Block block = beeHousing.getBeeHousingLevel().getBlockState(finalPos).getBlock();
+        if(block == Blocks.AIR || block == Blocks.CAVE_AIR){
+            return 0;
+        }
+        boolean containedByTag = false;
+        for(var tag : tags){
+            if(Objects.requireNonNull(ForgeRegistries.BLOCKS.tags()).getTag(tag).contains(block)){
+                containedByTag = true;
+                break;
+            }
+        }
+        return (containedByTag || resourceType.contains(block)) ? chance : 0;
     }
 
     @Override

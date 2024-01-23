@@ -1,9 +1,7 @@
 package com.emily.apicraft.genetics.conditions;
 
 import com.emily.apicraft.climatology.EnumTemperature;
-import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
+import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.emily.apicraft.recipes.conditions.Conditions;
 import net.minecraft.network.chat.Component;
 

@@ -2,7 +2,7 @@ package com.emily.apicraft.recipes.conditions;
 
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.conditions.*;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
+import com.emily.apicraft.genetics.conditions.IConditionType;
 import com.emily.apicraft.registry.Registries;
 import net.minecraftforge.registries.RegistryObject;
 

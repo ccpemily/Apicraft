@@ -1,8 +1,5 @@
 package com.emily.apicraft.genetics.conditions;
 
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;

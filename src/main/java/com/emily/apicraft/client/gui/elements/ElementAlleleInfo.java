@@ -2,9 +2,8 @@ package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.IAlleleType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 

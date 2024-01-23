@@ -1,7 +1,7 @@
 package com.emily.apicraft.bee;
 
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.genetics.IAllele;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;

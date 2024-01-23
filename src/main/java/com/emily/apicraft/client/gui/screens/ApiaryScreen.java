@@ -1,6 +1,6 @@
 package com.emily.apicraft.client.gui.screens;
 
-import com.emily.apicraft.inventory.menu.tile.ApiaryMenu;
+import com.emily.apicraft.inventory.menu.blockentity.ApiaryMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

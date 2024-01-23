@@ -1,7 +1,7 @@
 package com.emily.apicraft.genetics.alleles;
 
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.IAlleleType;
 
 import java.util.Locale;
 

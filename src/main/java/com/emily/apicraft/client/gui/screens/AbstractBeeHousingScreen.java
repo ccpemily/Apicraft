@@ -3,11 +3,11 @@ package com.emily.apicraft.client.gui.screens;
 import cofh.core.client.gui.ContainerScreenCoFH;
 import cofh.core.client.gui.element.panel.SecurityPanel;
 import cofh.lib.util.helpers.SecurityHelper;
-import com.emily.apicraft.block.entity.beehousing.AbstractBeeHousingBlockEntity;
+import com.emily.apicraft.block.entity.beehouse.AbstractBeeHousingBlockEntity;
 import com.emily.apicraft.client.gui.elements.ElementBreedingProcess;
 import com.emily.apicraft.client.gui.panels.ClimatePanel;
 import com.emily.apicraft.client.gui.panels.ErrorPanel;
-import com.emily.apicraft.inventory.menu.tile.AbstractBeeHousingMenu;
+import com.emily.apicraft.inventory.menu.blockentity.AbstractBeeHousingMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 

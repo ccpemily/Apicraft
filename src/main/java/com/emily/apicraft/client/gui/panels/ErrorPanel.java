@@ -3,9 +3,6 @@ package com.emily.apicraft.client.gui.panels;
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.client.gui.element.panel.PanelBase;
 import com.emily.apicraft.core.lib.ErrorStates;
-import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 

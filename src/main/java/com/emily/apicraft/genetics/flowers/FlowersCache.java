@@ -5,7 +5,7 @@ import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.block.IBeeHousing;
+import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

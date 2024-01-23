@@ -1,8 +1,8 @@
 package com.emily.apicraft.recipes.managers;
 
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.utils.recipes.ICustomManager;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.recipes.ICustomManager;
 import com.emily.apicraft.recipes.RecipeTypes;
 import com.emily.apicraft.recipes.beeproduct.BeeProductRecipe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;

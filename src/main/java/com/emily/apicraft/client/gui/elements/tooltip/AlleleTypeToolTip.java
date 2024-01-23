@@ -2,7 +2,7 @@ package com.emily.apicraft.client.gui.elements.tooltip;
 
 import cofh.core.client.gui.element.ElementBase;
 import cofh.core.client.gui.element.ITooltipFactory;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.genetics.IAlleleType;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;

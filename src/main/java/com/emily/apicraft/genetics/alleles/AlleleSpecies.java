@@ -3,8 +3,8 @@ package com.emily.apicraft.genetics.alleles;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.BeeBranches;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.IAlleleType;
 
 import java.awt.*;
 import java.util.HashMap;

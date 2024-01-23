@@ -2,8 +2,8 @@ package com.emily.apicraft.recipes.beeproduct;
 
 import cofh.lib.util.recipes.SerializableRecipe;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.recipes.RecipeSerializers;
 import com.emily.apicraft.recipes.RecipeTypes;
 import net.minecraft.resources.ResourceLocation;

@@ -1,12 +1,12 @@
 package com.emily.apicraft.genetics.mutations;
 
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.interfaces.block.IBeeHousing;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.conditions.IBeeCondition;
+import com.emily.apicraft.block.beehouse.IBeeHousing;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.mojang.logging.LogUtils.getLogger;
@@ -82,6 +82,11 @@ public class Mutation {
 
         public MutationBuilder addCondition(IBeeCondition condition){
             this.conditions.add(condition);
+            return this;
+        }
+
+        public MutationBuilder addConditions(Collection<IBeeCondition> conditions){
+            this.conditions.addAll(conditions);
             return this;
         }
 

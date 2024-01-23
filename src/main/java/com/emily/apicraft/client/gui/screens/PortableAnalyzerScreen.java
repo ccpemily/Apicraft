@@ -12,7 +12,7 @@ import com.emily.apicraft.client.gui.elements.tooltip.TemperatureTooltip;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.genetics.IAlleleType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

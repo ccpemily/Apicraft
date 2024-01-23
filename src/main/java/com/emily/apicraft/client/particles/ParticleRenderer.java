@@ -1,6 +1,6 @@
 package com.emily.apicraft.client.particles;
 
-import com.emily.apicraft.block.entity.beehousing.AbstractBeeHousingBlockEntity;
+import com.emily.apicraft.block.entity.beehouse.AbstractBeeHousingBlockEntity;
 import com.emily.apicraft.genetics.BeeGenome;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;

@@ -2,9 +2,9 @@ package com.emily.apicraft.recipes.mutation;
 
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.conditions.IBeeCondition;
+import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.JsonUtils;
 import com.google.gson.JsonArray;
@@ -25,9 +25,9 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
     @SuppressWarnings("unchecked")
     public @NotNull MutationRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
         Combination<IAllele<AlleleSpecies>> parents = null;
-        List<IAllele<AlleleSpecies>> results = new ArrayList<>();
-        List<Float> chances = new ArrayList<>();
-        List<List<IBeeCondition>> conditions = new ArrayList<>();
+        IAllele<AlleleSpecies> result = null;
+        float chance = 0;
+        List<IBeeCondition> conditions = new ArrayList<>();
 
         if(jsonObject.has(JsonUtils.PARENTS)){
             JsonObject parentsDict = jsonObject.getAsJsonObject(JsonUtils.PARENTS);
@@ -37,48 +37,36 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
                 parents = new Combination<>(first, second);
             }
         }
-        if(jsonObject.has(JsonUtils.RESULTS)){
-            JsonArray resultArray = jsonObject.getAsJsonArray(JsonUtils.RESULTS);
-            for(var item : resultArray){
-                JsonObject result = item.getAsJsonObject();
-                IAllele<AlleleSpecies> species = null;
-                float chance = 0;
-                Map<ResourceLocation, IBeeCondition> conditionMap = new HashMap<>();
-
-                if(result.has(JsonUtils.SPECIES)){
-                    species = (IAllele<AlleleSpecies>) Registries.ALLELES.get(result.get(JsonUtils.SPECIES).getAsString());
-                }
-                if(result.has(JsonUtils.CHANCE)){
-                    chance = result.get(JsonUtils.CHANCE).getAsFloat();
-                }
-                if(result.has(JsonUtils.CONDITIONS)){
-                    for(var cItem : result.getAsJsonArray(JsonUtils.CONDITIONS)){
-                        if(cItem.getAsJsonObject().has(JsonUtils.TYPE) && cItem.getAsJsonObject().has(JsonUtils.VALUE)){
-                            String type = cItem.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
-                            IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
-                            IBeeCondition cond = serializer.fromJson(
-                                    ResourceLocation.tryParse(type),
-                                    cItem.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
-                            );
-                            if(cond != null){
-                                conditionMap.put(ResourceLocation.tryParse(type), cond);
-                            }
+        if(jsonObject.has(JsonUtils.RESULT)){
+            JsonObject r = jsonObject.getAsJsonObject(JsonUtils.RESULT);
+            if(r.has(JsonUtils.SPECIES)){
+                result = (IAllele<AlleleSpecies>) Registries.ALLELES.get(r.get(JsonUtils.SPECIES).getAsString());
+            }
+            if(r.has(JsonUtils.CHANCE)){
+                chance = r.get(JsonUtils.CHANCE).getAsFloat();
+            }
+            if(r.has(JsonUtils.CONDITIONS)){
+                for(var condition : r.getAsJsonArray(JsonUtils.CONDITIONS)){
+                    if(condition.getAsJsonObject().has(JsonUtils.TYPE) && condition.getAsJsonObject().has(JsonUtils.VALUE)){
+                        String type = condition.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
+                        IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
+                        IBeeCondition cond = serializer.fromJson(
+                                ResourceLocation.tryParse(type),
+                                condition.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
+                        );
+                        if(cond != null){
+                            conditions.add(cond);
                         }
                     }
-                }
-                if(species != null && chance != 0){
-                    results.add(species);
-                    chances.add(chance);
-                    conditions.add(conditionMap.values().stream().toList());
                 }
             }
         }
 
-        if(parents == null || results.isEmpty() || conditions.isEmpty()){
+        if(parents == null || result == null){
             return null;
         }
         else{
-            return new MutationRecipe(id, parents, results, chances, conditions);
+            return new MutationRecipe(id, parents, result, chance, conditions);
         }
     }
 

@@ -2,9 +2,9 @@ package com.emily.apicraft.capabilities.empty;
 
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.capabilities.IBeeProvider;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.capabilities.IBeeProvider;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.IAlleleType;
 
 import javax.annotation.Nullable;
 import java.util.Optional;

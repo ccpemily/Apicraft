@@ -1,8 +1,6 @@
 package com.emily.apicraft.genetics;
 
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
 
 import java.util.HashMap;
 import java.util.Locale;

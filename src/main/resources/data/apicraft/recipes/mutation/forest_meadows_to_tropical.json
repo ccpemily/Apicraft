@@ -1,0 +1,19 @@
+{
+  "type": "apicraft:mutation",
+  "parents": {
+    "first": "apicraft:species.forest",
+    "second": "apicraft:species.meadows"
+  },
+  "result": {
+    "species": "apicraft:species.tropical",
+    "chance": 0.1,
+    "conditions": [
+      {
+        "type": "apicraft:humidity",
+        "value": {
+          "restrict": "damp"
+        }
+      }
+    ]
+  }
+}

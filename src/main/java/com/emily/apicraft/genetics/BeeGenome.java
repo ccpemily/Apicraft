@@ -5,9 +5,7 @@ import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.genetics.mutations.MutationManager;
-import com.emily.apicraft.interfaces.block.IBeeHousing;
-import com.emily.apicraft.interfaces.genetics.IAllele;
-import com.emily.apicraft.interfaces.genetics.IAlleleType;
+import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -102,18 +100,23 @@ public class BeeGenome {
             if(!mutations.isEmpty()){
                 IAllele<?>[] activeAlleles = getAllActive(chromosomes);
                 IAllele<?>[] inactiveAlleles = getAllInactive(chromosomes);
-                // Randomly select a mutation (uniformly distributed)
-                int mutationIdActive = random.nextInt(mutations.size());
-                float chanceActive = mutations.get(mutationIdActive).getConditionalChance(beeHousing);
-                // Mutate active genome if in chance
-                if(random.nextFloat() * 100 < chanceActive){
-                    activeAlleles = karyotype.defaultTemplate(mutations.get(mutationIdActive).getResult());
+                for(int i = 0; i < mutations.size(); i++){
+                    // Randomly select a mutation (uniformly distributed)
+                    int mutationIdActive = random.nextInt(mutations.size());
+                    float chanceActive = mutations.get(mutationIdActive).getConditionalChance(beeHousing);
+                    // Mutate active genome if in chance
+                    if(random.nextFloat() * 100 < chanceActive){
+                        activeAlleles = karyotype.defaultTemplate(mutations.get(mutationIdActive).getResult());
+                        break;
+                    }
                 }
-
-                int mutationIdInactive = random.nextInt(mutations.size());
-                float chanceInactive = mutations.get(mutationIdInactive).getConditionalChance(beeHousing);
-                if(random.nextFloat() * 100 < chanceInactive){
-                    inactiveAlleles = karyotype.defaultTemplate(mutations.get(mutationIdInactive).getResult());
+                for(int i = 0; i < mutations.size(); i++){
+                    int mutationIdInactive = random.nextInt(mutations.size());
+                    float chanceInactive = mutations.get(mutationIdInactive).getConditionalChance(beeHousing);
+                    if(random.nextFloat() * 100 < chanceInactive){
+                        inactiveAlleles = karyotype.defaultTemplate(mutations.get(mutationIdInactive).getResult());
+                        break;
+                    }
                 }
 
                 setTemplate(chromosomes, activeAlleles, inactiveAlleles);

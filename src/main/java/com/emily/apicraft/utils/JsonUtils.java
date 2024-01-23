@@ -7,7 +7,7 @@ public class JsonUtils {
     public static final String FIRST = "first";
     public static final String SECOND = "second";
 
-    public static final String RESULTS = "results";
+    public static final String RESULT = "result";
 
     public static final String SPECIES = "species";
     public static final String CHANCE = "chance";

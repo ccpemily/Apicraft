@@ -1,6 +1,5 @@
 package com.emily.apicraft.recipes.conditions;
 
-import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.conditions.ConditionHumidity;
 import com.emily.apicraft.genetics.conditions.ConditionOwnerName;
 import com.emily.apicraft.genetics.conditions.ConditionRequireBlock;
@@ -9,7 +8,7 @@ import com.emily.apicraft.genetics.conditions.serializer.HumiditySerializer;
 import com.emily.apicraft.genetics.conditions.serializer.RequireBlockSerializer;
 import com.emily.apicraft.genetics.conditions.serializer.RequirePlayerSerializer;
 import com.emily.apicraft.genetics.conditions.serializer.TemperatureSerializer;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
+import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.registry.Registries;
 import net.minecraftforge.registries.RegistryObject;
 

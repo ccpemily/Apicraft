@@ -1,10 +1,6 @@
 package com.emily.apicraft.items.subtype;
 
-import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
-import net.minecraft.core.Vec3i;
-
 import java.util.Locale;
-import java.util.function.Function;
 
 public enum FrameTypes {
     UNTREATED(1, 10, 0.05f),

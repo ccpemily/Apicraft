@@ -2,7 +2,7 @@ package com.emily.apicraft.genetics.mutations;
 
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.genetics.IAllele;
 import com.emily.apicraft.recipes.managers.MutationRecipeManager;
 import com.emily.apicraft.recipes.mutation.MutationRecipe;
 
@@ -12,12 +12,14 @@ public class MutationManager {
     private MutationManager(){}
 
     public static List<Mutation> findMutations(Combination<IAllele<AlleleSpecies>> pair){
-        MutationRecipe recipe = MutationRecipeManager.INSTANCE.getRecipe(pair);
-        if(recipe == null){
+        List<Mutation> mutations = new ArrayList<>();
+        List<MutationRecipe> recipes = MutationRecipeManager.INSTANCE.getRecipe(pair);
+        if(recipes == null || recipes.isEmpty()){
             return List.of();
         }
         else{
-            return recipe.getResults();
+            recipes.forEach((recipe -> mutations.add(recipe.getResult())));
+            return mutations;
         }
     }
 

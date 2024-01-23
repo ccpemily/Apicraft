@@ -2,8 +2,7 @@ package com.emily.apicraft.client.gui.panels;
 
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.client.gui.element.panel.PanelBase;
-import com.emily.apicraft.interfaces.climatology.IClimateProvider;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.emily.apicraft.climatology.IClimateProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

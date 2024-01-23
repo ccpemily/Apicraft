@@ -2,7 +2,7 @@ package com.emily.apicraft.genetics.conditions.serializer;
 
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.genetics.conditions.ConditionHumidity;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
+import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.utils.JsonUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;

@@ -323,6 +323,7 @@
   "branch.monastic": "僧侣",
   "branch.emily": "粉红",
   "branch.akina": "绛紫",
+  "recipe.mutation.name": "蜜蜂杂交",
   "gui.portable_analyzer.can_analyze" : "可分析:",
   "gui.portable_analyzer.page_1" : "I   : 普通",
   "gui.portable_analyzer.page_2" : "II  : 环境",

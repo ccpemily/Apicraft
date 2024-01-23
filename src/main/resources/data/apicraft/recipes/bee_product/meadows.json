@@ -24,7 +24,7 @@
       "type": "apicraft:require_block",
       "value": {
         "tags": [
-          "#forge:storage_blocks/diamond"
+          "forge:storage_blocks/diamond"
         ]
       }
     }

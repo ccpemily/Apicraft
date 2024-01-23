@@ -47,7 +47,7 @@
               "minecraft:glow_stone"
             ],
             "tags": [
-              "#minecraft:soul_fire_base_blocks"
+              "minecraft:soul_fire_base_blocks"
             ]
           }
         }

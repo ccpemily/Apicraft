@@ -3,8 +3,11 @@ package com.emily.apicraft.capabilities.implementation;
 import com.emily.apicraft.bee.BeeProductData;
 import com.emily.apicraft.capabilities.Capabilities;
 import com.emily.apicraft.capabilities.empty.EmptyBeeProductContainer;
-import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.interfaces.capabilities.IBeeProductContainer;
+import com.emily.apicraft.interfaces.genetics.IAllele;
+import com.emily.apicraft.items.BrokenFrameItem;
+import com.emily.apicraft.items.FrameItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
@@ -17,11 +20,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BeeProductContainerCapability implements IBeeProductContainer, ICapabilityProvider {
+public class BeeProductFrameCapability implements IBeeProductContainer, ICapabilityProvider {
     private final LazyOptional<IBeeProductContainer> holder = LazyOptional.of(() -> this);
     private final ItemStack container;
 
-    public BeeProductContainerCapability(ItemStack stack){
+    public BeeProductFrameCapability(ItemStack stack){
         this.container = stack;
     }
 
@@ -50,26 +53,31 @@ public class BeeProductContainerCapability implements IBeeProductContainer, ICap
         return stack.getCapability(Capabilities.PRODUCT_DATA_PROVIDER).orElse(EmptyBeeProductContainer.getInstance());
     }
 
-    public static void addProduct(ItemStack frame, Alleles.Species species, Boolean special){
-        Optional<BeeProductData> dataOptional = BeeProductContainerCapability.get(frame).getProductData();
+    public static boolean addProduct(ItemStack frame, IAllele<AlleleSpecies> species, Boolean special){
+        if(frame.getItem() instanceof BrokenFrameItem){
+            return false;
+        }
+        Optional<BeeProductData> dataOptional = BeeProductFrameCapability.get(frame).getProductData();
         if(dataOptional.isPresent()){
             BeeProductData data = dataOptional.get();
             boolean added = data.tryAdd(species, special);
             if(added){
                 frame.setDamageValue(frame.getMaxDamage() - data.getTotalStored());
-                BeeProductContainerCapability.get(frame).setProductData(data);
+                BeeProductFrameCapability.get(frame).setProductData(data);
             }
+            return added;
         }
+        return false;
     }
 
-    public static Optional<Tuple<Alleles.Species, Boolean>> removeProduct(ItemStack frame){
-        Optional<BeeProductData> dataOptional = BeeProductContainerCapability.get(frame).getProductData();
+    public static Optional<Tuple<IAllele<AlleleSpecies>, Boolean>> removeProduct(ItemStack frame){
+        Optional<BeeProductData> dataOptional = BeeProductFrameCapability.get(frame).getProductData();
         if(dataOptional.isPresent()){
             BeeProductData data = dataOptional.get();
-            Optional<Tuple<Alleles.Species, Boolean>> result = data.tryRemove();
+            Optional<Tuple<IAllele<AlleleSpecies>, Boolean>> result = data.tryRemove();
             if(result.isPresent()){
                 frame.setDamageValue(frame.getMaxDamage() - data.getTotalStored());
-                BeeProductContainerCapability.get(frame).setProductData(data);
+                BeeProductFrameCapability.get(frame).setProductData(data);
             }
             return result;
         }

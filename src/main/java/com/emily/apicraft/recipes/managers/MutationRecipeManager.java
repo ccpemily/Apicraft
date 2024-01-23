@@ -1,19 +1,16 @@
-package com.emily.apicraft.utils.recipes.managers;
+package com.emily.apicraft.recipes.managers;
 
+import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.utils.recipes.ICustomManager;
-import com.emily.apicraft.utils.recipes.RecipeTypes;
-import com.emily.apicraft.utils.recipes.mutation.MutationRecipe;
+import com.emily.apicraft.recipes.RecipeTypes;
+import com.emily.apicraft.recipes.mutation.MutationRecipe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.item.crafting.RecipeManager;
-import org.slf4j.Logger;
 
 import java.util.Map;
-
-import static com.mojang.logging.LogUtils.getLogger;
 
 public class MutationRecipeManager implements ICustomManager {
     public static final MutationRecipeManager INSTANCE = new MutationRecipeManager();
@@ -24,7 +21,7 @@ public class MutationRecipeManager implements ICustomManager {
         recipeMap.put(recipe.getParents(), recipe);
     }
 
-    public MutationRecipe getRecipe(Combination<Alleles.Species> combination){
+    public MutationRecipe getRecipe(Combination<IAllele<AlleleSpecies>> combination){
         return recipeMap.get(combination);
     }
 
@@ -35,7 +32,6 @@ public class MutationRecipeManager implements ICustomManager {
         for(var entry : recipes.entrySet()){
             addRecipe(entry.getValue());
         }
-        Logger logger = getLogger();
-        logger.debug(String.format("Loaded %d mutation recipes from refreshing event.", recipeMap.size()));
+        Apicraft.LOGGER.debug(String.format("Loaded %d mutation recipes from refreshing event.", recipeMap.size()));
     }
 }

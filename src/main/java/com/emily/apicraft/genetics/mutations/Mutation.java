@@ -43,7 +43,7 @@ public class Mutation {
         for(IBeeCondition condition : conditions){
             result = condition.applyModifier(housing, result);
         }
-        return result;
+        return housing.applyMutationModifier(result);
     }
 
     public static class MutationBuilder {

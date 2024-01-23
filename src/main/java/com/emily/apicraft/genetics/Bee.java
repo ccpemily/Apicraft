@@ -5,10 +5,13 @@ import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.block.IBeeHousing;
+import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.utils.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -153,9 +156,15 @@ public class Bee {
     // endregion
 
     // region BeeBehavior
-    public void age(int modifier){
+    public void age(float modifier){
         if(this.health > 0){
-            this.health = (int)Math.ceil(health - modifier);
+            int remain = (int) Math.floor(modifier);
+            float chance = modifier - remain;
+            this.health = health - remain;
+            Random random = new Random();
+            if(random.nextFloat() <= chance){
+                this.health -= 1;
+            }
         }
         if(this.health < 0){
             this.health = 0;
@@ -176,8 +185,15 @@ public class Bee {
         int fertility = housing.applyFertilityModifier(getGenome().getFertility());
         List<ItemStack> beeList = new ArrayList<>();
         for (int i = 0; i < fertility; i++){
-            ItemStack stack = new ItemStack(Registries.ITEMS.get("bee_drone"));
-            Bee bee = new Bee(getGenome().inheritWith(mate, housing), null, generation + 1);
+            ItemStack stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_LARVA_ID));
+            Bee bee = new Bee(getGenome().inheritWith(mate, housing), null, 0);
+            if(i == 0){
+                stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_PRINCESS_ID));
+                bee = new Bee(getGenome().inheritWith(mate, housing), null, generation + 1);
+            }
+            if(i == 1){
+                stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_DRONE_ID));
+            }
             BeeProviderCapability.get(stack).setBeeIndividual(bee);
             beeList.add(stack);
         }
@@ -222,9 +238,11 @@ public class Bee {
         EnumTemperature speciesTemperature = getGenome().getSpecies().getValue().getTemperature();
         EnumHumidity speciesHumidity = getGenome().getSpecies().getValue().getHumidity();
         ErrorStates temperatureState =
-                ((Alleles.TemperatureTolerance) getGenome().getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true)).getValue().apply(temperature, speciesTemperature);
+                ((Alleles.TemperatureTolerance) getGenome().getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true))
+                        .getValue().apply(temperature, speciesTemperature);
         ErrorStates humidityState =
-                ((Alleles.HumidityTolerance) getGenome().getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true)).getValue().apply(humidity, speciesHumidity);
+                ((Alleles.HumidityTolerance) getGenome().getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true))
+                        .getValue().apply(humidity, speciesHumidity);
         if(temperatureState != ErrorStates.NONE){
             housing.setErrorState(temperatureState);
             return false; // Climate not suitable.
@@ -240,18 +258,22 @@ public class Bee {
     public boolean canProduceSpecial(IBeeHousing housing, boolean active){
         EnumTemperature temperature = housing.getTemperature();
         EnumHumidity humidity = housing.getHumidity();
-        EnumTemperature speciesTemperature = active ? getGenome().getSpecies().getValue().getTemperature() : getGenome().getInactiveSpecies().getValue().getTemperature();
-        EnumHumidity speciesHumidity = active ? getGenome().getSpecies().getValue().getHumidity() : getGenome().getInactiveSpecies().getValue().getHumidity();
+        EnumTemperature speciesTemperature =
+                active ? getGenome().getSpecies().getValue().getTemperature() :
+                        getGenome().getInactiveSpecies().getValue().getTemperature();
+        EnumHumidity speciesHumidity =
+                active ? getGenome().getSpecies().getValue().getHumidity() :
+                        getGenome().getInactiveSpecies().getValue().getHumidity();
         return temperature == speciesTemperature && humidity == speciesHumidity;
     }
     // endregion
 
     // region Helpers
-    public static Bee getPure(Alleles.Species species){
+    public static Bee getPure(IAllele<AlleleSpecies> species){
         return new Bee(BeeKaryotype.INSTANCE.defaultGenome(species));
     }
 
-    public static Bee getPureMated(Alleles.Species species){
+    public static Bee getPureMated(IAllele<AlleleSpecies> species){
         BeeGenome genome = BeeKaryotype.INSTANCE.defaultGenome(species);
         return new Bee(genome, genome);
     }

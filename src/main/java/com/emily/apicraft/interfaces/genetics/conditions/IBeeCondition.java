@@ -9,5 +9,4 @@ public interface IBeeCondition {
     float applyModifier(IBeeHousing beeHousing, float chance);
     List<Component> getConditionTooltip();
     IConditionType<?> getType();
-    IConditionSerializer<?> getSerializer();
 }

@@ -11,7 +11,7 @@ import com.emily.apicraft.block.entity.beehousing.BeeHouseEntity;
 import com.emily.apicraft.block.entity.beehousing.ThermalApiaryEntity;
 import com.emily.apicraft.capabilities.empty.EmptyBeeProductContainer;
 import com.emily.apicraft.capabilities.empty.EmptyBeeProvider;
-import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.particles.Particles;
 import com.emily.apicraft.genetics.Bee;
@@ -32,11 +32,12 @@ import com.emily.apicraft.items.*;
 import com.emily.apicraft.items.subtype.BeeCombTypes;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import com.emily.apicraft.items.subtype.FrameTypes;
-import com.emily.apicraft.utils.recipes.RecipeManagers;
-import com.emily.apicraft.utils.recipes.RecipeSerializers;
-import com.emily.apicraft.utils.recipes.RecipeTypes;
-import com.emily.apicraft.utils.recipes.conditions.ConditionSerializers;
-import com.emily.apicraft.utils.recipes.conditions.Conditions;
+import com.emily.apicraft.recipes.RecipeManagers;
+import com.emily.apicraft.recipes.RecipeSerializers;
+import com.emily.apicraft.recipes.RecipeTypes;
+import com.emily.apicraft.recipes.conditions.ConditionSerializers;
+import com.emily.apicraft.recipes.conditions.Conditions;
+import com.emily.apicraft.utils.ItemUtils;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -134,6 +135,7 @@ public class Registries {
         }
         for(FrameTypes type : FrameTypes.values()){
             registerItem(type.getName(), () -> new FrameItem(type), TAB_ITEMS);
+            registerItem(type.getName() + "_broken", () -> new BrokenFrameItem(type), TAB_ITEMS);
         }
         registerItem("portable_analyzer", PortableAnalyzer::new, TAB_ITEMS);
     }
@@ -147,11 +149,7 @@ public class Registries {
         CREATIVE_TABS.register(Apicraft.MOD_ID + ".bees",
                 () -> CreativeModeTab.builder()
                         .title(Component.translatable("itemGroup.apicraft.bees"))
-                        .icon(() -> {
-                            ItemStack stack = new ItemStack(ITEMS.get("bee_drone"));
-                            BeeProviderCapability.get(stack).setBeeIndividual(Bee.getPure(Alleles.Species.FOREST));
-                            return stack;
-                        })
+                        .icon(ItemUtils::getDefaultDroneStack)
                         .displayItems((pParameters, pOutput) -> TAB_BEES.forEach((item) -> {
                             ItemStack stack = new ItemStack(item.get());
                             IBeeProvider provider = BeeProviderCapability.get(stack);
@@ -182,7 +180,7 @@ public class Registries {
                         .icon(() -> new ItemStack(ITEMS.get("bee_comb_honey")))
                         .displayItems((pParameters, pOutput) -> TAB_ITEMS.forEach((item) -> {
                             ItemStack stack = new ItemStack(item.get());
-                            IBeeProductContainer container = BeeProductContainerCapability.get(stack);
+                            IBeeProductContainer container = BeeProductFrameCapability.get(stack);
                             if(container instanceof EmptyBeeProductContainer){
                                 pOutput.accept(stack);
                             }

@@ -1,4 +1,4 @@
-package com.emily.apicraft.utils.recipes.conditions;
+package com.emily.apicraft.recipes.conditions;
 
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.conditions.*;

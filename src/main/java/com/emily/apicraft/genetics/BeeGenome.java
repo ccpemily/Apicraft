@@ -1,7 +1,6 @@
 package com.emily.apicraft.genetics;
 
 import com.emily.apicraft.core.lib.ErrorStates;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.mutations.Mutation;
@@ -16,7 +15,6 @@ import net.minecraft.nbt.Tag;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 public class BeeGenome {

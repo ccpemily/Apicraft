@@ -2,25 +2,26 @@ package com.emily.apicraft.genetics.conditions;
 
 import com.emily.apicraft.interfaces.block.IBeeHousing;
 import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.interfaces.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.interfaces.genetics.conditions.IConditionType;
+import com.emily.apicraft.recipes.conditions.Conditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.tags.ITag;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ConditionRequireBlock implements IBeeCondition {
     private final List<Block> resourceType = new ArrayList<>();
 
-    public ConditionRequireBlock(Block type){
-        this.resourceType.add(type);
+    public ConditionRequireBlock(Collection<? extends Block> type){
+        this.resourceType.addAll(type);
     }
 
-    public ConditionRequireBlock(ITag<Block> tag){
-        this.resourceType.addAll(tag.stream().toList());
+    public ConditionRequireBlock(List<ITag<? extends Block>> list){
+        list.forEach((tag) -> this.resourceType.addAll(tag.stream().toList()));
     }
 
     @Override
@@ -42,11 +43,6 @@ public class ConditionRequireBlock implements IBeeCondition {
 
     @Override
     public IConditionType<?> getType() {
-        return null;
-    }
-
-    @Override
-    public IConditionSerializer<?> getSerializer() {
-        return null;
+        return Conditions.REQUIRE_BLOCK.get();
     }
 }

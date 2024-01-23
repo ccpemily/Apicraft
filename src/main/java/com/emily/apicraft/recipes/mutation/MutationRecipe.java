@@ -1,15 +1,14 @@
-package com.emily.apicraft.utils.recipes.mutation;
+package com.emily.apicraft.recipes.mutation;
 
 import cofh.lib.util.recipes.SerializableRecipe;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.interfaces.genetics.conditions.IBeeCondition;
-import com.emily.apicraft.utils.recipes.RecipeSerializers;
-import com.emily.apicraft.utils.recipes.RecipeTypes;
+import com.emily.apicraft.recipes.RecipeSerializers;
+import com.emily.apicraft.recipes.RecipeTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -24,7 +23,13 @@ public class MutationRecipe extends SerializableRecipe {
     protected final List<Float> baseChances = new ArrayList<>();
     protected final List<List<IBeeCondition>> conditions = new ArrayList<>();
 
-    public MutationRecipe(ResourceLocation id, Combination<IAllele<AlleleSpecies>> parents, List<IAllele<AlleleSpecies>> results, List<Float> chances, List<List<IBeeCondition>> conditions) {
+    public MutationRecipe(
+            ResourceLocation id,
+            Combination<IAllele<AlleleSpecies>> parents,
+            List<IAllele<AlleleSpecies>> results,
+            List<Float> chances,
+            List<List<IBeeCondition>> conditions
+    ) {
         super(id);
         if(parents != null){
             this.parents = parents;

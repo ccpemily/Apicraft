@@ -2,16 +2,14 @@ package com.emily.apicraft.items;
 
 import cofh.core.common.item.ItemCoFH;
 import com.emily.apicraft.bee.BeeProductData;
-import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
+import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
 import com.emily.apicraft.items.subtype.FrameTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -42,6 +40,26 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
         this.fertilityModifier = type.fertilityModifier;
     }
 
+    protected FrameItem(FrameTypes type, boolean ignoreModifiers){
+        super(new Properties().durability(type.maxUse).setNoRepair());
+        this.type = type;
+        if(ignoreModifiers){
+            this.productivityModifier = 1.0f;
+            this.lifespanModifier = 1.0f;
+            this.mutationModifier = 1.0f;
+            this.territoryModifier = 1.0f;
+            this.fertilityModifier = 0;
+        }
+        else {
+            this.productivityModifier = type.productivityModifier;
+            this.lifespanModifier = type.lifespanModifier;
+            this.mutationModifier = type.mutationModifier;
+            this.territoryModifier = type.territoryModifier;
+            this.fertilityModifier = type.fertilityModifier;
+        }
+
+    }
+
     public FrameTypes getType() {
         return type;
     }
@@ -59,7 +77,7 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
-        Optional<BeeProductData> data =  BeeProductContainerCapability.get(stack).getProductData();
+        Optional<BeeProductData> data =  BeeProductFrameCapability.get(stack).getProductData();
         data.ifPresent(beeProductData ->
                 components.add(Component.translatable("tooltip.frame.product_stored", beeProductData.getTotalStored(), this.type.maxUse))
         );
@@ -93,11 +111,15 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
                 components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
             }
         }
+        else{
+            components.add(Component.translatable("tooltip.bee_modifier.title"));
+            components.add(Component.translatable("tooltip.bee_modifier.empty"));
+        }
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag tag){
-        return new BeeProductContainerCapability(stack);
+        return new BeeProductFrameCapability(stack);
     }
 
     // region IBeeModifierProvider
@@ -107,8 +129,8 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
     }
 
     @Override
-    public int applyLifespanModifier(int val) {
-        return (int) Math.ceil(val * this.lifespanModifier);
+    public float applyLifespanModifier(float val) {
+        return val * this.lifespanModifier;
     }
 
     @Override

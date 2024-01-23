@@ -3,22 +3,30 @@ package com.emily.apicraft.inventory;
 import cofh.lib.api.IStorageCallback;
 import cofh.lib.common.inventory.ItemStorageCoFH;
 import cofh.lib.common.inventory.SimpleItemInv;
-import com.emily.apicraft.capabilities.implementation.BeeProductContainerCapability;
+import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.capabilities.Capabilities;
+import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.interfaces.capabilities.IBeeProductContainer;
 import com.emily.apicraft.interfaces.genetics.IBeeModifierProvider;
 import com.emily.apicraft.inventory.storage.ItemStorageBee;
 import com.emily.apicraft.inventory.storage.ItemStorageFrame;
+import com.emily.apicraft.items.FrameItem;
 import com.emily.apicraft.items.subtype.BeeTypes;
+import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProvider {
@@ -36,7 +44,7 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
 
     public BeeHousingItemInv(@Nullable IStorageCallback callback, int outputCount, int frameCount, int augmentCount, int maxFrameTier) {
         super(callback, Tags.TAG_BEEHOUSING_INV);
-        queenInv = new ItemStorageBee(BeeTypes.QUEEN, BeeTypes.DRONE);
+        queenInv = new ItemStorageBee(BeeTypes.QUEEN, BeeTypes.PRINCESS);
         queenInv.setCapacity(1);
         slots.add(queenInv);
         droneInv = new ItemStorageBee(BeeTypes.DRONE);
@@ -64,7 +72,7 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
     }
 
     public boolean hasFrameSlot(){
-        return frameInv.size() > 0;
+        return !frameInv.isEmpty();
     }
 
     public ItemStorageBee getQueenSlot(){
@@ -114,7 +122,7 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
         // Randomly select a frame to add, except frames already full
         for(int i = 0; i < frameInv.size(); i++){
             if(frameInv.get(i).getItemStack().getCapability(Capabilities.PRODUCT_DATA_PROVIDER).isPresent()){
-                IBeeProductContainer container = BeeProductContainerCapability.get(frameInv.get(i).getItemStack());
+                IBeeProductContainer container = BeeProductFrameCapability.get(frameInv.get(i).getItemStack());
                 if(container.getProductData().isPresent() && !container.getProductData().get().isFull()){
                     listFrame.add(i);
                 }
@@ -124,8 +132,19 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
             return;
         }
         int id = listFrame.get(random.nextInt(listFrame.size()));
-        if(frameInv.get(id).getItemStack().getCapability(Capabilities.PRODUCT_DATA_PROVIDER).isPresent()){
-            BeeProductContainerCapability.addProduct(frameInv.get(id).getItemStack(), species, special);
+        ItemStack stack = frameInv.get(id).getItemStack();
+        if(stack.getCapability(Capabilities.PRODUCT_DATA_PROVIDER).isPresent()){
+            boolean result = BeeProductFrameCapability.addProduct(frameInv.get(id).getItemStack(), species, special);
+            if(result){
+                FrameItem item = (FrameItem) stack.getItem();
+                float chance = item.getType().brokenChance;
+                if(random.nextFloat() <= chance){
+                    ItemStack newStack = new ItemStack(Registries.ITEMS.get(ForgeRegistries.ITEMS.getKey(item) + "_broken"));
+                    Optional<BeeProductData> data = BeeProductFrameCapability.get(stack).getProductData();
+                    data.ifPresent(beeProductData -> BeeProductFrameCapability.get(newStack).setProductData(beeProductData));
+                    frameInv.get(id).setItemStack(newStack);
+                }
+            }
         }
     }
 
@@ -142,8 +161,8 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
     }
 
     @Override
-    public int applyLifespanModifier(int val) {
-        int result = val;
+    public float applyLifespanModifier(float val) {
+        float result = val;
         for(ItemStorageFrame frameStorage : getFrameInv()){
             if(frameStorage.getItemStack().getItem() instanceof IBeeModifierProvider provider){
                 result = provider.applyLifespanModifier(result);

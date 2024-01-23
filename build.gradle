@@ -2,7 +2,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
@@ -36,6 +36,7 @@ minecraft {
         }
 
         client {
+            args '--username=ShiyuEmily'
             property 'forge.enabledGameTestNamespaces', mod_id
         }
 
@@ -71,8 +72,9 @@ repositories {
 
 dependencies {
     // Specify the version of Minecraft to use.
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
 
+    // Hard code dependencies
     implementation fg.deobf("com.teamcofh:cofh_core:${minecraft_version}-${cofh_core_version}.+")
 
     // compile against the JEI API but do not include it at runtime
@@ -84,16 +86,12 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     // other runtime mods
+    // Mekanism
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")
-    //runtimeOnly(fg.deobf("com.teamcofh:thermal_core:1.20.1-11.0.0.+")){
-    //    transitive = false
-    //}
-    //runtimeOnly(fg.deobf("com.teamcofh:thermal_foundation:1.20.1-11.0.0.+")){
-    //    transitive = false
-    //}
-    //runtimeOnly(fg.deobf("com.teamcofh:thermal_expansion:1.20.1-11.0.0.+")){
-    //    transitive = false
-    //}
+    // Thermal Series
+    runtimeOnly fg.deobf("com.teamcofh:thermal_core:1.20.1-11.0.0.+")
+    runtimeOnly fg.deobf("com.teamcofh:thermal_foundation:1.20.1-11.0.0.+")
+    runtimeOnly fg.deobf("com.teamcofh:thermal_expansion:1.20.1-11.0.0.+")
 }
 
 tasks.named('processResources', ProcessResources).configure {

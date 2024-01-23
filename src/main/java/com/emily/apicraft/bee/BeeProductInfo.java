@@ -23,7 +23,7 @@ public class BeeProductInfo {
             normalProductCount--;
             if(specialProductCount > 0){
                 specialProductCount--;
-                return RemoveResult.REMOVED_ALL;
+                return RemoveResult.REMOVED_BOTH;
             }
             return RemoveResult.REMOVED_NORMAL;
         }
@@ -57,6 +57,6 @@ public class BeeProductInfo {
     }
 
     public static enum RemoveResult {
-        NO_PRODUCT, REMOVED_NORMAL, REMOVED_ALL
+        NO_PRODUCT, REMOVED_NORMAL, REMOVED_BOTH
     }
 }

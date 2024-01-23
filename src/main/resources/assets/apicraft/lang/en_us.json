@@ -28,6 +28,9 @@
   "item.apicraft.frame_untreated": "框架",
   "item.apicraft.frame_impregnated": "浸渍框架",
   "item.apicraft.frame_proven": "标定框架",
+  "item.apicraft.frame_untreated_broken": "Broken 框架",
+  "item.apicraft.frame_impregnated_broken": "Broken 浸渍框架",
+  "item.apicraft.frame_proven_broken": "Broken 标定框架",
   "tile.apiary.name": "Apiary",
   "tile.bee_house.name": "简易蜂房",
   "tile.thermal_apiary.name": "Thermal Apiary",
@@ -45,6 +48,7 @@
   "gui.portable_analyzer.inactive.tooltip": "Inactive",
   "bee.type.drone": " Drone",
   "bee.type.queen": " Queen",
+  "bee.type.princess": " Princess",
   "bee.type.larva": " Larva",
   "bee.tooltip.tmi": "Press Shift to expand",
   "bee.tooltip.behavior": "Behavior: ",
@@ -347,5 +351,6 @@
   "tooltip.bee_modifier.fertility.add" : "生育能力: +%d",
   "tooltip.bee_modifier.fertility.sub" : "生育能力: -%d",
   "tooltip.bee_modifier.mutation.mul" : "变异几率: %fx",
-  "tooltip.bee_modifier.territory.mul" : "活动范围: %fx"
+  "tooltip.bee_modifier.territory.mul" : "活动范围: %fx",
+  "tooltip.bee_modifier.empty": "None"
 }

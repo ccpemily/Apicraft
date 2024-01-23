@@ -1,0 +1,32 @@
+{
+  "type": "apicraft:bee_product",
+  "species": "apicraft:species.meadows",
+  "products": [
+    {
+      "item": "apicraft:bee_comb_honey",
+      "count": 1,
+      "chance": 0.8
+    },
+    {
+      "item": "minecraft:honeycomb",
+      "count": 1,
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:diamond",
+      "count": 1,
+      "chance": 0.05,
+      "special": true
+    }
+  ],
+  "special_conditions": [
+    {
+      "type": "apicraft:require_block",
+      "value": {
+        "tags": [
+          "#forge:storage_blocks/diamond"
+        ]
+      }
+    }
+  ]
+}

@@ -8,6 +8,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class ThermalApiary extends AbstractBeeHousingBlock {
     public ThermalApiary() {
-        super(BlockBehaviour.Properties.of().strength(2.0f).requiresCorrectToolForDrops(), ThermalApiaryEntity.class, Registries.TILE_ENTITIES.getSup("thermal_apiary"));
+        super(BlockBehaviour.Properties.of().strength(2.0f).requiresCorrectToolForDrops(),
+                ThermalApiaryEntity.class,
+                Registries.TILE_ENTITIES.getSup("thermal_apiary")
+        );
     }
 }

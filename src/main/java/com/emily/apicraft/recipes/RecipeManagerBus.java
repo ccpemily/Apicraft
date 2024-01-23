@@ -1,4 +1,4 @@
-package com.emily.apicraft.utils.recipes;
+package com.emily.apicraft.recipes;
 
 import com.emily.apicraft.interfaces.utils.recipes.ICustomManager;
 import net.minecraft.world.item.crafting.RecipeManager;

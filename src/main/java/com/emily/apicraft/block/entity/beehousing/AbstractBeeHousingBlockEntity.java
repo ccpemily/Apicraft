@@ -111,7 +111,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             return false; // Invalid bee type (exceptional)
         }
         BeeTypes type = typeOptional.get();
-        if(type == BeeTypes.DRONE){
+        if(type == BeeTypes.PRINCESS){
             setActive(false);
             ItemStack droneStack = inventory.getDrone();
             if(droneStack.getItem() instanceof BeeItem && ((BeeItem) droneStack.getItem()).getBeeType() == BeeTypes.DRONE){
@@ -149,7 +149,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             boolean canWork =  canWorkCache.queenCanWork(currentQueen, this);
             // Check for flowers
             flowersCache.update(this, currentQueen);
-            boolean hasFlower = flowersCache.getFlowersPos().size() > 0;
+            boolean hasFlower = !flowersCache.getFlowersPos().isEmpty();
             boolean dirty = flowersCache.isDirty();
             if(!hasFlower){
                 // Flower error comes first
@@ -170,7 +170,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             return;
         }
         if(inventory.getQueen().getItem() instanceof BeeItem beeItem){
-            if(beeItem.getBeeType() == BeeTypes.DRONE){
+            if(beeItem.getBeeType() == BeeTypes.PRINCESS){
                 tickBreed();
             }
             else if(beeItem.getBeeType() == BeeTypes.QUEEN){
@@ -230,7 +230,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
         ItemStack princessStack = inventory.getQueen();
         ItemStack droneStack = inventory.getDrone();
         if(princessStack.getItem() instanceof BeeItem beeItem){
-            if(beeItem.getBeeType() != BeeTypes.DRONE){
+            if(beeItem.getBeeType() != BeeTypes.PRINCESS){
                 processStorage.clear();
                 processStorage.setCapacity(0);
                 return;
@@ -521,7 +521,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
             biome = hasLevel() ? Objects.requireNonNull(getLevel()).getBiome(pos()).get() : null;
         }
         else{
-            this.baseTemperature = (int) Math.floor(biome.getBaseTemperature() * 100);
+            this.baseTemperature = (int) Math.floor(biome.getModifiedClimateSettings().temperature() * 100);
             this.baseHumidity = (int) Math.floor(biome.getModifiedClimateSettings().downfall() * 100);
         }
     }
@@ -559,7 +559,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     }
 
     @Override
-    public int applyLifespanModifier(int val) {
+    public float applyLifespanModifier(float val) {
         return inventory.applyLifespanModifier(val);
     }
 

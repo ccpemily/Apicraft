@@ -1,4 +1,4 @@
-package com.emily.apicraft.utils.recipes.mutation;
+package com.emily.apicraft.recipes.mutation;
 
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
@@ -16,7 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe> {
     @Override
@@ -41,7 +43,7 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
                 JsonObject result = item.getAsJsonObject();
                 IAllele<AlleleSpecies> species = null;
                 float chance = 0;
-                List<IBeeCondition> conditionList = new ArrayList<>();
+                Map<ResourceLocation, IBeeCondition> conditionMap = new HashMap<>();
 
                 if(result.has(JsonUtils.SPECIES)){
                     species = (IAllele<AlleleSpecies>) Registries.ALLELES.get(result.get(JsonUtils.SPECIES).getAsString());
@@ -51,11 +53,15 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
                 }
                 if(result.has(JsonUtils.CONDITIONS)){
                     for(var cItem : result.getAsJsonArray(JsonUtils.CONDITIONS)){
-                        if(cItem.getAsJsonObject().has(JsonUtils.TYPE)){
-                            IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(cItem.getAsJsonObject().get(JsonUtils.TYPE).getAsString()).getSerializer().get();
-                            IBeeCondition cond = serializer.fromJson(ResourceLocation.tryParse(cItem.getAsJsonObject().get(JsonUtils.TYPE).getAsString()), cItem.getAsJsonObject());
+                        if(cItem.getAsJsonObject().has(JsonUtils.TYPE) && cItem.getAsJsonObject().has(JsonUtils.VALUE)){
+                            String type = cItem.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
+                            IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
+                            IBeeCondition cond = serializer.fromJson(
+                                    ResourceLocation.tryParse(type),
+                                    cItem.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
+                            );
                             if(cond != null){
-                                conditionList.add(cond);
+                                conditionMap.put(ResourceLocation.tryParse(type), cond);
                             }
                         }
                     }
@@ -63,7 +69,7 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
                 if(species != null && chance != 0){
                     results.add(species);
                     chances.add(chance);
-                    conditions.add(conditionList);
+                    conditions.add(conditionMap.values().stream().toList());
                 }
             }
         }

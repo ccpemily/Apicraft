@@ -5,6 +5,7 @@ import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.utils.ItemUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
@@ -26,10 +27,13 @@ public class ApicraftJeiPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(Registries.ITEMS.get("bee_drone"), BeeSubtypeInterpreter.INSTANCE);
-        registration.registerSubtypeInterpreter(Registries.ITEMS.get("bee_queen"), BeeSubtypeInterpreter.INSTANCE);
-        registration.registerSubtypeInterpreter(Registries.ITEMS.get("bee_larva"), BeeSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(Registries.ITEMS.get(ItemUtils.BEE_DRONE_ID), BeeSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(Registries.ITEMS.get(ItemUtils.BEE_PRINCESS_ID), BeeSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(Registries.ITEMS.get(ItemUtils.BEE_QUEEN_ID), BeeSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(Registries.ITEMS.get(ItemUtils.BEE_LARVA_ID), BeeSubtypeInterpreter.INSTANCE);
     }
+
+
 
     private static class BeeSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
         public static final BeeSubtypeInterpreter INSTANCE = new BeeSubtypeInterpreter();

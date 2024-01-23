@@ -56,7 +56,7 @@ public class BeeKaryotype {
         return alleles;
     }
 
-    public BeeGenome defaultGenome(Alleles.Species species){
+    public BeeGenome defaultGenome(IAllele<AlleleSpecies> species){
         BeeChromosome[] chromosomes = new BeeChromosome[karyotype.size()];
         IAllele<?>[] template = defaultTemplate(species);
         for(int i = 0; i < karyotype.size(); i++){

@@ -1,6 +1,7 @@
 package com.emily.apicraft.bee;
 
-import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.interfaces.genetics.IAllele;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
@@ -15,20 +16,21 @@ import java.util.Map;
 import java.util.Optional;
 
 public class BeeProductData {
-    private final Map<Alleles.Species, BeeProductInfo> productData;
+    private final Map<IAllele<AlleleSpecies>, BeeProductInfo> productData;
     private final int capacity;
 
     public BeeProductData(int capacity){
         productData = new HashMap<>();
         this.capacity = capacity;
     }
+    @SuppressWarnings("unchecked")
     public BeeProductData(ItemStack container, CompoundTag tag){
         productData = new HashMap<>();
         ListTag list = tag.getList(Tags.TAG_PRODUCT_DATA, Tag.TAG_COMPOUND);
         if(!list.isEmpty()){
             for(int i = 0; i < list.size(); i++){
                 CompoundTag infoTag = list.getCompound(i);
-                Alleles.Species species = (Alleles.Species) Registries.ALLELES.get(infoTag.getString(Tags.TAG_PRODUCT_SPECIES));
+                IAllele<AlleleSpecies> species = (IAllele<AlleleSpecies>) Registries.ALLELES.get(infoTag.getString(Tags.TAG_PRODUCT_SPECIES));
                 int normal = infoTag.getInt(Tags.TAG_NORMAL_COUNT);
                 int special = Math.min(infoTag.getInt(Tags.TAG_SPECIAL_COUNT), normal);
                 productData.put(species, new BeeProductInfo(normal, special));
@@ -40,7 +42,7 @@ public class BeeProductData {
     public CompoundTag writeToTag(CompoundTag tag){
         ListTag list = new ListTag();
         int i = 0;
-        for(Alleles.Species species : productData.keySet()){
+        for(IAllele<AlleleSpecies> species : productData.keySet()){
             if(species != null){
                 CompoundTag infoTag = new CompoundTag();
                 infoTag.putString(Tags.TAG_PRODUCT_SPECIES, species.toString());
@@ -54,7 +56,7 @@ public class BeeProductData {
         return tag;
     }
 
-    private void add(Alleles.Species species, boolean special){
+    private void add(IAllele<AlleleSpecies> species, boolean special){
         if(!productData.containsKey(species)){
             productData.put(species, new BeeProductInfo());
         }
@@ -67,10 +69,10 @@ public class BeeProductData {
         }
     }
 
-    private Optional<Tuple<Alleles.Species, Boolean>> remove(){
-        Iterator<Alleles.Species> iterator = productData.keySet().iterator();
+    private Optional<Tuple<IAllele<AlleleSpecies>, Boolean>> remove(){
+        Iterator<IAllele<AlleleSpecies>> iterator = productData.keySet().iterator();
         if(iterator.hasNext()){
-            Alleles.Species species = iterator.next();
+            IAllele<AlleleSpecies> species = iterator.next();
             BeeProductInfo.RemoveResult result = productData.get(species).removeProduct();
             if(result == BeeProductInfo.RemoveResult.NO_PRODUCT){
                 productData.remove(species);
@@ -80,13 +82,13 @@ public class BeeProductData {
                 if(!productData.get(species).hasProduct()){
                     productData.remove(species);
                 }
-                return Optional.of(new Tuple<>(species, result == BeeProductInfo.RemoveResult.REMOVED_ALL));
+                return Optional.of(new Tuple<>(species, result == BeeProductInfo.RemoveResult.REMOVED_BOTH));
             }
         }
         return Optional.empty();
     }
 
-    public boolean tryAdd(Alleles.Species species, boolean special){
+    public boolean tryAdd(IAllele<AlleleSpecies> species, boolean special){
         if(getTotalStored() >= capacity){
             return false;
         } else {
@@ -95,7 +97,7 @@ public class BeeProductData {
         }
     }
 
-    public Optional<Tuple<Alleles.Species, Boolean>> tryRemove(){
+    public Optional<Tuple<IAllele<AlleleSpecies>, Boolean>> tryRemove(){
         if(getTotalStored() <= 0){
             return Optional.empty();
         } else {

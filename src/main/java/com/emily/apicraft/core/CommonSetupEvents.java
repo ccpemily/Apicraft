@@ -1,7 +1,7 @@
 package com.emily.apicraft.core;
 
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.utils.recipes.RecipeManagerBus;
+import com.emily.apicraft.recipes.RecipeManagerBus;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;

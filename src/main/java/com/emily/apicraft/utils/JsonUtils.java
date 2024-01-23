@@ -26,8 +26,8 @@ public class JsonUtils {
     public static final String TO = "to";
 
     public static final String REQUIRE_BLOCK = "require_block";
-    public static final String BLOCK = "block";
-    public static final String TAG = "tag";
+    public static final String BLOCKS = "blocks";
+    public static final String TAGS = "tags";
 
     public static final String REQUIRE_PLAYER = "require_player";
     public static final String NAME = "name";

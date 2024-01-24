@@ -27,7 +27,7 @@ public class HumiditySerializer implements IConditionSerializer<ConditionHumidit
             from = EnumHumidity.valueOf(fromVal.toUpperCase(Locale.ENGLISH));
             to = EnumHumidity.valueOf(toVal.toUpperCase(Locale.ENGLISH));
         }
-        if(from != null && to != null){
+        if(from != null){
             return new ConditionHumidity(from, to);
         }
         return null;

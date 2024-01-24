@@ -79,28 +79,28 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         Optional<BeeProductData> data =  BeeProductFrameCapability.get(stack).getProductData();
         data.ifPresent(beeProductData ->
-                components.add(Component.translatable("tooltip.frame.product_stored", beeProductData.getTotalStored(), this.type.maxUse))
+                components.add(Component.translatable("tooltip.frame.product_stored", beeProductData.getTotalStored(), this.type.maxUse).withStyle(ChatFormatting.GOLD))
         );
         List<Component> modifiers = new ArrayList<>();
         if(type.lifespanModifier != 1.0f){
-            modifiers.add(Component.translatable("tooltip.bee_modifier.lifespan.mul", 1 / type.lifespanModifier));
+            modifiers.add(Component.translatable("tooltip.bee_modifier.lifespan.mul", 1 / type.lifespanModifier).withStyle(ChatFormatting.GRAY));
         }
         if(type.productivityModifier != 1.0f){
-            modifiers.add(Component.translatable("tooltip.bee_modifier.productivity.mul", type.productivityModifier));
+            modifiers.add(Component.translatable("tooltip.bee_modifier.productivity.mul", type.productivityModifier).withStyle(ChatFormatting.GRAY));
         }
         if(type.fertilityModifier != 0){
             if(type.fertilityModifier > 0){
-                modifiers.add(Component.translatable("tooltip.bee_modifier.fertility.add", type.fertilityModifier));
+                modifiers.add(Component.translatable("tooltip.bee_modifier.fertility.add", type.fertilityModifier).withStyle(ChatFormatting.GRAY));
             }
             else {
-                modifiers.add(Component.translatable("tooltip.bee_modifier.fertility.sub", -type.fertilityModifier));
+                modifiers.add(Component.translatable("tooltip.bee_modifier.fertility.sub", -type.fertilityModifier).withStyle(ChatFormatting.GRAY));
             }
         }
         if(type.mutationModifier != 1.0f){
-            modifiers.add(Component.translatable("tooltip.bee_modifier.mutation.mul", type.mutationModifier));
+            modifiers.add(Component.translatable("tooltip.bee_modifier.mutation.mul", type.mutationModifier).withStyle(ChatFormatting.GRAY));
         }
         if(type.territoryModifier != 1.0f){
-            modifiers.add(Component.translatable("tooltip.bee_modifier.territory.mul", type.territoryModifier));
+            modifiers.add(Component.translatable("tooltip.bee_modifier.territory.mul", type.territoryModifier).withStyle(ChatFormatting.GRAY));
         }
         if(!modifiers.isEmpty()){
             if(Screen.hasShiftDown()){
@@ -113,7 +113,7 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
         }
         else{
             components.add(Component.translatable("tooltip.bee_modifier.title"));
-            components.add(Component.translatable("tooltip.bee_modifier.empty"));
+            components.add(Component.translatable("tooltip.bee_modifier.empty").withStyle(ChatFormatting.GRAY));
         }
     }
 

@@ -34,7 +34,7 @@ public class ApicraftJeiPlugin implements IModPlugin {
     public static final RecipeType<BeeProductRecipe> BEE_PRODUCT_RECIPE_TYPE = new RecipeType<>(RecipeTypes.BEE_PRODUCT_RECIPE.getId(), BeeProductRecipe.class);
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return new ResourceLocation(Apicraft.MOD_ID);
+        return new ResourceLocation(Apicraft.MOD_ID, "jei_plugin");
     }
 
     @Override

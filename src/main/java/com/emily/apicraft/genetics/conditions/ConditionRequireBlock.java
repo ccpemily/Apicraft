@@ -20,6 +20,14 @@ public class ConditionRequireBlock implements IBeeCondition {
         this.tags.addAll(tags);
     }
 
+    public Set<Block> getAcceptedBlocks(){
+        return resourceType;
+    }
+
+    public Set<TagKey<Block>> getAcceptedTags(){
+        return tags;
+    }
+
     @Override
     public float applyModifier(IBeeHousing beeHousing, float chance) {
         BlockPos pos = beeHousing.getBeeHousingPos();
@@ -45,7 +53,7 @@ public class ConditionRequireBlock implements IBeeCondition {
 
     @Override
     public List<Component> getConditionTooltip() {
-        return null;
+        return List.of(Component.translatable("tooltip.condition.require_block"));
     }
 
     @Override

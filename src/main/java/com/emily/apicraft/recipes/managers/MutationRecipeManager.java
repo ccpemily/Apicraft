@@ -9,8 +9,11 @@ import com.emily.apicraft.recipes.RecipeTypes;
 import com.emily.apicraft.recipes.mutation.MutationRecipe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.slf4j.Logger;
 
 import java.util.*;
+
+import static com.mojang.logging.LogUtils.getLogger;
 
 public class MutationRecipeManager implements ICustomManager {
     public static final MutationRecipeManager INSTANCE = new MutationRecipeManager();
@@ -38,6 +41,11 @@ public class MutationRecipeManager implements ICustomManager {
         for(var entry : recipes.entrySet()){
             addRecipe(entry.getValue());
         }
-        Apicraft.LOGGER.debug(String.format("Loaded %d mutation recipes from refreshing event.", recipeMap.size()));
+        int size = 0;
+        for(var val : recipeMap.values()){
+            size += val.size();
+        }
+        Logger logger = getLogger();
+        logger.debug(String.format("Loaded %d mutation recipes from refreshing event.", size));
     }
 }

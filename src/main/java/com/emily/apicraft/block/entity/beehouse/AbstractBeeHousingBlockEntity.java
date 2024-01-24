@@ -196,7 +196,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
 
     protected void doProduction(){
         if(currentQueen != null && level != null){
-            boolean active = level.random.nextBoolean();
+            boolean active = level.random.nextInt(100) < 75;
             Alleles.Species species = active ? currentQueen.getGenome().getSpecies() : currentQueen.getGenome().getInactiveSpecies();
             boolean special = currentQueen.canProduceSpecial(this, active);
 

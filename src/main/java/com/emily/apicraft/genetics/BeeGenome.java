@@ -96,7 +96,10 @@ public class BeeGenome {
         // If earned hybrid species, check for mutations
         if(!speciesChromosome.isPure()){
             // Find available mutation list
-            List<Mutation> mutations = MutationManager.findMutations((Alleles.Species) speciesChromosome.getActive(), (Alleles.Species) speciesChromosome.getInactive());
+            List<Mutation> mutations = MutationManager.findMutations(
+                    (Alleles.Species) speciesChromosome.getActive(),
+                    (Alleles.Species) speciesChromosome.getInactive()
+            );
             if(!mutations.isEmpty()){
                 IAllele<?>[] activeAlleles = getAllActive(chromosomes);
                 IAllele<?>[] inactiveAlleles = getAllInactive(chromosomes);

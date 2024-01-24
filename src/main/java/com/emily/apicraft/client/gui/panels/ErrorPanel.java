@@ -14,7 +14,7 @@ public class ErrorPanel extends PanelBase {
     public static int defaultHeaderColor = 0xe1c92f;
     public static int defaultSubHeaderColor = 0xaaafb8;
     public static int defaultTextColor = 0x101010;
-    public static int defaultBackgroundColor = 0x35a4ff;
+    public static int defaultBackgroundColor = 0xff7777;
     private final Supplier<ErrorStates> supplier;
     public ErrorPanel(IGuiAccess gui, Supplier<ErrorStates> supplier) {
         super(gui, RIGHT);

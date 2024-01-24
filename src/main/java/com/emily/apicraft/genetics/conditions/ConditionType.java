@@ -19,12 +19,12 @@ public class ConditionType<T extends IBeeCondition> implements IConditionType<T>
     }
 
     @Override
-    public String toString() {
-        return registryName.toString();
+    public Supplier<IConditionSerializer<T>> getSerializer() {
+        return serializer;
     }
 
     @Override
-    public Supplier<IConditionSerializer<T>> getSerializer() {
-        return serializer;
+    public ResourceLocation getResourceLocation() {
+        return registryName;
     }
 }

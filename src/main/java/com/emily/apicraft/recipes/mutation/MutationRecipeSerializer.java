@@ -1,17 +1,24 @@
 package com.emily.apicraft.recipes.mutation;
 
+import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.IAllele;
 import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
+import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.registry.Registries;
 import com.emily.apicraft.utils.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +62,13 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
                                 condition.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
                         );
                         if(cond != null){
+                            boolean containedBy = false;
+                            for(var c : conditions){
+                                if(c.getClass().isInstance(cond)){
+                                    containedBy = true;
+                                    break;
+                                }
+                            }
                             conditions.add(cond);
                         }
                     }
@@ -70,13 +84,40 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public @Nullable MutationRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
-        return null;
+        IAllele<AlleleSpecies> first = (IAllele<AlleleSpecies>) Registries.ALLELES.get(buffer.readResourceLocation());
+        IAllele<AlleleSpecies> second = (IAllele<AlleleSpecies>) Registries.ALLELES.get(buffer.readResourceLocation());
+        IAllele<AlleleSpecies> result = (IAllele<AlleleSpecies>) Registries.ALLELES.get(buffer.readResourceLocation());
+        float baseChance = buffer.readFloat();
+        int conditionCount = buffer.readInt();
+        List<IBeeCondition> conditions = new ArrayList<>(conditionCount);
+        for(int i = 0; i < conditionCount; i++){
+            ResourceLocation condName = buffer.readResourceLocation();
+            IConditionSerializer<?> serializer = Registries.CONDITION_SERIALIZERS.get(condName);
+            IBeeCondition cond = serializer.fromNetwork(condName, buffer);
+            if(cond != null){
+                conditions.add(cond);
+            }
+        }
+        return new MutationRecipe(id, new Combination<>(first, second), result, baseChance, conditions);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void toNetwork(@NotNull FriendlyByteBuf id, @NotNull MutationRecipe buffer) {
-
+    public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull MutationRecipe recipe) {
+        Combination<IAllele<AlleleSpecies>> parents = recipe.getParents();
+        Mutation mutation = recipe.getResult();
+        buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, parents.getFirst().toString()));
+        buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, parents.getSecond().toString()));
+        buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, mutation.getResult().toString()));
+        buffer.writeFloat(recipe.baseChance);
+        buffer.writeInt(mutation.getConditions().size());
+        for(var cond : mutation.getConditions()){
+            IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) cond.getType().getSerializer().get();
+            buffer.writeResourceLocation(cond.getType().getResourceLocation());
+            serializer.toNetwork(buffer, cond);
+        }
     }
 }

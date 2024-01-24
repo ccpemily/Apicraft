@@ -12,6 +12,10 @@ public class ConditionOwnerName implements IBeeCondition {
     public ConditionOwnerName(String name){
         this.name = name;
     }
+
+    public String getName(){
+        return name;
+    }
     @Override
     public float applyModifier(IBeeHousing beeHousing, float chance) {
         return Objects.equals(beeHousing.getBeeHousingOwnerName(), name) ? chance : 0;
@@ -19,7 +23,7 @@ public class ConditionOwnerName implements IBeeCondition {
 
     @Override
     public List<Component> getConditionTooltip() {
-        return null;
+        return List.of(Component.translatable("tooltip.condition.require_player", name));
     }
 
     @Override

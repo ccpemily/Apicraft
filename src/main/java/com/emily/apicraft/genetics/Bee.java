@@ -116,7 +116,7 @@ public class Bee {
                 .append(Component.translatable(speciesActive.getValue().getHumidity().getName())
                                 .append(" / ")
                                 .append(Component.translatable(genome.getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true).getName()))
-                ).withStyle(ChatFormatting.GREEN)
+                ).withStyle(ChatFormatting.AQUA)
         );
         Alleles.Behavior behavior = (Alleles.Behavior) genome.getAllele(AlleleTypes.BEHAVIOR, true);
         ChatFormatting color = ChatFormatting.WHITE;
@@ -183,6 +183,8 @@ public class Bee {
         }
         int fertility = housing.applyFertilityModifier(getGenome().getFertility());
         List<ItemStack> beeList = new ArrayList<>();
+        Random random = new Random();
+        int r = random.nextInt(2);
         for (int i = 0; i < fertility; i++){
             ItemStack stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_LARVA_ID));
             Bee bee = new Bee(getGenome().inheritWith(mate, housing), null, 0);
@@ -190,7 +192,7 @@ public class Bee {
                 stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_PRINCESS_ID));
                 bee = new Bee(getGenome().inheritWith(mate, housing), null, generation + 1);
             }
-            if(i == 1){
+            if(i <= 1 + r){
                 stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_DRONE_ID));
             }
             BeeProviderCapability.get(stack).setBeeIndividual(bee);

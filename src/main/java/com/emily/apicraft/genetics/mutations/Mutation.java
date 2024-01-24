@@ -37,6 +37,10 @@ public class Mutation {
     public IAllele<AlleleSpecies> getResult() {
         return speciesResult;
     }
+    public List<IBeeCondition> getConditions() {return conditions;}
+    public int getBaseChance(){
+        return baseChance;
+    }
 
     public float getConditionalChance(IBeeHousing housing){
         float result = baseChance;

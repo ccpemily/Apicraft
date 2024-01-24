@@ -4,9 +4,9 @@ import cofh.lib.util.recipes.SerializableRecipe;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
 import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.conditions.*;
 import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.recipes.RecipeSerializers;
 import com.emily.apicraft.recipes.RecipeTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +22,11 @@ public class MutationRecipe extends SerializableRecipe {
     protected final IAllele<AlleleSpecies> result;
     protected final float baseChance;
     protected final List<IBeeCondition> conditions = new ArrayList<>();
+
+    protected boolean hasConditionBlock = false;
+    protected boolean hasConditionPlayer = false;
+    protected boolean hasConditionTemperature = false;
+    protected boolean hasConditionHumidity = false;
 
     public MutationRecipe(
             ResourceLocation id,
@@ -43,7 +48,7 @@ public class MutationRecipe extends SerializableRecipe {
         }
         else{
             this.result = null;
-            Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null ");
+            Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null result.");
         }
         if(chance > 0 && chance <= 1){
             this.baseChance = chance;
@@ -56,7 +61,21 @@ public class MutationRecipe extends SerializableRecipe {
             this.conditions.addAll(conditions);
         }
         else{
-            Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null conditions.");
+            if(conditions == null) Apicraft.LOGGER.warn("Invalid mutation recipe :" + id + "\nTrying to add a mutation with null conditions.");
+        }
+        for(IBeeCondition condition : this.conditions){
+            if(condition instanceof ConditionRequireBlock){
+                hasConditionBlock = true;
+            }
+            if(condition instanceof ConditionOwnerName){
+                hasConditionPlayer = true;
+            }
+            if(condition instanceof ConditionTemperature){
+                hasConditionTemperature = true;
+            }
+            if(condition instanceof ConditionHumidity){
+                hasConditionHumidity = true;
+            }
         }
         trim();
     }
@@ -71,6 +90,22 @@ public class MutationRecipe extends SerializableRecipe {
                 .setResult(result)
                 .setChance((int)Math.floor(baseChance * 100))
                 .addConditions(conditions).build();
+    }
+
+    public boolean hasConditionBlock() {
+        return hasConditionBlock;
+    }
+
+    public boolean hasConditionPlayer() {
+        return hasConditionPlayer;
+    }
+
+    public boolean hasConditionTemperature() {
+        return hasConditionTemperature;
+    }
+
+    public boolean hasConditionHumidity() {
+        return hasConditionHumidity;
     }
 
     private void trim(){

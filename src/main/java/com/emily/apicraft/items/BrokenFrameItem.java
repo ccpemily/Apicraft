@@ -3,6 +3,8 @@ package com.emily.apicraft.items;
 import com.emily.apicraft.bee.BeeProductData;
 import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.items.subtype.FrameTypes;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -24,10 +26,15 @@ public class BrokenFrameItem extends FrameItem{
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         Optional<BeeProductData> data =  BeeProductFrameCapability.get(stack).getProductData();
         data.ifPresent(beeProductData ->
-                components.add(Component.translatable("tooltip.frame.product_stored", beeProductData.getTotalStored(), this.getType().maxUse))
+                components.add(Component.translatable("tooltip.frame.product_stored", beeProductData.getTotalStored(), this.getType().maxUse).withStyle(ChatFormatting.GOLD))
         );
+        if(Screen.hasShiftDown()){
+            components.add(Component.translatable("tooltip.bee_modifier.title"));
+            components.add(Component.translatable("tooltip.bee_modifier.empty").withStyle(ChatFormatting.GRAY));
+        }
+        else{
+            components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+        }
 
-        components.add(Component.translatable("tooltip.bee_modifier.title"));
-        components.add(Component.translatable("tooltip.bee_modifier.empty"));
     }
 }

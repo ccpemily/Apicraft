@@ -25,7 +25,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
     private final BeeTypes type;
 
     public BeeItem(BeeTypes type) {
-        super(type == BeeTypes.QUEEN ? new Properties().stacksTo(1) : new Properties());
+        super((type == BeeTypes.QUEEN || type == BeeTypes.PRINCESS) ? new Properties().stacksTo(1) : new Properties());
         this.type = type;
         ClientSetupEvents.addColorable(this);
     }

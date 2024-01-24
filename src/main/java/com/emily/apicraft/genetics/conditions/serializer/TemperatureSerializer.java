@@ -46,11 +46,14 @@ public class TemperatureSerializer implements IConditionSerializer<ConditionTemp
     @Nullable
     @Override
     public ConditionTemperature fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
-        return null;
+        EnumTemperature start = EnumTemperature.values()[buffer.readInt()];
+        EnumTemperature end = EnumTemperature.values()[buffer.readInt()];
+        return new ConditionTemperature(start, end);
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buffer, ConditionTemperature condition) {
-
+        buffer.writeInt(condition.getTemperatureStart().ordinal());
+        buffer.writeInt(condition.getTemperatureEnd().ordinal());
     }
 }

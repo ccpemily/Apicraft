@@ -206,7 +206,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                                     Component.translatable(temperatureCond.getTemperatureStart().getName()).withStyle(ChatFormatting.GREEN) :
                                     Component.translatable(temperatureCond.getTemperatureStart().getName()).append("+").withStyle(ChatFormatting.GREEN)
                             ),
-                            105, yOffsetTemperature, 0xffffff
+                            106, yOffsetTemperature, 0xffffff
                     );
                 }
                 if(humidityCond != null){
@@ -218,7 +218,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                                             Component.translatable(humidityCond.getHumidityStart().getName()).withStyle(ChatFormatting.AQUA) :
                                             Component.translatable(humidityCond.getHumidityStart().getName()).append("+").withStyle(ChatFormatting.AQUA)
                             ),
-                            105, 39 + yOffset, 0xffffff
+                            106, 39 + yOffset, 0xffffff
                     );
                 }
             }
@@ -238,12 +238,13 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
         List<IBeeCondition> conditions = recipe.getResult().getConditions();
         if(!conditions.isEmpty() && mouseX >= 90 && mouseX <= 120 && mouseY >= 11 && mouseY <= 19){
             List<Component> components = new ArrayList<>();
+            components.add(Component.translatable("tooltip.condition.title").withStyle(ChatFormatting.YELLOW));
             for(var cond : conditions){
                 components.addAll(cond.getConditionTooltip());
             }
             return components;
         }
-        if(displayAdditionalCondition(recipe) && mouseX >= 116 && mouseX <= 120 && mouseY >= 30 && mouseY <= 34){
+        if(displayAdditionalCondition(recipe) && mouseX >= 114 && mouseX <= 118 && mouseY >= 34 && mouseY <= 38){
             return List.of(
                     Component.translatable("tooltip.condition.contains_multiple"),
                     Component.translatable("tooltip.condition.contains_multiple.info")
@@ -255,7 +256,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
     private static boolean displayAdditionalCondition(MutationRecipe recipe){
         return (recipe.hasConditionBlock() && recipe.hasConditionPlayer()) ||
                 ((recipe.hasConditionBlock() || recipe.hasConditionPlayer()) && (recipe.hasConditionTemperature() || recipe.hasConditionHumidity()) ||
-                        recipe.getResult().getConditions().size() >= 3
+                        recipe.hasOtherConditions()
                 );
     }
 }

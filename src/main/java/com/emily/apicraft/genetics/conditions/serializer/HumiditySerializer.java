@@ -36,11 +36,14 @@ public class HumiditySerializer implements IConditionSerializer<ConditionHumidit
     @Nullable
     @Override
     public ConditionHumidity fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
-        return null;
+        EnumHumidity humidityStart = EnumHumidity.values()[buffer.readInt()];
+        EnumHumidity humidityEnd = EnumHumidity.values()[buffer.readInt()];
+        return new ConditionHumidity(humidityStart, humidityEnd);
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buffer, ConditionHumidity condition) {
-
+        buffer.writeInt(condition.getHumidityStart().ordinal());
+        buffer.writeInt(condition.getHumidityEnd().ordinal());
     }
 }

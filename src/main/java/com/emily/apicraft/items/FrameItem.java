@@ -102,18 +102,17 @@ public class FrameItem extends ItemCoFH implements IBeeModifierProvider {
         if(type.territoryModifier != 1.0f){
             modifiers.add(Component.translatable("tooltip.bee_modifier.territory.mul", type.territoryModifier).withStyle(ChatFormatting.GRAY));
         }
-        if(!modifiers.isEmpty()){
-            if(Screen.hasShiftDown()){
-                components.add(Component.translatable("tooltip.bee_modifier.title"));
+        if(Screen.hasShiftDown()){
+            components.add(Component.translatable("tooltip.bee_modifier.title"));
+            if(!modifiers.isEmpty()){
                 components.addAll(modifiers);
             }
             else{
-                components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+                components.add(Component.translatable("tooltip.bee_modifier.empty").withStyle(ChatFormatting.GRAY));
             }
         }
         else{
-            components.add(Component.translatable("tooltip.bee_modifier.title"));
-            components.add(Component.translatable("tooltip.bee_modifier.empty").withStyle(ChatFormatting.GRAY));
+            components.add(Component.translatable("bee.tooltip.tmi").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
         }
     }
 

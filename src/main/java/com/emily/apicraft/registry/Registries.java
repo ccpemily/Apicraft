@@ -35,8 +35,8 @@ import com.emily.apicraft.items.subtype.FrameTypes;
 import com.emily.apicraft.recipes.RecipeManagers;
 import com.emily.apicraft.recipes.RecipeSerializers;
 import com.emily.apicraft.recipes.RecipeTypes;
-import com.emily.apicraft.recipes.conditions.ConditionSerializers;
-import com.emily.apicraft.recipes.conditions.Conditions;
+import com.emily.apicraft.genetics.conditions.ConditionSerializers;
+import com.emily.apicraft.genetics.conditions.Conditions;
 import com.emily.apicraft.utils.ItemUtils;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.chat.Component;
@@ -52,7 +52,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryObject;
@@ -160,7 +159,14 @@ public class Registries {
                                 for (Alleles.Species species : Alleles.Species.values()) {
                                     ItemStack bee = new ItemStack(item.get());
                                     IBeeProvider beeProvider = BeeProviderCapability.get(bee);
-                                    beeProvider.setBeeIndividual(Bee.getPure(species));
+                                    if(stack.getItem() instanceof BeeItem beeItem){
+                                        if(beeItem.getBeeType() == BeeTypes.QUEEN){
+                                            beeProvider.setBeeIndividual(Bee.getPureMated(species));
+                                        }
+                                        else{
+                                            beeProvider.setBeeIndividual(Bee.getPure(species));
+                                        }
+                                    }
                                     pOutput.accept(bee);
                                 }
                             }

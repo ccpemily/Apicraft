@@ -27,6 +27,7 @@ public class MutationRecipe extends SerializableRecipe {
     protected boolean hasConditionPlayer = false;
     protected boolean hasConditionTemperature = false;
     protected boolean hasConditionHumidity = false;
+    protected boolean hasOtherConditions = false;
 
     public MutationRecipe(
             ResourceLocation id,
@@ -67,14 +68,17 @@ public class MutationRecipe extends SerializableRecipe {
             if(condition instanceof ConditionRequireBlock){
                 hasConditionBlock = true;
             }
-            if(condition instanceof ConditionOwnerName){
+            else if(condition instanceof ConditionOwnerName){
                 hasConditionPlayer = true;
             }
-            if(condition instanceof ConditionTemperature){
+            else if(condition instanceof ConditionTemperature){
                 hasConditionTemperature = true;
             }
-            if(condition instanceof ConditionHumidity){
+            else if(condition instanceof ConditionHumidity){
                 hasConditionHumidity = true;
+            }
+            else {
+                hasOtherConditions = true;
             }
         }
         trim();
@@ -106,6 +110,9 @@ public class MutationRecipe extends SerializableRecipe {
 
     public boolean hasConditionHumidity() {
         return hasConditionHumidity;
+    }
+    public boolean hasOtherConditions(){
+        return hasOtherConditions;
     }
 
     private void trim(){

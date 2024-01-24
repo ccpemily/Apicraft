@@ -38,6 +38,7 @@ public class Bee {
     // region Constructor
     public Bee(BeeGenome genome, @Nullable BeeGenome mate, int generation){
         this.genome = genome;
+        this.mate = mate;
         this.health = genome.getMaxHealth();
         this.generation = generation;
     }
@@ -192,7 +193,7 @@ public class Bee {
                 stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_PRINCESS_ID));
                 bee = new Bee(getGenome().inheritWith(mate, housing), null, generation + 1);
             }
-            if(i <= 1 + r){
+            if(i <= 1 + r && i > 0){
                 stack = new ItemStack(Registries.ITEMS.get(ItemUtils.BEE_DRONE_ID));
             }
             BeeProviderCapability.get(stack).setBeeIndividual(bee);
@@ -228,7 +229,7 @@ public class Bee {
         }
         // Check cave dwelling
         if(!level.dimensionType().hasCeiling() && level.dimensionType().hasSkyLight()){
-            if(!getGenome().isCaveDwelling() && !level.canSeeSkyFromBelowWater(housing.getBeeHousingPos())){
+            if(!getGenome().isCaveDwelling() && !level.canSeeSkyFromBelowWater(housing.getBeeHousingPos().above())){
                 housing.setErrorState(ErrorStates.CANT_SEE_SKY);
                 return false; // Not cave dwelling but in cave
             }
@@ -257,6 +258,8 @@ public class Bee {
     }
 
     public boolean canProduceSpecial(IBeeHousing housing, boolean active){
+
+        // TODO change to BeeProduct RecipeMap
         EnumTemperature temperature = housing.getTemperature();
         EnumHumidity humidity = housing.getHumidity();
         EnumTemperature speciesTemperature =

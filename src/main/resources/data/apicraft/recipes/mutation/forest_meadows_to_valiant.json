@@ -1,0 +1,24 @@
+{
+  "type": "apicraft:mutation",
+  "parents": {
+    "first": "apicraft:species.forest",
+    "second": "apicraft:species.meadows"
+  },
+  "result": {
+    "species": "apicraft:species.valiant",
+    "chance": 0.1,
+    "conditions": [
+      {
+        "type": "apicraft:biome",
+        "value": {
+          "biomes": [
+            "minecraft:forest"
+          ],
+          "tags": [
+            "minecraft:is_overworld"
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -67,12 +67,28 @@ public class RequireBlockSerializer implements IConditionSerializer<ConditionReq
     @Nullable
     @Override
     public ConditionRequireBlock fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
-
-        return null;
+        Set<Block> blocks = new HashSet<>();
+        Set<TagKey<Block>> tags = new HashSet<>();
+        int blockCount = buffer.readInt();
+        for(int i = 0; i < blockCount; i++){
+            ResourceLocation loc = buffer.readResourceLocation();
+            Block block = ForgeRegistries.BLOCKS.getValue(loc);
+            blocks.add(block);
+        }
+        int tagCount = buffer.readInt();
+        for(int i = 0; i < blockCount; i++){
+            ResourceLocation loc = buffer.readResourceLocation();
+            TagKey<Block> tag = BlockTags.create(loc);
+            tags.add(tag);
+        }
+        return new ConditionRequireBlock(blocks, tags);
     }
 
     @Override
     public void toNetwork(FriendlyByteBuf buffer, ConditionRequireBlock condition) {
-
+        buffer.writeInt(condition.getAcceptedBlocks().size());
+        condition.getAcceptedBlocks().forEach(block -> buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block))));
+        buffer.writeInt(condition.getAcceptedTags().size());
+        condition.getAcceptedTags().forEach(tag -> buffer.writeResourceLocation(tag.location()));
     }
 }

@@ -48,7 +48,6 @@ public class ApicraftJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
-
         registration.addRecipeCategories(new BeeMutationCategory(registration.getJeiHelpers().getGuiHelper(), ItemUtils.getDefaultDroneStack(), MUTATION_RECIPE_TYPE));
     }
 

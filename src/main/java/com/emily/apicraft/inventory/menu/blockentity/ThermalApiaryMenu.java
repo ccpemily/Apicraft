@@ -12,8 +12,8 @@ import net.minecraft.world.level.Level;
 public class ThermalApiaryMenu extends AbstractBeeHousingMenu {
     public ThermalApiaryMenu(int windowId, Level world, BlockPos pos, Inventory inventory, Player player) {
         super(Registries.MENUS.get("thermal_apiary"), windowId, world, pos, inventory, player);
-        addSlot(new SlotCoFH(this.invWrapper, 0, 29, 25));
-        addSlot(new SlotCoFH(this.invWrapper, 1, 29, 51));
+        addSlot(new SlotCoFH(this.invWrapper, 0, 29, 26));
+        addSlot(new SlotCoFH(this.invWrapper, 1, 29, 52));
         // Product slots
         addSlot(new SlotRemoveOnly(this.invWrapper, 2, 116, 52));
         addSlot(new SlotRemoveOnly(this.invWrapper, 3, 137, 39));

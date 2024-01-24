@@ -100,9 +100,9 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                 ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), mutation.getResult())
         ));
 
-        builder.addSlot(RecipeIngredientRole.INPUT, 19, 16).addItemStack(princess);
-        builder.addSlot(RecipeIngredientRole.INPUT, 72, 16).addItemStack(drone);
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 126, 16).addItemStack(queen);
+        builder.addSlot(RecipeIngredientRole.INPUT, 17, 16).addItemStack(princess);
+        builder.addSlot(RecipeIngredientRole.INPUT, 69, 16).addItemStack(drone);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 16).addItemStack(queen);
 
         List<IBeeCondition> conditions = recipe.getResult().getConditions();
         boolean alreadySet = false;
@@ -111,7 +111,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.CATALYST, 97, 38).addTooltipCallback(
                         (recipeSlotView, tooltip) -> {
                             if(!blockCond.getAcceptedBlocks().isEmpty()){
-                                tooltip.add(Component.translatable("tooltip.accept_blocks"));
+                                tooltip.add(Component.translatable("tooltip.accept_blocks").withStyle(ChatFormatting.DARK_GRAY));
                                 boolean firstBlock = true;
                                 MutableComponent component = Component.literal("  ");
                                 for(var b : blockCond.getAcceptedBlocks()){
@@ -126,7 +126,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                                 tooltip.add(component);
                             }
                             if(!blockCond.getAcceptedTags().isEmpty()){
-                                tooltip.add(Component.translatable("tooltip.accept_block_tags"));
+                                tooltip.add(Component.translatable("tooltip.accept_block_tags").withStyle(ChatFormatting.DARK_GRAY));
                                 blockCond.getAcceptedTags().forEach(
                                         tag -> tooltip.add(Component.literal("  #" + tag.location()).withStyle(ChatFormatting.GRAY))
                                 );
@@ -168,9 +168,9 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
         PoseStack stack = gui.pose();
         stack.pushPose();
         Font fontRenderer = Minecraft.getInstance().font;
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getFirst().getName()), 28, 38, 0xffffff);
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getSecond().getName()), 81, 38, 0xffffff);
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getResult().getResult().getName()), 135, 38, 0xffffff);
+        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getFirst().getName()), 26, 38, 0xffffff);
+        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getSecond().getName()), 78, 38, 0xffffff);
+        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getResult().getResult().getName()), 137, 38, 0xffffff);
         List<IBeeCondition> conditions = recipe.getResult().getConditions();
         if(conditions.isEmpty()){
             gui.drawCenteredString(fontRenderer, "%d%%".formatted(recipe.getResult().getBaseChance()), 105, 12, 0xffffff);
@@ -197,7 +197,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                 }
             }
             if(blockCond == null && playerCond == null && (temperatureCond != null || humidityCond != null)){
-                int yOffsetTemperature = humidityCond == null ? 44 : 39;
+                int yOffsetTemperature = humidityCond == null ? 43 : 39;
                 if(temperatureCond != null){
                     gui.drawCenteredString(
                             fontRenderer,
@@ -206,11 +206,11 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                                     Component.translatable(temperatureCond.getTemperatureStart().getName()).withStyle(ChatFormatting.GREEN) :
                                     Component.translatable(temperatureCond.getTemperatureStart().getName()).append("+").withStyle(ChatFormatting.GREEN)
                             ),
-                            106, yOffsetTemperature, 0xffffff
+                            107, yOffsetTemperature, 0xffffff
                     );
                 }
                 if(humidityCond != null){
-                    int yOffset = temperatureCond == null ? 5 : 10;
+                    int yOffset = temperatureCond == null ? 4 : 10;
                     gui.drawCenteredString(
                             fontRenderer,
                             Component.literal("H:").withStyle(ChatFormatting.YELLOW).append(
@@ -218,7 +218,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                                             Component.translatable(humidityCond.getHumidityStart().getName()).withStyle(ChatFormatting.AQUA) :
                                             Component.translatable(humidityCond.getHumidityStart().getName()).append("+").withStyle(ChatFormatting.AQUA)
                             ),
-                            106, 39 + yOffset, 0xffffff
+                            108, 39 + yOffset, 0xffffff
                     );
                 }
             }

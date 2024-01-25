@@ -1,6 +1,7 @@
 package com.emily.apicraft.genetics.conditions;
 
 import com.emily.apicraft.block.beehouse.IBeeHousing;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ConditionOwnerName implements IBeeCondition {
 
     @Override
     public List<Component> getConditionTooltip() {
-        return List.of(Component.translatable("tooltip.condition.require_player", name));
+        return List.of(Component.translatable("tooltip.condition.require_player", Component.literal(name).withStyle(ChatFormatting.YELLOW)));
     }
 
     @Override

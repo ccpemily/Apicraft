@@ -1,12 +1,14 @@
 package com.emily.apicraft.genetics;
 
 import com.emily.apicraft.core.lib.ErrorStates;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.genetics.mutations.MutationManager;
 import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.emily.apicraft.utils.Tags;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -14,6 +16,7 @@ import net.minecraft.nbt.Tag;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 public class BeeGenome {
     private final BeeKaryotype karyotype = BeeKaryotype.INSTANCE;
@@ -57,27 +60,46 @@ public class BeeGenome {
     // endregion
 
     // region GenomeInfo
-    public Alleles.Species getSpecies(){
-        return (Alleles.Species) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getActive();
+    @SuppressWarnings("unchecked")
+    public IAllele<AlleleSpecies> getSpecies(){
+        return (IAllele<AlleleSpecies>) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getActive();
     }
-    public Alleles.Species getInactiveSpecies(){
-        return (Alleles.Species) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getInactive();
+    @SuppressWarnings("unchecked")
+    public IAllele<AlleleSpecies> getInactiveSpecies(){
+        return (IAllele<AlleleSpecies>) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getInactive();
     }
 
     public IAllele<?> getAllele(IAlleleType type, boolean active){
         return active ? chromosomes[karyotype.getIndex(type)].getActive() : chromosomes[karyotype.getIndex(type)].getInactive();
     }
+
+    @SuppressWarnings("unchecked")
     public int getMaxHealth(){
-        return ((Alleles.LifeSpan) getAllele(AlleleTypes.LIFESPAN, true)).getValue();
+        return ((IAllele<Integer>) getAllele(AlleleTypes.LIFESPAN, true)).getValue();
     }
-    public float getProductivity() { return ((Alleles.Productivity) getAllele(AlleleTypes.PRODUCTIVITY, true)).getValue(); }
-    public int getFertility() { return ((Alleles.Fertility) getAllele(AlleleTypes.FERTILITY, true)).getValue(); }
-    public ErrorStates canWork(int skylight) { return ((Alleles.Behavior) getAllele(AlleleTypes.BEHAVIOR, true)).getValue().apply(skylight); }
+
+    @SuppressWarnings("unchecked")
+    public float getProductivity() { return ((IAllele<Float>) getAllele(AlleleTypes.PRODUCTIVITY, true)).getValue(); }
+
+    @SuppressWarnings("unchecked")
+    public int getFertility() { return ((IAllele<Integer>) getAllele(AlleleTypes.FERTILITY, true)).getValue(); }
+
+    @SuppressWarnings("unchecked")
+    public ErrorStates canWork(int skylight) { return ((IAllele<Function<Integer, ErrorStates>>) getAllele(AlleleTypes.BEHAVIOR, true)).getValue().apply(skylight); }
+
+    @SuppressWarnings("unchecked")
     public boolean toleratesRain(){
-        return ((Alleles.RainTolerance) getAllele(AlleleTypes.RAIN_TOLERANCE, true)).getValue();
+        return ((IAllele<Boolean>) getAllele(AlleleTypes.RAIN_TOLERANCE, true)).getValue();
     }
+
+    @SuppressWarnings("unchecked")
     public boolean isCaveDwelling(){
-        return ((Alleles.CaveDwelling) getAllele(AlleleTypes.CAVE_DWELLING, true)).getValue();
+        return ((IAllele<Boolean>) getAllele(AlleleTypes.CAVE_DWELLING, true)).getValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    public Vec3i getTerritory(){
+        return ((IAllele<Vec3i>) getAllele(AlleleTypes.TERRITORY, true)).getValue();
     }
     // endregion
 

@@ -4,6 +4,7 @@ import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.genetics.conditions.ConditionHumidity;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.utils.JsonUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +32,22 @@ public class HumiditySerializer implements IConditionSerializer<ConditionHumidit
             return new ConditionHumidity(from, to);
         }
         return null;
+    }
+
+    @Override
+    public JsonObject toJson(ConditionHumidity condition) {
+        JsonObject object = new JsonObject();
+        JsonObject value = new JsonObject();
+        object.addProperty(JsonUtils.TYPE, condition.getType().getResourceLocation().toString());
+        if(condition.isRestrict()){
+            value.addProperty(JsonUtils.RESTRICT, condition.getHumidityStart().name().toLowerCase(Locale.ENGLISH));
+        }
+        else{
+            value.addProperty(JsonUtils.FROM, condition.getHumidityStart().name().toLowerCase(Locale.ENGLISH));
+            value.addProperty(JsonUtils.TO, condition.getHumidityEnd().name().toLowerCase(Locale.ENGLISH));
+        }
+        object.add(JsonUtils.VALUE, value);
+        return object;
     }
 
     @Nullable

@@ -3,6 +3,7 @@ package com.emily.apicraft.genetics.conditions.serializer;
 import com.emily.apicraft.genetics.conditions.ConditionRequireBlock;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.utils.JsonUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
@@ -62,6 +63,25 @@ public class RequireBlockSerializer implements IConditionSerializer<ConditionReq
             return new ConditionRequireBlock(blocks, tags);
         }
         return null;
+    }
+
+    @Override
+    public JsonObject toJson(ConditionRequireBlock condition) {
+        JsonObject object = new JsonObject();
+        JsonObject value = new JsonObject();
+        object.addProperty(JsonUtils.TYPE, condition.getType().getResourceLocation().toString());
+        JsonArray blocks = new JsonArray();
+        for(var b : condition.getAcceptedBlocks()){
+            blocks.add(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(b)).toString());
+        }
+        JsonArray tags = new JsonArray();
+        for(var t : condition.getAcceptedTags()){
+            tags.add(t.location().toString());
+        }
+        value.add(JsonUtils.BLOCKS, blocks);
+        value.add(JsonUtils.TAGS, tags);
+        object.add(JsonUtils.VALUE, value);
+        return object;
     }
 
     @Nullable

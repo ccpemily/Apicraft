@@ -3,6 +3,8 @@ package com.emily.apicraft.client.gui.elements;
 import cofh.core.client.gui.IGuiAccess;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.Bee;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,7 +28,7 @@ public class ElementTemperatureInfo extends ElementText{
     public void drawBackground(GuiGraphics gui, int mouseX, int mouseY) {
         Optional<Bee> beeOptional = supplier.get();
         if(beeOptional.isPresent()){
-            Alleles.Species allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
+            IAllele<AlleleSpecies> allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
             setText(Component.translatable(allele.getValue().getTemperature().getName()).getString(), getColor(allele.isDominant()));
             super.drawBackground(gui, mouseX, mouseY);
         }
@@ -35,7 +37,7 @@ public class ElementTemperatureInfo extends ElementText{
     public EnumTemperature getTemperature(){
         Optional<Bee> beeOptional = supplier.get();
         if(beeOptional.isPresent()) {
-            Alleles.Species allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
+            IAllele<AlleleSpecies> allele = active ? beeOptional.get().getGenome().getSpecies() : beeOptional.get().getGenome().getInactiveSpecies();
             return allele.getValue().getTemperature();
         }
         return EnumTemperature.NONE;

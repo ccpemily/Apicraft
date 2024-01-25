@@ -1,8 +1,10 @@
 package com.emily.apicraft.genetics.conditions.serializer;
 
+import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.conditions.ConditionBiome;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.utils.JsonUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.Registries;
@@ -55,6 +57,25 @@ public class BiomeSerializer implements IConditionSerializer<ConditionBiome> {
             return new ConditionBiome(biomes, tags);
         }
         return null;
+    }
+
+    @Override
+    public JsonObject toJson(ConditionBiome condition) {
+        JsonObject object = new JsonObject();
+        JsonObject value = new JsonObject();
+        object.addProperty(JsonUtils.TYPE, condition.getType().getResourceLocation().toString());
+        JsonArray biomes = new JsonArray();
+        for(var b : condition.getAcceptedBiomeNames()){
+            biomes.add(b.toString());
+        }
+        JsonArray tags = new JsonArray();
+        for(var t : condition.getAcceptedTags()){
+            tags.add(t.location().toString());
+        }
+        value.add(JsonUtils.BIOMES, biomes);
+        value.add(JsonUtils.TAGS, tags);
+        object.add(JsonUtils.VALUE, value);
+        return object;
     }
 
     @Nullable

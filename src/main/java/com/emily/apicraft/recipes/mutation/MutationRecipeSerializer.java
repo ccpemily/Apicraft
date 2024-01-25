@@ -44,37 +44,38 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
                 parents = new Combination<>(first, second);
             }
         }
-        if(jsonObject.has(JsonUtils.RESULT)){
+        if(jsonObject.has(JsonUtils.RESULT)) {
             JsonObject r = jsonObject.getAsJsonObject(JsonUtils.RESULT);
-            if(r.has(JsonUtils.SPECIES)){
+            if (r.has(JsonUtils.SPECIES)) {
                 result = (IAllele<AlleleSpecies>) Registries.ALLELES.get(r.get(JsonUtils.SPECIES).getAsString());
             }
-            if(r.has(JsonUtils.CHANCE)){
+            if (r.has(JsonUtils.CHANCE)) {
                 chance = r.get(JsonUtils.CHANCE).getAsFloat();
             }
-            if(r.has(JsonUtils.CONDITIONS)){
-                for(var condition : r.getAsJsonArray(JsonUtils.CONDITIONS)){
-                    if(condition.getAsJsonObject().has(JsonUtils.TYPE) && condition.getAsJsonObject().has(JsonUtils.VALUE)){
-                        String type = condition.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
-                        IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
-                        IBeeCondition cond = serializer.fromJson(
-                                ResourceLocation.tryParse(type),
-                                condition.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
-                        );
-                        if(cond != null){
-                            boolean containedBy = false;
-                            for(var c : conditions){
-                                if(c.getClass().isInstance(cond)){
-                                    containedBy = true;
-                                    break;
-                                }
+        }
+        if(jsonObject.has(JsonUtils.CONDITIONS)){
+            for(var condition : jsonObject.getAsJsonArray(JsonUtils.CONDITIONS)){
+                if(condition.getAsJsonObject().has(JsonUtils.TYPE) && condition.getAsJsonObject().has(JsonUtils.VALUE)){
+                    String type = condition.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
+                    IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
+                    IBeeCondition cond = serializer.fromJson(
+                            ResourceLocation.tryParse(type),
+                            condition.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
+                    );
+                    if(cond != null){
+                        boolean containedBy = false;
+                        for(var c : conditions){
+                            if(c.getClass().isInstance(cond)){
+                                containedBy = true;
+                                break;
                             }
-                            conditions.add(cond);
                         }
+                        conditions.add(cond);
                     }
                 }
             }
         }
+
 
         if(parents == null || result == null){
             return null;

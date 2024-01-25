@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 public class RequirePlayerSerializer implements IConditionSerializer<ConditionOwnerName> {
     @Override
@@ -18,6 +19,16 @@ public class RequirePlayerSerializer implements IConditionSerializer<ConditionOw
             return new ConditionOwnerName(name);
         }
         return null;
+    }
+
+    @Override
+    public JsonObject toJson(ConditionOwnerName condition) {
+        JsonObject object = new JsonObject();
+        JsonObject value = new JsonObject();
+        object.addProperty(JsonUtils.TYPE, condition.getType().getResourceLocation().toString());
+        value.addProperty(JsonUtils.NAME, condition.getName());
+        object.add(JsonUtils.VALUE, value);
+        return object;
     }
 
     @Nullable

@@ -43,6 +43,22 @@ public class TemperatureSerializer implements IConditionSerializer<ConditionTemp
         return null;
     }
 
+    @Override
+    public JsonObject toJson(ConditionTemperature condition) {
+        JsonObject object = new JsonObject();
+        JsonObject value = new JsonObject();
+        object.addProperty(JsonUtils.TYPE, condition.getType().getResourceLocation().toString());
+        if(condition.isRestrict()){
+            value.addProperty(JsonUtils.RESTRICT, condition.getTemperatureStart().name().toLowerCase(Locale.ENGLISH));
+        }
+        else{
+            value.addProperty(JsonUtils.FROM, condition.getTemperatureStart().name().toLowerCase(Locale.ENGLISH));
+            value.addProperty(JsonUtils.TO, condition.getTemperatureEnd().name().toLowerCase(Locale.ENGLISH));
+        }
+        object.add(JsonUtils.VALUE, value);
+        return object;
+    }
+
     @Nullable
     @Override
     public ConditionTemperature fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {

@@ -4,7 +4,7 @@ import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.BeeBranches;
-import com.emily.apicraft.genetics.effects.EffectProvider;
+import com.emily.apicraft.genetics.effects.EmptyEffect;
 import com.emily.apicraft.genetics.flowers.FlowerProvider;
 import com.emily.apicraft.genetics.IAllele;
 import com.emily.apicraft.genetics.IAlleleType;
@@ -891,18 +891,18 @@ public class Alleles {
         }
         // endregion
     }
-    public enum Effect implements IAllele<EffectProvider> {
-        NONE(new EffectProvider());
+    public enum Effect implements IAllele<com.emily.apicraft.genetics.effects.Effect> {
+        NONE(new EmptyEffect());
 
         // region InternalMethods
-        private final EffectProvider provider;
+        private final com.emily.apicraft.genetics.effects.Effect provider;
         private final boolean dominant;
 
-        Effect(EffectProvider provider){
+        Effect(com.emily.apicraft.genetics.effects.Effect provider){
             this(provider, false);
         }
 
-        Effect(EffectProvider provider, boolean dominant){
+        Effect(com.emily.apicraft.genetics.effects.Effect provider, boolean dominant){
             this.dominant = dominant;
             this.provider = provider;
         }
@@ -931,7 +931,7 @@ public class Alleles {
         }
 
         @Override
-        public EffectProvider getValue() {
+        public com.emily.apicraft.genetics.effects.Effect getValue() {
             return provider;
         }
 

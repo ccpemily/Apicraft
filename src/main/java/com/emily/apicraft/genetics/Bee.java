@@ -80,8 +80,8 @@ public class Bee {
 
     // region Tooltips
     public void addTooltip(List<Component> components) {
-        Alleles.Species speciesActive = genome.getSpecies();
-        Alleles.Species speciesInactive = genome.getInactiveSpecies();
+        IAllele<AlleleSpecies> speciesActive = genome.getSpecies();
+        IAllele<AlleleSpecies> speciesInactive = genome.getInactiveSpecies();
         if(speciesActive != speciesInactive){
             components.add(
                     Component.translatable(speciesActive.getName())

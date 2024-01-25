@@ -11,6 +11,8 @@ import com.emily.apicraft.client.gui.elements.BreedingProcessStorage;
 import com.emily.apicraft.client.particles.ParticleRenderer;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
+import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.flowers.FlowersCache;
 import com.emily.apicraft.block.beehouse.IBeeHousing;
@@ -197,7 +199,7 @@ public abstract class AbstractBeeHousingBlockEntity extends SecurableBlockEntity
     protected void doProduction(){
         if(currentQueen != null && level != null){
             boolean active = level.random.nextInt(100) < 75;
-            Alleles.Species species = active ? currentQueen.getGenome().getSpecies() : currentQueen.getGenome().getInactiveSpecies();
+            IAllele<AlleleSpecies> species = active ? currentQueen.getGenome().getSpecies() : currentQueen.getGenome().getInactiveSpecies();
             boolean special = currentQueen.canProduceSpecial(this, active);
 
             float chanceBase = applyProductivityModifier(currentQueen.getGenome().getProductivity());

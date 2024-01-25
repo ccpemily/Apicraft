@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 public interface IConditionSerializer<T extends IBeeCondition> {
     T fromJson(ResourceLocation id, JsonObject jsonObject);
+    JsonObject toJson(T condition);
 
     @Nullable
     T fromNetwork(ResourceLocation id, FriendlyByteBuf buffer);

@@ -1,4 +1,5 @@
 package com.emily.apicraft.genetics.effects;
 
-public class EffectProvider {
+public class EmptyEffect extends Effect {
+
 }

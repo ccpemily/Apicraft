@@ -1,7 +1,7 @@
 package com.emily.apicraft.block.entity.beehouse;
 
 import com.emily.apicraft.inventory.menu.blockentity.ThermalApiaryMenu;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

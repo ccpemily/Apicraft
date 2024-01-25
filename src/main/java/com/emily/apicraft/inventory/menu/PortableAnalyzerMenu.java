@@ -7,7 +7,7 @@ import cofh.lib.common.inventory.SlotCoFH;
 import cofh.lib.common.inventory.SlotLocked;
 import cofh.lib.common.inventory.wrapper.InvWrapperCoFH;
 import com.emily.apicraft.items.BeeItem;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;

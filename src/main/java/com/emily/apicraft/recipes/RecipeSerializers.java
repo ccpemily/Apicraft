@@ -3,7 +3,7 @@ package com.emily.apicraft.recipes;
 import com.emily.apicraft.recipes.beeproduct.BeeProductRecipe;
 import com.emily.apicraft.recipes.beeproduct.BeeProductRecipeSerializer;
 import com.emily.apicraft.recipes.mutation.MutationRecipeSerializer;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import com.emily.apicraft.recipes.mutation.MutationRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.RegistryObject;

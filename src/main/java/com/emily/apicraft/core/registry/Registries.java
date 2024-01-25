@@ -1,4 +1,4 @@
-package com.emily.apicraft.registry;
+package com.emily.apicraft.core.registry;
 
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;

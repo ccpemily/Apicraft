@@ -8,7 +8,7 @@ import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.recipes.RecipeTypes;
 import com.emily.apicraft.recipes.beeproduct.BeeProductRecipe;
 import com.emily.apicraft.recipes.mutation.MutationRecipe;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import com.emily.apicraft.utils.ItemUtils;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

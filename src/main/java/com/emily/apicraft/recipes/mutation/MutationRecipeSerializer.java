@@ -7,25 +7,17 @@ import com.emily.apicraft.genetics.IAllele;
 import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.genetics.mutations.Mutation;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import com.emily.apicraft.utils.JsonUtils;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe> {
     @Override
@@ -52,30 +44,29 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
             if (r.has(JsonUtils.CHANCE)) {
                 chance = r.get(JsonUtils.CHANCE).getAsFloat();
             }
-        }
-        if(jsonObject.has(JsonUtils.CONDITIONS)){
-            for(var condition : jsonObject.getAsJsonArray(JsonUtils.CONDITIONS)){
-                if(condition.getAsJsonObject().has(JsonUtils.TYPE) && condition.getAsJsonObject().has(JsonUtils.VALUE)){
-                    String type = condition.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
-                    IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
-                    IBeeCondition cond = serializer.fromJson(
-                            ResourceLocation.tryParse(type),
-                            condition.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
-                    );
-                    if(cond != null){
-                        boolean containedBy = false;
-                        for(var c : conditions){
-                            if(c.getClass().isInstance(cond)){
-                                containedBy = true;
-                                break;
+            if(r.has(JsonUtils.CONDITIONS)){
+                for(var condition : r.getAsJsonArray(JsonUtils.CONDITIONS)){
+                    if(condition.getAsJsonObject().has(JsonUtils.TYPE) && condition.getAsJsonObject().has(JsonUtils.VALUE)){
+                        String type = condition.getAsJsonObject().get(JsonUtils.TYPE).getAsString();
+                        IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) Registries.CONDITION_TYPES.get(type).getSerializer().get();
+                        IBeeCondition cond = serializer.fromJson(
+                                ResourceLocation.tryParse(type),
+                                condition.getAsJsonObject().get(JsonUtils.VALUE).getAsJsonObject()
+                        );
+                        if(cond != null){
+                            boolean containedBy = false;
+                            for(var c : conditions){
+                                if(c.getClass().isInstance(cond)){
+                                    containedBy = true;
+                                    break;
+                                }
                             }
+                            conditions.add(cond);
                         }
-                        conditions.add(cond);
                     }
                 }
             }
         }
-
 
         if(parents == null || result == null){
             return null;
@@ -109,7 +100,7 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull MutationRecipe recipe) {
         Combination<IAllele<AlleleSpecies>> parents = recipe.getParents();
-        Mutation mutation = recipe.getResult();
+        Mutation mutation = recipe.getMutation();
         buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, parents.getFirst().toString()));
         buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, parents.getSecond().toString()));
         buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, mutation.getResult().toString()));

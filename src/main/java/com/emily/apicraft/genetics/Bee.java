@@ -9,7 +9,7 @@ import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.block.beehouse.IBeeHousing;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import com.emily.apicraft.utils.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;

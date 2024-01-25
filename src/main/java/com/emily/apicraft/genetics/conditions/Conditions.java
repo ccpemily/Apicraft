@@ -1,7 +1,7 @@
 package com.emily.apicraft.genetics.conditions;
 
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class Conditions {

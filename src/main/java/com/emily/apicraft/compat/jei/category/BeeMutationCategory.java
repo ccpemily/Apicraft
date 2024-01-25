@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
     protected final RecipeType<MutationRecipe> type;
@@ -92,19 +91,19 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
                         ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), parents.getSecond())
                 )
         );
-        Mutation mutation = recipe.getResult();
-        queen = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), mutation.getResult());
+        Mutation mutation = recipe.getMutation();
+        queen = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), recipe.getResult());
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStacks(List.of(
-                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), mutation.getResult()),
-                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), mutation.getResult()),
-                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), mutation.getResult())
+                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), recipe.getResult()),
+                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), recipe.getResult()),
+                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), recipe.getResult())
         ));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 17, 16).addItemStack(princess);
         builder.addSlot(RecipeIngredientRole.INPUT, 69, 16).addItemStack(drone);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 128, 16).addItemStack(queen);
 
-        List<IBeeCondition> conditions = recipe.getResult().getConditions();
+        List<IBeeCondition> conditions = (List<IBeeCondition>) recipe.getConditions();
         boolean alreadySet = false;
         for(var cond : conditions){
             if(cond instanceof ConditionRequireBlock blockCond){
@@ -170,13 +169,13 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
         Font fontRenderer = Minecraft.getInstance().font;
         gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getFirst().getName()), 26, 38, 0xffffff);
         gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getSecond().getName()), 78, 38, 0xffffff);
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getResult().getResult().getName()), 137, 38, 0xffffff);
-        List<IBeeCondition> conditions = recipe.getResult().getConditions();
+        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getResult().getName()), 137, 38, 0xffffff);
+        List<IBeeCondition> conditions = (List<IBeeCondition>) recipe.getConditions();
         if(conditions.isEmpty()){
-            gui.drawCenteredString(fontRenderer, "%d%%".formatted(recipe.getResult().getBaseChance()), 105, 12, 0xffffff);
+            gui.drawCenteredString(fontRenderer, "%d%%".formatted(recipe.getMutation().getBaseChance()), 105, 12, 0xffffff);
         }
         else {
-            gui.drawCenteredString(fontRenderer, "[%d%%]".formatted(recipe.getResult().getBaseChance()), 105, 12,
+            gui.drawCenteredString(fontRenderer, "[%d%%]".formatted(recipe.getMutation().getBaseChance()), 105, 12,
                     displayAdditionalCondition(recipe) ? 0xff9999 : 0xffffff);
             ConditionRequireBlock blockCond = null;
             ConditionOwnerName playerCond = null;
@@ -235,7 +234,7 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
             @NotNull IRecipeSlotsView recipeSlotsView,
             double mouseX, double mouseY
     ) {
-        List<IBeeCondition> conditions = recipe.getResult().getConditions();
+        List<IBeeCondition> conditions = (List<IBeeCondition>) recipe.getConditions();
         if(!conditions.isEmpty() && mouseX >= 90 && mouseX <= 120 && mouseY >= 11 && mouseY <= 19){
             List<Component> components = new ArrayList<>();
             components.add(Component.translatable("tooltip.condition.title").withStyle(ChatFormatting.YELLOW));

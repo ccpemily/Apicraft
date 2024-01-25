@@ -1,6 +1,6 @@
 package com.emily.apicraft.client.particles;
 
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;

@@ -7,7 +7,7 @@ import com.emily.apicraft.genetics.alleles.AlleleSpecies;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.capabilities.IBeeProvider;
 import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 

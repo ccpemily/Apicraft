@@ -15,6 +15,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -176,6 +177,92 @@ public class MutationRecipeProvider extends RecipeProvider {
                 .buildAndAccept(writer);
         // endregion
 
+        // region Glacial branch
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.INDUSTRIOUS, Alleles.Species.WINTRY)
+                .setResult(Alleles.Species.ICY).setChance(0.12f)
+                .restrictTemperatureRange(EnumTemperature.ICY, EnumTemperature.COLD)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.ICY, Alleles.Species.WINTRY)
+                .setResult(Alleles.Species.GLACIAL).setChance(0.08f)
+                .restrictTemperature(EnumTemperature.ICY)
+                .buildAndAccept(writer);
+        // endregion
+
+        // region Vengeful branch
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.MONASTIC, Alleles.Species.DEMONIC)
+                .setResult(Alleles.Species.VINDICTIVE).setChance(0.04f)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.VINDICTIVE, Alleles.Species.DEMONIC)
+                .setResult(Alleles.Species.VENGEFUL).setChance(0.08f)
+                .requireBlock(Blocks.CRYING_OBSIDIAN)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.VINDICTIVE, Alleles.Species.MONASTIC)
+                .setResult(Alleles.Species.VENGEFUL).setChance(0.08f)
+                .requireBlock(Blocks.CRYING_OBSIDIAN)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.VINDICTIVE, Alleles.Species.VENGEFUL)
+                .setResult(Alleles.Species.AVENGING).setChance(0.02f)
+                .restrictTemperature(EnumTemperature.HELLISH)
+                .restrictHumidity(EnumHumidity.ARID)
+                .requireBlock(Blocks.SCULK)
+                .buildAndAccept(writer);
+        // endregion
+
+        // region Agrarian branch
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.DILIGENT, Alleles.Species.MEADOWS)
+                .setResult(Alleles.Species.RURAL).setChance(0.12f)
+                .restrictBiome(Biomes.PLAINS.location())
+                .requireBlock(Blocks.HAY_BLOCK)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.RURAL, Alleles.Species.UNWEARY)
+                .setResult(Alleles.Species.FARMER).setChance(0.1f)
+                .restrictBiome(Biomes.PLAINS.location())
+                .requireBlock(Blocks.HAY_BLOCK)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.FARMER, Alleles.Species.INDUSTRIOUS)
+                .setResult(Alleles.Species.AGRARIAN).setChance(0.06f)
+                .restrictBiome(Biomes.PLAINS.location())
+                .requireBlock(Blocks.HAY_BLOCK)
+                .buildAndAccept(writer);
+        // endregion
+
+        // region Boggy branch
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.MARSHY, Alleles.Species.NOBLE)
+                .setResult(Alleles.Species.MIRY).setChance(0.15f)
+                .restrictTemperature(EnumTemperature.WARM)
+                .restrictHumidity(EnumHumidity.DAMP)
+                .requireBlock(Blocks.MUD)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.MIRY, Alleles.Species.MARSHY)
+                .setResult(Alleles.Species.BOGGY).setChance(0.08f)
+                .restrictTemperature(EnumTemperature.WARM)
+                .restrictHumidity(EnumHumidity.DAMP)
+                .requireBlock(Blocks.MUD)
+                .buildAndAccept(writer);
+        // endregion
+
+        // region Monastic branch
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.MONASTIC, Alleles.Species.AUSTERE)
+                .setResult(Alleles.Species.SECLUDED).setChance(0.1f)
+                .requireBlockTag(BlockTags.SOUL_FIRE_BASE_BLOCKS)
+                .buildAndAccept(writer);
+        MutationRecipeBuilder.get()
+                .setParents(Alleles.Species.SECLUDED, Alleles.Species.MONASTIC)
+                .setResult(Alleles.Species.HERMITIC).setChance(0.04f)
+                .requireBlockTag(BlockTags.SOUL_FIRE_BASE_BLOCKS)
+                .buildAndAccept(writer);
         // endregion
     }
 }

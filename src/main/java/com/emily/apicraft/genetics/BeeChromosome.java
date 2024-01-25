@@ -1,6 +1,6 @@
 package com.emily.apicraft.genetics;
 
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 

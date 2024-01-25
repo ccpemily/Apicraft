@@ -1,7 +1,7 @@
 package com.emily.apicraft.block.beehouse;
 
 import com.emily.apicraft.block.entity.beehouse.ThermalApiaryEntity;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 //import net.minecraft.world.level.material.Material;
 

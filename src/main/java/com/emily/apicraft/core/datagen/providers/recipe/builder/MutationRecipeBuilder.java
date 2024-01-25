@@ -139,7 +139,7 @@ public class MutationRecipeBuilder {
         String first = parents.getFirst().toString().substring(8);
         String second = parents.getSecond().toString().substring(8);
         String res = this.result.toString().substring(8);
-        ResourceLocation id = new ResourceLocation(Apicraft.MOD_ID, first + "_" + second + "_to_" + res);
+        ResourceLocation id = new ResourceLocation(Apicraft.MOD_ID, "mutation/" + first + "_" + second + "_to_" + res);
         return new MutationRecipe(id, parents, result, chance, conditions);
     }
 
@@ -166,15 +166,16 @@ public class MutationRecipeBuilder {
             p.addProperty(JsonUtils.SECOND, new ResourceLocation(Apicraft.MOD_ID, recipe.getParents().getSecond().toString()).toString());
             json.add(JsonUtils.PARENTS, p);
             JsonObject r = new JsonObject();
-            r.addProperty(JsonUtils.SPECIES, new ResourceLocation(Apicraft.MOD_ID, recipe.getResult().getResult().toString()).toString());
-            r.addProperty(JsonUtils.CHANCE, recipe.getResult().getBaseChance());
-            json.add(JsonUtils.RESULT, r);
+            r.addProperty(JsonUtils.SPECIES, new ResourceLocation(Apicraft.MOD_ID, recipe.getResult().toString()).toString());
+            r.addProperty(JsonUtils.CHANCE, recipe.getChance());
+
             JsonArray condArray = new JsonArray();
-            for (var cond : recipe.getResult().getConditions()){
+            for (var cond : recipe.getConditions()){
                 IConditionSerializer<IBeeCondition> serializer = (IConditionSerializer<IBeeCondition>) cond.getType().getSerializer().get();
                 condArray.add(serializer.toJson(cond));
             }
-            json.add(JsonUtils.CONDITIONS, condArray);
+            r.add(JsonUtils.CONDITIONS, condArray);
+            json.add(JsonUtils.RESULT, r);
         }
 
         @Override

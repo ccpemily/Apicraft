@@ -13,7 +13,7 @@ import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import com.emily.apicraft.inventory.menu.blockentity.ApiaryMenu;
 import com.emily.apicraft.inventory.menu.blockentity.BeeHouseMenu;
 import com.emily.apicraft.inventory.menu.blockentity.ThermalApiaryMenu;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;

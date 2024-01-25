@@ -1,12 +1,7 @@
 package com.emily.apicraft.genetics.conditions;
 
-import com.emily.apicraft.genetics.conditions.ConditionHumidity;
-import com.emily.apicraft.genetics.conditions.ConditionOwnerName;
-import com.emily.apicraft.genetics.conditions.ConditionRequireBlock;
-import com.emily.apicraft.genetics.conditions.ConditionTemperature;
 import com.emily.apicraft.genetics.conditions.serializer.*;
-import com.emily.apicraft.genetics.conditions.IConditionSerializer;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ConditionSerializers {

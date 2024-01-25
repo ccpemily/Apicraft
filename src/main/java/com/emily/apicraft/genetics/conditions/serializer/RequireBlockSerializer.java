@@ -11,14 +11,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITag;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-
-import static com.emily.apicraft.registry.Registries.BLOCKS;
 
 public class RequireBlockSerializer implements IConditionSerializer<ConditionRequireBlock> {
     @Override

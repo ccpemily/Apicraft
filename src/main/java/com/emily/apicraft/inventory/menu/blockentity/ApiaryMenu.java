@@ -2,7 +2,7 @@ package com.emily.apicraft.inventory.menu.blockentity;
 
 import cofh.lib.common.inventory.SlotCoFH;
 import cofh.lib.common.inventory.SlotRemoveOnly;
-import com.emily.apicraft.registry.Registries;
+import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

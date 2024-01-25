@@ -18,7 +18,7 @@ public class MutationManager {
             return List.of();
         }
         else{
-            recipes.forEach((recipe -> mutations.add(recipe.getResult())));
+            recipes.forEach((recipe -> mutations.add(recipe.getMutation())));
             return mutations;
         }
     }

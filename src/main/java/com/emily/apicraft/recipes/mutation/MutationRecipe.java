@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MutationRecipe extends SerializableRecipe {
@@ -87,8 +88,18 @@ public class MutationRecipe extends SerializableRecipe {
     public Combination<IAllele<AlleleSpecies>> getParents(){
         return parents;
     }
+    public IAllele<AlleleSpecies> getResult(){
+        return result;
+    }
+    public float getChance(){
+        return baseChance;
+    }
 
-    public Mutation getResult(){
+    public Collection<IBeeCondition> getConditions(){
+        return conditions;
+    }
+
+    public Mutation getMutation(){
             Mutation.MutationBuilder builder = new Mutation.MutationBuilder();
         return builder.setParent(parents.getFirst(), parents.getSecond())
                 .setResult(result)

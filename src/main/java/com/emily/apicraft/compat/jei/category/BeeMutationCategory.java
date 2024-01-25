@@ -2,8 +2,9 @@ package com.emily.apicraft.compat.jei.category;
 
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.core.registry.Registries;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.conditions.*;
 import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.recipes.mutation.MutationRecipe;
@@ -77,26 +78,30 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull MutationRecipe recipe, @NotNull IFocusGroup focuses) {
-        Combination<IAllele<AlleleSpecies>> parents = recipe.getParents();
+        Combination<ResourceLocation> parents = recipe.getParents();
+        IAllele<SpeciesData> first = (IAllele<SpeciesData>) Registries.ALLELES.get(parents.getFirst());
+        IAllele<SpeciesData> second = (IAllele<SpeciesData>) Registries.ALLELES.get(parents.getSecond());
+        IAllele<SpeciesData> result = (IAllele<SpeciesData>) Registries.ALLELES.get(recipe.getResult());
         ItemStack queen;
-        ItemStack princess = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), parents.getFirst());
-        ItemStack drone = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), parents.getSecond());
+        ItemStack princess = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), first);
+        ItemStack drone = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), second);
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(
-                List.of(ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), parents.getFirst()),
-                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), parents.getFirst()),
-                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), parents.getFirst()),
-                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), parents.getSecond()),
-                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), parents.getSecond()),
-                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), parents.getSecond())
+                List.of(ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), first),
+                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), first),
+                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), first),
+                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), second),
+                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), second),
+                        ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), second)
                 )
         );
         Mutation mutation = recipe.getMutation();
-        queen = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), recipe.getResult());
+        queen = ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_QUEEN_ID), result);
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStacks(List.of(
-                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), recipe.getResult()),
-                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), recipe.getResult()),
-                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), recipe.getResult())
+                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_PRINCESS_ID), result),
+                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_DRONE_ID), result),
+                ItemUtils.getDefaultBeeStack(new ResourceLocation(Apicraft.MOD_ID, ItemUtils.BEE_LARVA_ID), result)
         ));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 17, 16).addItemStack(princess);
@@ -167,9 +172,9 @@ public class BeeMutationCategory implements IRecipeCategory<MutationRecipe> {
         PoseStack stack = gui.pose();
         stack.pushPose();
         Font fontRenderer = Minecraft.getInstance().font;
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getFirst().getName()), 26, 38, 0xffffff);
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getParents().getSecond().getName()), 78, 38, 0xffffff);
-        gui.drawCenteredString(fontRenderer, Component.translatable(recipe.getResult().getName()), 137, 38, 0xffffff);
+        gui.drawCenteredString(fontRenderer, Component.translatable("allele." + recipe.getParents().getFirst().getPath()), 26, 38, 0xffffff);
+        gui.drawCenteredString(fontRenderer, Component.translatable("allele." + recipe.getParents().getSecond().getPath()), 78, 38, 0xffffff);
+        gui.drawCenteredString(fontRenderer, Component.translatable("allele." + recipe.getResult().getPath()), 137, 38, 0xffffff);
         List<IBeeCondition> conditions = (List<IBeeCondition>) recipe.getConditions();
         if(conditions.isEmpty()){
             gui.drawCenteredString(fontRenderer, "%d%%".formatted(recipe.getMutation().getBaseChance()), 105, 12, 0xffffff);

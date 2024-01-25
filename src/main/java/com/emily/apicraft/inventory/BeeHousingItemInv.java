@@ -3,13 +3,13 @@ package com.emily.apicraft.inventory;
 import cofh.lib.api.IStorageCallback;
 import cofh.lib.common.inventory.ItemStorageCoFH;
 import cofh.lib.common.inventory.SimpleItemInv;
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.capabilities.Capabilities;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.capabilities.IBeeProductContainer;
-import com.emily.apicraft.genetics.IBeeModifierProvider;
+import com.emily.apicraft.apiculture.IBeeModifierProvider;
 import com.emily.apicraft.inventory.storage.ItemStorageBee;
 import com.emily.apicraft.inventory.storage.ItemStorageFrame;
 import com.emily.apicraft.items.FrameItem;
@@ -113,7 +113,7 @@ public class BeeHousingItemInv extends SimpleItemInv implements IBeeModifierProv
         return stack;
     }
 
-    public void addFrameProduct(IAllele<AlleleSpecies> species, boolean special){
+    public void addFrameProduct(IAllele<SpeciesData> species, boolean special){
         Random random = new Random();
         List<Integer> listFrame = new ArrayList<>();
 

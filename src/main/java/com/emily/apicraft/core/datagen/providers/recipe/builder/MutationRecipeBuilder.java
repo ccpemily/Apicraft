@@ -4,8 +4,8 @@ import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.Combination;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.genetics.conditions.*;
 import com.emily.apicraft.recipes.RecipeSerializers;
@@ -26,25 +26,17 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class MutationRecipeBuilder {
-    private Combination<IAllele<AlleleSpecies>> parents = null;
-    private IAllele<AlleleSpecies> result = null;
+    private Combination<ResourceLocation> parents = null;
+    private ResourceLocation result = null;
     private float chance = 0;
     private final List<IBeeCondition> conditions = new ArrayList<>();
 
     private MutationRecipeBuilder(){
     }
 
-    public MutationRecipeBuilder setParents(IAllele<AlleleSpecies> first, IAllele<AlleleSpecies> second){
-        if(first instanceof Alleles.Species f && second instanceof Alleles.Species s){
-            if(f.ordinal() > s.ordinal()){
-                parents = new Combination<>(f, s);
-            }
-            else if(f.ordinal() < s.ordinal()){
-                parents = new Combination<>(s, f);
-            }
-            else {
-                throw new IllegalArgumentException();
-            }
+    public MutationRecipeBuilder setParents(ResourceLocation first, ResourceLocation second){
+        if(first.equals(second)){
+            throw new IllegalArgumentException();
         }
         else {
             parents = new Combination<>(first, second);
@@ -52,8 +44,17 @@ public class MutationRecipeBuilder {
         return this;
     }
 
-    public MutationRecipeBuilder setResult(IAllele<AlleleSpecies> result){
+    public MutationRecipeBuilder setParents(String first, String second){
+        return setParents(new ResourceLocation(Apicraft.MOD_ID, first), new ResourceLocation(Apicraft.MOD_ID, second));
+    }
+
+    public MutationRecipeBuilder setResult(ResourceLocation result){
         this.result = result;
+        return this;
+    }
+
+    public MutationRecipeBuilder setResult(String result){
+        this.result = new ResourceLocation(Apicraft.MOD_ID, result);
         return this;
     }
 
@@ -136,9 +137,9 @@ public class MutationRecipeBuilder {
         if(parents == null || result == null || chance == 0){
             throw new IllegalArgumentException();
         }
-        String first = parents.getFirst().toString().substring(8);
-        String second = parents.getSecond().toString().substring(8);
-        String res = this.result.toString().substring(8);
+        String first = parents.getFirst().getPath().substring(8);
+        String second = parents.getSecond().getPath().substring(8);
+        String res = this.result.getPath().substring(8);
         ResourceLocation id = new ResourceLocation(Apicraft.MOD_ID, "mutation/" + first + "_" + second + "_to_" + res);
         return new MutationRecipe(id, parents, result, chance, conditions);
     }
@@ -162,11 +163,11 @@ public class MutationRecipeBuilder {
         @SuppressWarnings("unchecked")
         public void serializeRecipeData(@NotNull JsonObject json) {
             JsonObject p = new JsonObject();
-            p.addProperty(JsonUtils.FIRST, new ResourceLocation(Apicraft.MOD_ID, recipe.getParents().getFirst().toString()).toString());
-            p.addProperty(JsonUtils.SECOND, new ResourceLocation(Apicraft.MOD_ID, recipe.getParents().getSecond().toString()).toString());
+            p.addProperty(JsonUtils.FIRST, recipe.getParents().getFirst().getPath());
+            p.addProperty(JsonUtils.SECOND, recipe.getParents().getSecond().getPath());
             json.add(JsonUtils.PARENTS, p);
             JsonObject r = new JsonObject();
-            r.addProperty(JsonUtils.SPECIES, new ResourceLocation(Apicraft.MOD_ID, recipe.getResult().toString()).toString());
+            r.addProperty(JsonUtils.SPECIES, recipe.getResult().getPath());
             r.addProperty(JsonUtils.CHANCE, recipe.getChance());
 
             JsonArray condArray = new JsonArray();

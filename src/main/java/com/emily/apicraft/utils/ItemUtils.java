@@ -3,10 +3,10 @@ package com.emily.apicraft.utils;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.capabilities.IBeeProvider;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.core.registry.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +18,7 @@ public class ItemUtils {
     public static final String BEE_LARVA_ID = "bee_larva";
 
     // region static
-    public static ItemStack getDefaultBeeStack(ResourceLocation id, IAllele<AlleleSpecies> species){
+    public static ItemStack getDefaultBeeStack(ResourceLocation id, IAllele<SpeciesData> species){
         ItemStack stack = new ItemStack(Registries.ITEMS.get(id));
         IBeeProvider provider = BeeProviderCapability.get(stack);
         if(provider instanceof BeeProviderCapability){

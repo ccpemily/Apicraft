@@ -1,7 +1,7 @@
 package com.emily.apicraft.genetics.effects;
 
 import com.emily.apicraft.block.beehouse.IBeeHousing;
-import com.emily.apicraft.genetics.BeeGenome;
+import com.emily.apicraft.genetics.genome.BeeGenome;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;

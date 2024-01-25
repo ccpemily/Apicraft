@@ -1,6 +1,6 @@
 package com.emily.apicraft.capabilities;
 
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import java.util.Optional;

@@ -26,6 +26,7 @@ public class ThermalApiaryMenu extends AbstractBeeHousingMenu {
         for(int i = 0; i < 3; i++){
             addSlot(new SlotCoFH(this.invWrapper, 9 + i, 66, 23 + i * 29));
         }
+        bindAugmentSlots(this.invWrapper, 12, 4);
         bindPlayerInventory(inventory);
     }
 

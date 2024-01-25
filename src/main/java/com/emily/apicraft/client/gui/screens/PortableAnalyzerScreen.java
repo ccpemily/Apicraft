@@ -12,7 +12,7 @@ import com.emily.apicraft.client.gui.elements.tooltip.TemperatureTooltip;
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -202,7 +202,7 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     }
     private void addChromosomeInfoLine(IAlleleType type, int row, int page){
         addElement(new ElementText(this, COLUMN_0, getRowY(row))
-                .setText(Component.translatable(type.getName()).getString())
+                .setText(Component.translatable(type.getLocalizationKey()).getString())
                 .setTooltipFactory(new AlleleTypeToolTip(type))
                 .setVisible(() -> this.selected == page)
         );
@@ -247,7 +247,7 @@ public class PortableAnalyzerScreen extends ContainerScreenCoFH<PortableAnalyzer
     }
     private void addToleranceInfoLine(IAlleleType type, int row){
         addElement(new ElementText(this, COLUMN_0 + 10, getRowY(row))
-                .setText(Component.translatable(type.getName()).getString())
+                .setText(Component.translatable(type.getLocalizationKey()).getString())
                 .setTooltipFactory(new AlleleTypeToolTip(type))
                 .setVisible(() -> this.selected == 2)
         );

@@ -1,11 +1,15 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.branches;
 
+import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Locale;
 
-public enum BeeBranches {
+public enum BeeBranches implements IBeeBranch{
     HONEY,
     NOBLE,
     INDUSTRIOUS,
@@ -79,7 +83,10 @@ public enum BeeBranches {
         return template;
     }
 
-    public String getName(){
+    public ResourceLocation location(){
+        return new ResourceLocation(Apicraft.MOD_ID, this.name().toLowerCase(Locale.ENGLISH));
+    }
+    public String getLocalizationKey(){
         return "branch." + this.name().toLowerCase(Locale.ENGLISH);
     }
 

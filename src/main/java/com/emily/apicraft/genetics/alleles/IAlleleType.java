@@ -1,4 +1,4 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.alleles;
 
 public interface IAlleleType {
     boolean isValid(IAllele<?> allele);
@@ -7,17 +7,16 @@ public interface IAlleleType {
      *
      * @return Returns the simple name of this allele type ("type")
      */
-    @Override
-    String toString();
+    String getRegistryName();
 
     /**
      *
      * @return Returns the full unlocalized name of this allele type ("allele.type.class")
      */
-    String getName();
+    String getLocalizationKey();
     /**
      *
      * @return Returns the unlocalized name of this allele ("allele.type.class.description")
      */
-    String getDescription();
+    String getDescriptionKey();
 }

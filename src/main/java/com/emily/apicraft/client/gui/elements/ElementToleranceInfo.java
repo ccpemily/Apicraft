@@ -3,8 +3,8 @@ package com.emily.apicraft.client.gui.elements;
 import cofh.core.client.gui.IGuiAccess;
 import cofh.core.util.helpers.RenderHelper;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +26,7 @@ public class ElementToleranceInfo extends ElementAlleleInfo{
         if(beeOptional.isPresent()){
             IAllele<?> allele = beeOptional.get().getGenome().getAllele(type, active);
             setText(Component.literal("(")
-                    .append(Component.translatable(allele.getName()))
+                    .append(Component.translatable(allele.getLocalizationKey()))
                     .append(Component.literal(")"))
                     .getString(), getColor(allele.isDominant()));
             int u = 0;

@@ -1,11 +1,11 @@
 package com.emily.apicraft.capabilities.implementation;
 
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import com.emily.apicraft.capabilities.Capabilities;
 import com.emily.apicraft.capabilities.empty.EmptyBeeProductContainer;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.capabilities.IBeeProductContainer;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.items.BrokenFrameItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +52,7 @@ public class BeeProductFrameCapability implements IBeeProductContainer, ICapabil
         return stack.getCapability(Capabilities.PRODUCT_DATA_PROVIDER).orElse(EmptyBeeProductContainer.getInstance());
     }
 
-    public static boolean addProduct(ItemStack frame, IAllele<AlleleSpecies> species, Boolean special){
+    public static boolean addProduct(ItemStack frame, IAllele<SpeciesData> species, Boolean special){
         if(frame.getItem() instanceof BrokenFrameItem){
             return false;
         }
@@ -69,11 +69,11 @@ public class BeeProductFrameCapability implements IBeeProductContainer, ICapabil
         return false;
     }
 
-    public static Optional<Tuple<IAllele<AlleleSpecies>, Boolean>> removeProduct(ItemStack frame){
+    public static Optional<Tuple<IAllele<SpeciesData>, Boolean>> removeProduct(ItemStack frame){
         Optional<BeeProductData> dataOptional = BeeProductFrameCapability.get(frame).getProductData();
         if(dataOptional.isPresent()){
             BeeProductData data = dataOptional.get();
-            Optional<Tuple<IAllele<AlleleSpecies>, Boolean>> result = data.tryRemove();
+            Optional<Tuple<IAllele<SpeciesData>, Boolean>> result = data.tryRemove();
             if(result.isPresent()){
                 frame.setDamageValue(frame.getMaxDamage() - data.getTotalStored());
                 BeeProductFrameCapability.get(frame).setProductData(data);

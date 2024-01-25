@@ -4,7 +4,7 @@ import cofh.core.common.item.ItemCoFH;
 import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.ClientSetupEvents;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.items.subtype.BeeTypes;
 import net.minecraft.ChatFormatting;
@@ -33,7 +33,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack){
         Alleles.Species species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true);
-        return Component.translatable(species.getName()).append(Component.translatable(this.getBeeType().getName()));
+        return Component.translatable(species.getLocalizationKey()).append(Component.translatable(this.getBeeType().getName()));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class BeeItem extends ItemCoFH implements IBeeItem {
             return false;
         }
         else {
-            AlleleSpecies species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true).getValue();
+            SpeciesData species = BeeProviderCapability.get(stack).getBeeSpeciesDirectly(true).getValue();
             return species.isFoil();
         }
     }

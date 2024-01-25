@@ -2,15 +2,14 @@ package com.emily.apicraft.genetics.alleles;
 
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
-import com.emily.apicraft.genetics.BeeBranches;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.branches.BeeBranches;
+import com.emily.apicraft.genetics.branches.IBeeBranch;
 
 import java.awt.*;
 import java.util.HashMap;
 
-public class AlleleSpecies {
-    private final BeeBranches branch;
+public class SpeciesData {
+    private final IBeeBranch branch;
     private final int firstColor;
     private final int secondColor;
     private final boolean isFoil;
@@ -18,7 +17,7 @@ public class AlleleSpecies {
     private final EnumHumidity humidity;
     private final HashMap<IAlleleType, IAllele<?>> template;
 
-    AlleleSpecies(BeeBranches branch, BeeSpeciesProperties builder){
+    SpeciesData(IBeeBranch branch, BeeSpeciesProperties builder){
         this.firstColor = builder.firstColor;
         this.secondColor = builder.secondColor;
         this.branch = branch;
@@ -53,7 +52,7 @@ public class AlleleSpecies {
         return template;
     }
 
-    public BeeBranches getBranch(){
+    public IBeeBranch getBranch(){
         return branch;
     }
 
@@ -99,8 +98,8 @@ public class AlleleSpecies {
             return this;
         }
 
-        public AlleleSpecies build(BeeBranches branch){
-            return new AlleleSpecies(branch, this);
+        public SpeciesData build(BeeBranches branch){
+            return new SpeciesData(branch, this);
         }
 
         public static BeeSpeciesProperties get(){

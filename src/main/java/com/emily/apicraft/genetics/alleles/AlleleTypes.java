@@ -1,8 +1,5 @@
 package com.emily.apicraft.genetics.alleles;
 
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
-
 import java.util.Locale;
 
 public enum AlleleTypes implements IAlleleType {
@@ -20,15 +17,15 @@ public enum AlleleTypes implements IAlleleType {
         return this == allele.getType();
     }
     @Override
-    public String toString(){
+    public String getRegistryName(){
         return this.name().toLowerCase(Locale.ENGLISH);
     }
     @Override
-    public String getName(){
-         return "allele." + this + ".class";
+    public String getLocalizationKey(){
+         return "allele." + this.getRegistryName() + ".class";
     }
     @Override
-    public String getDescription(){
-        return getName() + ".description";
+    public String getDescriptionKey(){
+        return getLocalizationKey() + ".description";
     }
 }

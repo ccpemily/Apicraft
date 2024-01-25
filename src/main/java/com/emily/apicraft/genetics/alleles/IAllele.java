@@ -1,4 +1,4 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.alleles;
 
 import net.minecraft.network.chat.Component;
 
@@ -9,21 +9,20 @@ public interface IAllele<T> {
      *
      * @return Returns the registry name of this allele ("type.value")
      */
-    @Override
-    String toString();
+    String getRegistryName();
     /**
      *
      * @return Returns the unlocalized name of this allele ("allele.type.value")
      */
-    default String getName(){
-        return "allele." + this;
+    default String getLocalizationKey(){
+        return "allele." + this.getRegistryName();
     }
     /**
      *
      * @return Returns the description key of this allele ("allele.type.value.description")
      */
-    default String getDescription(){
-        return "allele." + this + ".description";
+    default String getDescriptionKey(){
+        return "allele." + this.getRegistryName() + ".description";
     }
     boolean isDominant();
     List<Component> getDescriptionTooltips();

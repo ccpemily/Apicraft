@@ -1,9 +1,9 @@
 package com.emily.apicraft.items;
 
 import cofh.core.common.item.ItemCoFH;
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
-import com.emily.apicraft.genetics.IBeeModifierProvider;
+import com.emily.apicraft.apiculture.IBeeModifierProvider;
 import com.emily.apicraft.items.subtype.FrameTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

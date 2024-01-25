@@ -2,8 +2,8 @@ package com.emily.apicraft.recipes.mutation;
 
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.genetics.mutations.Mutation;
@@ -23,23 +23,23 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
     @Override
     @SuppressWarnings("unchecked")
     public @NotNull MutationRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-        Combination<IAllele<AlleleSpecies>> parents = null;
-        IAllele<AlleleSpecies> result = null;
+        Combination<ResourceLocation> parents = null;
+        ResourceLocation result = null;
         float chance = 0;
         List<IBeeCondition> conditions = new ArrayList<>();
 
         if(jsonObject.has(JsonUtils.PARENTS)){
             JsonObject parentsDict = jsonObject.getAsJsonObject(JsonUtils.PARENTS);
             if(parentsDict.has(JsonUtils.FIRST) && parentsDict.has(JsonUtils.SECOND)){
-                IAllele<AlleleSpecies> first = (IAllele<AlleleSpecies>)Registries.ALLELES.get(parentsDict.get(JsonUtils.FIRST).getAsString());
-                IAllele<AlleleSpecies> second = (IAllele<AlleleSpecies>)Registries.ALLELES.get(parentsDict.get(JsonUtils.SECOND).getAsString());
+                ResourceLocation first = ResourceLocation.tryParse(parentsDict.get(JsonUtils.FIRST).getAsString());
+                ResourceLocation second = ResourceLocation.tryParse(parentsDict.get(JsonUtils.SECOND).getAsString());
                 parents = new Combination<>(first, second);
             }
         }
         if(jsonObject.has(JsonUtils.RESULT)) {
             JsonObject r = jsonObject.getAsJsonObject(JsonUtils.RESULT);
             if (r.has(JsonUtils.SPECIES)) {
-                result = (IAllele<AlleleSpecies>) Registries.ALLELES.get(r.get(JsonUtils.SPECIES).getAsString());
+                result = ResourceLocation.tryParse(r.get(JsonUtils.SPECIES).getAsString());
             }
             if (r.has(JsonUtils.CHANCE)) {
                 chance = r.get(JsonUtils.CHANCE).getAsFloat();
@@ -76,12 +76,11 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public @Nullable MutationRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
-        IAllele<AlleleSpecies> first = (IAllele<AlleleSpecies>) Registries.ALLELES.get(buffer.readResourceLocation());
-        IAllele<AlleleSpecies> second = (IAllele<AlleleSpecies>) Registries.ALLELES.get(buffer.readResourceLocation());
-        IAllele<AlleleSpecies> result = (IAllele<AlleleSpecies>) Registries.ALLELES.get(buffer.readResourceLocation());
+        ResourceLocation first = buffer.readResourceLocation();
+        ResourceLocation second = buffer.readResourceLocation();
+        ResourceLocation result = buffer.readResourceLocation();
         float baseChance = buffer.readFloat();
         int conditionCount = buffer.readInt();
         List<IBeeCondition> conditions = new ArrayList<>(conditionCount);
@@ -99,11 +98,11 @@ public class MutationRecipeSerializer implements RecipeSerializer<MutationRecipe
     @SuppressWarnings("unchecked")
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull MutationRecipe recipe) {
-        Combination<IAllele<AlleleSpecies>> parents = recipe.getParents();
+        Combination<ResourceLocation> parents = recipe.getParents();
         Mutation mutation = recipe.getMutation();
-        buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, parents.getFirst().toString()));
-        buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, parents.getSecond().toString()));
-        buffer.writeResourceLocation(new ResourceLocation(Apicraft.MOD_ID, mutation.getResult().toString()));
+        buffer.writeResourceLocation(parents.getFirst());
+        buffer.writeResourceLocation(parents.getSecond());
+        buffer.writeResourceLocation(mutation.getResult());
         buffer.writeFloat(recipe.baseChance);
         buffer.writeInt(mutation.getConditions().size());
         for(var cond : mutation.getConditions()){

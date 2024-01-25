@@ -1,4 +1,4 @@
-package com.emily.apicraft.bee;
+package com.emily.apicraft.apiculture.beeproduct;
 
 public class BeeProductInfo {
     private int normalProductCount;

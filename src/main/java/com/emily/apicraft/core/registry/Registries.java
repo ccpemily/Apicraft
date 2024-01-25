@@ -2,7 +2,7 @@ package com.emily.apicraft.core.registry;
 
 import cofh.lib.util.DeferredRegisterCoFH;
 import com.emily.apicraft.Apicraft;
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import com.emily.apicraft.block.beehouse.Apiary;
 import com.emily.apicraft.block.beehouse.BeeHouse;
 import com.emily.apicraft.block.beehouse.ThermalApiary;
@@ -15,13 +15,13 @@ import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.client.particles.Particles;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.BeeKaryotype;
+import com.emily.apicraft.genetics.genome.BeeKaryotype;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.capabilities.IBeeProductContainer;
 import com.emily.apicraft.capabilities.IBeeProvider;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import com.emily.apicraft.genetics.conditions.IConditionSerializer;
 import com.emily.apicraft.genetics.conditions.IConditionType;
 import com.emily.apicraft.inventory.menu.PortableAnalyzerMenu;
@@ -260,11 +260,11 @@ public class Registries {
     }
 
     private static void registerAllele(Class<? extends IAllele<?>> alleleClass, IAlleleType type, IAllele<?> defaultValue){
-        logger.debug("Registering allele type: " + type.getName());
+        logger.debug("Registering allele type: " + type.getLocalizationKey());
         IAllele<?>[] types = alleleClass.getEnumConstants();
         BeeKaryotype.INSTANCE.registerToKaryotype(type, defaultValue);
         for(IAllele<?> t : types){
-            ALLELES.register(t.toString(), () -> t);
+            ALLELES.register(t.getRegistryName(), () -> t);
         }
     }
     // endregion

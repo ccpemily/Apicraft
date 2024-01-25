@@ -2,7 +2,7 @@ package com.emily.apicraft.genetics.flowers;
 
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.BeeGenome;
+import com.emily.apicraft.genetics.genome.BeeGenome;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.block.beehouse.IBeeHousing;

@@ -2,8 +2,8 @@ package com.emily.apicraft.client.gui.elements;
 
 import cofh.core.client.gui.IGuiAccess;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -30,7 +30,7 @@ public class ElementAlleleInfo extends ElementText{
         Optional<Bee> beeOptional = beeSupplier.get();
         if(beeOptional.isPresent()){
             IAllele<?> allele = beeOptional.get().getGenome().getAllele(type, active);
-            setText(Component.translatable(allele.getName()).getString(), getColor(allele.isDominant()));
+            setText(Component.translatable(allele.getLocalizationKey()).getString(), getColor(allele.isDominant()));
             super.drawBackground(gui, mouseX, mouseY);
         }
     }

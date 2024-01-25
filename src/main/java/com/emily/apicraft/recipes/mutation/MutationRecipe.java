@@ -3,10 +3,10 @@ package com.emily.apicraft.recipes.mutation;
 import cofh.lib.util.recipes.SerializableRecipe;
 import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.conditions.*;
 import com.emily.apicraft.genetics.mutations.Mutation;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.recipes.RecipeSerializers;
 import com.emily.apicraft.recipes.RecipeTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -19,8 +19,8 @@ import java.util.List;
 
 public class MutationRecipe extends SerializableRecipe {
     protected static final float DEFAULT_MUTATE_CHANCE = 0.05f;
-    protected final Combination<IAllele<AlleleSpecies>> parents;
-    protected final IAllele<AlleleSpecies> result;
+    protected final Combination<ResourceLocation> parents;
+    protected final ResourceLocation result;
     protected final float baseChance;
     protected final List<IBeeCondition> conditions = new ArrayList<>();
 
@@ -32,8 +32,8 @@ public class MutationRecipe extends SerializableRecipe {
 
     public MutationRecipe(
             ResourceLocation id,
-            Combination<IAllele<AlleleSpecies>> parents,
-            IAllele<AlleleSpecies> result,
+            Combination<ResourceLocation> parents,
+            ResourceLocation result,
             float chance,
             List<IBeeCondition> conditions
     ) {
@@ -85,10 +85,10 @@ public class MutationRecipe extends SerializableRecipe {
         trim();
     }
 
-    public Combination<IAllele<AlleleSpecies>> getParents(){
+    public Combination<ResourceLocation> getParents(){
         return parents;
     }
-    public IAllele<AlleleSpecies> getResult(){
+    public ResourceLocation getResult(){
         return result;
     }
     public float getChance(){

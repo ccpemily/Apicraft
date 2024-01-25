@@ -7,9 +7,9 @@ import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.genetics.Bee;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -34,7 +34,7 @@ public class AlleleInfoTooltip implements ITooltipFactory {
                     Optional<Bee> bee = alleleInfo.getBee();
                     MutableComponent component = Component.translatable("tooltip.tolerance.can_tolerate").append(": ");
                     if(bee.isPresent()){
-                        IAllele<AlleleSpecies> species = alleleInfo.isActive() ? bee.get().getGenome().getSpecies() : bee.get().getGenome().getInactiveSpecies();
+                        IAllele<SpeciesData> species = alleleInfo.isActive() ? bee.get().getGenome().getSpecies() : bee.get().getGenome().getInactiveSpecies();
                         EnumTemperature temperatureSelf = species.getValue().getTemperature();
                         EnumHumidity humiditySelf = species.getValue().getHumidity();
                         boolean addedComment = false;

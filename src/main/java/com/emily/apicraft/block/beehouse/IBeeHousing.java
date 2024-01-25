@@ -3,7 +3,7 @@ package com.emily.apicraft.block.beehouse;
 import com.emily.apicraft.core.lib.ErrorStates;
 import com.emily.apicraft.climatology.IClimateModifierProvider;
 import com.emily.apicraft.climatology.IClimateProvider;
-import com.emily.apicraft.genetics.IBeeModifierProvider;
+import com.emily.apicraft.apiculture.IBeeModifierProvider;
 import com.emily.apicraft.inventory.BeeHousingItemInv;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

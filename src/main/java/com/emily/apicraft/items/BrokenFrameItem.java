@@ -1,6 +1,6 @@
 package com.emily.apicraft.items;
 
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import com.emily.apicraft.capabilities.implementation.BeeProductFrameCapability;
 import com.emily.apicraft.items.subtype.FrameTypes;
 import net.minecraft.ChatFormatting;

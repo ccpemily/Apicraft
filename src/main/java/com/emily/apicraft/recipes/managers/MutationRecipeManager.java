@@ -1,13 +1,13 @@
 package com.emily.apicraft.recipes.managers;
 
-import com.emily.apicraft.Apicraft;
 import com.emily.apicraft.core.lib.Combination;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.recipes.ICustomManager;
 import com.emily.apicraft.recipes.RecipeTypes;
 import com.emily.apicraft.recipes.mutation.MutationRecipe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.slf4j.Logger;
 
@@ -18,7 +18,7 @@ import static com.mojang.logging.LogUtils.getLogger;
 public class MutationRecipeManager implements ICustomManager {
     public static final MutationRecipeManager INSTANCE = new MutationRecipeManager();
 
-    protected Map<Combination<IAllele<AlleleSpecies>>, List<MutationRecipe>> recipeMap = new Object2ObjectOpenHashMap<>();
+    protected Map<Combination<ResourceLocation>, List<MutationRecipe>> recipeMap = new Object2ObjectOpenHashMap<>();
 
     public void addRecipe(MutationRecipe recipe){
         if(recipeMap.containsKey(recipe.getParents())){
@@ -30,7 +30,7 @@ public class MutationRecipeManager implements ICustomManager {
         }
     }
 
-    public List<MutationRecipe> getRecipe(Combination<IAllele<AlleleSpecies>> combination){
+    public List<MutationRecipe> getRecipe(Combination<ResourceLocation> combination){
         return recipeMap.get(combination);
     }
 

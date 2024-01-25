@@ -2,7 +2,7 @@ package com.emily.apicraft.client.gui.elements.tooltip;
 
 import cofh.core.client.gui.element.ElementBase;
 import cofh.core.client.gui.element.ITooltipFactory;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class AlleleTypeToolTip implements ITooltipFactory {
 
     @Override
     public List<Component> create(ElementBase element, int mouseX, int mouseY) {
-        List<String> strings = List.of(Component.translatable(type.getDescription()).getString().split("\n"));
+        List<String> strings = List.of(Component.translatable(type.getDescriptionKey()).getString().split("\n"));
         return new ArrayList<>(strings.stream().map(Component::translatable).toList());
     }
 }

@@ -82,7 +82,7 @@ public class ApicraftJeiPlugin implements IModPlugin {
                 return IIngredientSubtypeInterpreter.NONE;
             }
             Bee bee = BeeProviderCapability.get(stack).getBeeIndividual().orElse(Bee.getPure(Alleles.Species.FOREST));
-            return bee.getGenome().getSpecies().toString();
+            return bee.getGenome().getSpecies().getRegistryName();
         }
     }
 }

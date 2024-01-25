@@ -1,6 +1,8 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.genome;
 
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class BeeKaryotype {
         defaultTemplate.put(type, defaultValue);
     }
 
-    public IAllele<?>[] defaultTemplate(IAllele<AlleleSpecies> species){
+    public IAllele<?>[] defaultTemplate(IAllele<SpeciesData> species){
         IAllele<?>[] alleles = new IAllele[karyotype.size()];
         for(int i = 0; i < karyotype.size(); i++){
             IAlleleType type = karyotype.get(i);
@@ -53,7 +55,7 @@ public class BeeKaryotype {
         return alleles;
     }
 
-    public BeeGenome defaultGenome(IAllele<AlleleSpecies> species){
+    public BeeGenome defaultGenome(IAllele<SpeciesData> species){
         BeeChromosome[] chromosomes = new BeeChromosome[karyotype.size()];
         IAllele<?>[] template = defaultTemplate(species);
         for(int i = 0; i < karyotype.size(); i++){

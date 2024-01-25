@@ -1,6 +1,6 @@
 package com.emily.apicraft.capabilities.empty;
 
-import com.emily.apicraft.bee.BeeProductData;
+import com.emily.apicraft.apiculture.beeproduct.BeeProductData;
 import com.emily.apicraft.capabilities.IBeeProductContainer;
 
 import java.util.Optional;

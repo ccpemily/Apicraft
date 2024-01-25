@@ -5,11 +5,14 @@ import com.emily.apicraft.capabilities.implementation.BeeProviderCapability;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
 import com.emily.apicraft.genetics.alleles.AlleleTypes;
 import com.emily.apicraft.genetics.alleles.Alleles;
 import com.emily.apicraft.block.beehouse.IBeeHousing;
 import com.emily.apicraft.core.registry.Registries;
+import com.emily.apicraft.genetics.genome.BeeGenome;
+import com.emily.apicraft.genetics.genome.BeeKaryotype;
 import com.emily.apicraft.utils.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -80,13 +83,13 @@ public class Bee {
 
     // region Tooltips
     public void addTooltip(List<Component> components) {
-        IAllele<AlleleSpecies> speciesActive = genome.getSpecies();
-        IAllele<AlleleSpecies> speciesInactive = genome.getInactiveSpecies();
+        IAllele<SpeciesData> speciesActive = genome.getSpecies();
+        IAllele<SpeciesData> speciesInactive = genome.getInactiveSpecies();
         if(speciesActive != speciesInactive){
             components.add(
-                    Component.translatable(speciesActive.getName())
+                    Component.translatable(speciesActive.getLocalizationKey())
                             .append("-")
-                            .append(Component.translatable(speciesInactive.getName())
+                            .append(Component.translatable(speciesInactive.getLocalizationKey())
                                     .append(Component.translatable("bee.tooltip.hybrid"))
                             ).withStyle(ChatFormatting.BLUE)
             );
@@ -105,18 +108,18 @@ public class Bee {
             components.add(Component.translatable("bee.tooltip.generation", generation)
             .withStyle(rarity.getStyleModifier().apply(Style.EMPTY)));
         }
-        components.add(Component.translatable(genome.getAllele(AlleleTypes.LIFESPAN, true).getName()).withStyle(ChatFormatting.GRAY));
-        components.add(Component.translatable(genome.getAllele(AlleleTypes.PRODUCTIVITY, true).getName()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable(genome.getAllele(AlleleTypes.LIFESPAN, true).getLocalizationKey()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable(genome.getAllele(AlleleTypes.PRODUCTIVITY, true).getLocalizationKey()).withStyle(ChatFormatting.GRAY));
         components.add(Component.literal("T: ")
                 .append(Component.translatable(speciesActive.getValue().getTemperature().getName())
                         .append(" / ")
-                        .append(Component.translatable(genome.getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true).getName()))
+                        .append(Component.translatable(genome.getAllele(AlleleTypes.TEMPERATURE_TOLERANCE, true).getLocalizationKey()))
                 ).withStyle(ChatFormatting.GREEN)
         );
         components.add(Component.literal("H: ")
                 .append(Component.translatable(speciesActive.getValue().getHumidity().getName())
                                 .append(" / ")
-                                .append(Component.translatable(genome.getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true).getName()))
+                                .append(Component.translatable(genome.getAllele(AlleleTypes.HUMIDITY_TOLERANCE, true).getLocalizationKey()))
                 ).withStyle(ChatFormatting.AQUA)
         );
         Alleles.Behavior behavior = (Alleles.Behavior) genome.getAllele(AlleleTypes.BEHAVIOR, true);
@@ -127,8 +130,8 @@ public class Bee {
             case CREPUSCULAR -> color = ChatFormatting.AQUA;
             case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
         }
-        components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + behavior).withStyle(color)));
-        components.add(Component.translatable(genome.getAllele(AlleleTypes.ACCEPTED_FLOWERS, true).getName()).withStyle(ChatFormatting.GRAY));
+        components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + behavior.getRegistryName()).withStyle(color)));
+        components.add(Component.translatable(genome.getAllele(AlleleTypes.ACCEPTED_FLOWERS, true).getLocalizationKey()).withStyle(ChatFormatting.GRAY));
         if(genome.isCaveDwelling()){
             components.add(Component.translatable("bee.tooltip.cave_dwelling").withStyle(ChatFormatting.DARK_GRAY));
         }
@@ -273,11 +276,11 @@ public class Bee {
     // endregion
 
     // region Helpers
-    public static Bee getPure(IAllele<AlleleSpecies> species){
+    public static Bee getPure(IAllele<SpeciesData> species){
         return new Bee(BeeKaryotype.INSTANCE.defaultGenome(species));
     }
 
-    public static Bee getPureMated(IAllele<AlleleSpecies> species){
+    public static Bee getPureMated(IAllele<SpeciesData> species){
         BeeGenome genome = BeeKaryotype.INSTANCE.defaultGenome(species);
         return new Bee(genome, genome);
     }

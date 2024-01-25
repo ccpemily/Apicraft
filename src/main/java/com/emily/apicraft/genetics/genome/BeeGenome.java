@@ -1,9 +1,7 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.genome;
 
 import com.emily.apicraft.core.lib.ErrorStates;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.alleles.AlleleTypes;
-import com.emily.apicraft.genetics.alleles.Alleles;
+import com.emily.apicraft.genetics.alleles.*;
 import com.emily.apicraft.genetics.mutations.Mutation;
 import com.emily.apicraft.genetics.mutations.MutationManager;
 import com.emily.apicraft.block.beehouse.IBeeHousing;
@@ -61,12 +59,12 @@ public class BeeGenome {
 
     // region GenomeInfo
     @SuppressWarnings("unchecked")
-    public IAllele<AlleleSpecies> getSpecies(){
-        return (IAllele<AlleleSpecies>) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getActive();
+    public IAllele<SpeciesData> getSpecies(){
+        return (IAllele<SpeciesData>) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getActive();
     }
     @SuppressWarnings("unchecked")
-    public IAllele<AlleleSpecies> getInactiveSpecies(){
-        return (IAllele<AlleleSpecies>) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getInactive();
+    public IAllele<SpeciesData> getInactiveSpecies(){
+        return (IAllele<SpeciesData>) chromosomes[karyotype.getIndex(AlleleTypes.SPECIES)].getInactive();
     }
 
     public IAllele<?> getAllele(IAlleleType type, boolean active){
@@ -131,7 +129,7 @@ public class BeeGenome {
                     float chanceActive = mutations.get(mutationIdActive).getConditionalChance(beeHousing);
                     // Mutate active genome if in chance
                     if(random.nextFloat() * 100 < chanceActive){
-                        activeAlleles = karyotype.defaultTemplate(mutations.get(mutationIdActive).getResult());
+                        activeAlleles = karyotype.defaultTemplate(mutations.get(mutationIdActive).getResultSpecies());
                         break;
                     }
                 }
@@ -139,7 +137,7 @@ public class BeeGenome {
                     int mutationIdInactive = random.nextInt(mutations.size());
                     float chanceInactive = mutations.get(mutationIdInactive).getConditionalChance(beeHousing);
                     if(random.nextFloat() * 100 < chanceInactive){
-                        inactiveAlleles = karyotype.defaultTemplate(mutations.get(mutationIdInactive).getResult());
+                        inactiveAlleles = karyotype.defaultTemplate(mutations.get(mutationIdInactive).getResultSpecies());
                         break;
                     }
                 }

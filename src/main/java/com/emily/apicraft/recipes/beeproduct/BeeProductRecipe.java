@@ -1,8 +1,8 @@
 package com.emily.apicraft.recipes.beeproduct;
 
 import cofh.lib.util.recipes.SerializableRecipe;
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.recipes.RecipeSerializers;
 import com.emily.apicraft.recipes.RecipeTypes;
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BeeProductRecipe extends SerializableRecipe {
-    protected IAllele<AlleleSpecies> species;
+    protected IAllele<SpeciesData> species;
     protected List<Tuple<ItemStack, Float>> normalOutputs = new ArrayList<>();
     protected List<Tuple<ItemStack, Float>> specialOutputs = new ArrayList<>();
     protected List<IBeeCondition> specialConditions = new ArrayList<>();
     protected BeeProductRecipe(
             ResourceLocation recipeId,
-            IAllele<AlleleSpecies> species,
+            IAllele<SpeciesData> species,
             List<Tuple<ItemStack, Boolean>> outputs,
             List<Float> chances,
             List<IBeeCondition> conditions
@@ -31,7 +31,7 @@ public class BeeProductRecipe extends SerializableRecipe {
         this.species = species;
     }
 
-    public IAllele<AlleleSpecies> getSpecies(){
+    public IAllele<SpeciesData> getSpecies(){
         return species;
     }
     public List<Tuple<ItemStack, Float>> getNormalOutputs(){

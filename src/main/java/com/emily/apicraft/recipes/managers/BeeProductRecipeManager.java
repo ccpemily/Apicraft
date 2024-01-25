@@ -1,7 +1,7 @@
 package com.emily.apicraft.recipes.managers;
 
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.recipes.ICustomManager;
 import com.emily.apicraft.recipes.RecipeTypes;
 import com.emily.apicraft.recipes.beeproduct.BeeProductRecipe;
@@ -16,12 +16,12 @@ import static com.mojang.logging.LogUtils.getLogger;
 public class BeeProductRecipeManager implements ICustomManager {
     public static final BeeProductRecipeManager INSTANCE = new BeeProductRecipeManager();
 
-    protected Map<IAllele<AlleleSpecies>, BeeProductRecipe> recipeMap = new Object2ObjectOpenHashMap<>();
+    protected Map<IAllele<SpeciesData>, BeeProductRecipe> recipeMap = new Object2ObjectOpenHashMap<>();
     public void addRecipe(BeeProductRecipe recipe){
         recipeMap.put(recipe.getSpecies(), recipe);
     }
 
-    public BeeProductRecipe getRecipe(IAllele<AlleleSpecies> species){
+    public BeeProductRecipe getRecipe(IAllele<SpeciesData> species){
         return recipeMap.get(species);
     }
 

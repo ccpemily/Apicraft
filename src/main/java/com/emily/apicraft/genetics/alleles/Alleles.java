@@ -3,11 +3,9 @@ package com.emily.apicraft.genetics.alleles;
 import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.core.lib.ErrorStates;
-import com.emily.apicraft.genetics.BeeBranches;
+import com.emily.apicraft.genetics.branches.BeeBranches;
 import com.emily.apicraft.genetics.effects.EmptyEffect;
 import com.emily.apicraft.genetics.flowers.FlowerProvider;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
@@ -19,75 +17,75 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Alleles {
-    public enum Species implements IAllele<AlleleSpecies> {
+    public enum Species implements IAllele<SpeciesData> {
         // region Honey branch
-        FOREST(AlleleSpecies.getBuilder()
+        FOREST(SpeciesData.getBuilder()
                 .addToTemplate(Fertility.FECUND)
                 .setColor(new Color(0x19d0ec), new Color(0xffdc16))
                 .build(BeeBranches.HONEY), true),
-        MEADOWS(AlleleSpecies.getBuilder()
+        MEADOWS(SpeciesData.getBuilder()
                 .setColor(new Color(0xef131e), new Color(0xffdc16))
                 .build(BeeBranches.HONEY), true),
-        COMMON(AlleleSpecies.getBuilder()
+        COMMON(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .setColor(new Color(0xb2b2b2), new Color(0xffdc16))
                 .build(BeeBranches.HONEY), true),
-        CULTIVATED(AlleleSpecies.getBuilder()
+        CULTIVATED(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.FASTEST)
                 .addToTemplate(LifeSpan.HYPER)
                 .setColor(new Color(0x5734ec), new Color(0xffdc16))
                 .build(BeeBranches.HONEY), true),
         // endregion
         // region Noble branch
-        NOBLE(AlleleSpecies.getBuilder()
+        NOBLE(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
                 .setColor(new Color(0xec9a19), new Color(0xffdc16))
                 .build(BeeBranches.NOBLE)),
-        MAJESTIC(AlleleSpecies.getBuilder()
+        MAJESTIC(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(Fertility.SWARMING)
                 .setColor(new Color(0x7f0000), new Color(0xffdc16))
                 .build(BeeBranches.NOBLE), true),
-        IMPERIAL(AlleleSpecies.getBuilder()
+        IMPERIAL(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.LONG)
                 .setColor(new Color(0xa3e02f), new Color(0xffdc16)).setFoil()
                 .build(BeeBranches.NOBLE)),
         // endregion
         // region Industrious branch
-        DILIGENT(AlleleSpecies.getBuilder()
+        DILIGENT(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
                 .setColor(new Color(0xc219ec), new Color(0xffdc16))
                 .build(BeeBranches.INDUSTRIOUS)),
-        UNWEARY(AlleleSpecies.getBuilder()
+        UNWEARY(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.RAPID)
                 .setColor(new Color(0x19ec5a), new Color(0xffdc16))
                 .build(BeeBranches.INDUSTRIOUS), true),
-        INDUSTRIOUS(AlleleSpecies.getBuilder()
+        INDUSTRIOUS(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.FAST)
                 .addToTemplate(LifeSpan.LONG)
                 .setColor(new Color(0xffffff), new Color(0xffdc16)).setFoil()
                 .build(BeeBranches.INDUSTRIOUS)),
         // endregion
         // region Heroic branch
-        STEADFAST(AlleleSpecies.getBuilder()
+        STEADFAST(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.LONG)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .addToTemplate(CaveDwelling.TRUE)
                 .setColor(new Color(0x4d2b15), new Color(0xffdc16)).setFoil()
                 .build(BeeBranches.HEROIC)),
-        VALIANT(AlleleSpecies.getBuilder()
+        VALIANT(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .addToTemplate(CaveDwelling.TRUE)
                 .setColor(new Color(0x626dbb), new Color(0xffdc16))
                 .build(BeeBranches.HEROIC), true),
-        HEROIC(AlleleSpecies.getBuilder()
+        HEROIC(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Behavior.CATHEMERAL)
@@ -96,19 +94,19 @@ public class Alleles {
                 .build(BeeBranches.HEROIC)),
         // endregion
         // region Infernal branch
-        SINISTER(AlleleSpecies.getBuilder()
+        SINISTER(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
                 .setTemperature(EnumTemperature.HELLISH).setHumidity(EnumHumidity.ARID)
                 .setColor(new Color(0xb3d5e4), new Color(0x9a2323))
                 .build(BeeBranches.INFERNAL)),
-        FIENDISH(AlleleSpecies.getBuilder()
+        FIENDISH(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.LONG)
                 .setTemperature(EnumTemperature.HELLISH).setHumidity(EnumHumidity.ARID)
                 .setColor(new Color(0xd7bee5), new Color(0x9a2323))
                 .build(BeeBranches.INFERNAL), true),
-        DEMONIC(AlleleSpecies.getBuilder()
+        DEMONIC(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .setTemperature(EnumTemperature.HELLISH).setHumidity(EnumHumidity.ARID)
@@ -116,16 +114,16 @@ public class Alleles {
                 .build(BeeBranches.INFERNAL)),
         // endregion
         // region Austere branch
-        MODEST(AlleleSpecies.getBuilder()
+        MODEST(SpeciesData.getBuilder()
                 .setTemperature(EnumTemperature.HOT).setHumidity(EnumHumidity.ARID)
                 .setColor(new Color(0xc5be86), new Color(0xffdc16))
                 .build(BeeBranches.AUSTERE)),
-        FRUGAL(AlleleSpecies.getBuilder()
+        FRUGAL(SpeciesData.getBuilder()
                 .addToTemplate(LifeSpan.LONG)
                 .setTemperature(EnumTemperature.HOT).setHumidity(EnumHumidity.ARID)
                 .setColor(new Color(0xe8dcb1), new Color(0xffdc16))
                 .build(BeeBranches.AUSTERE), true),
-        AUSTERE(AlleleSpecies.getBuilder()
+        AUSTERE(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLUGGISH)
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Behavior.CREPUSCULAR)
@@ -135,19 +133,19 @@ public class Alleles {
                 .build(BeeBranches.AUSTERE)),
         // endregion
         // region Tropical branch
-        TROPICAL(AlleleSpecies.getBuilder()
+        TROPICAL(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .addToTemplate(LifeSpan.NORMAL)
                 .setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP)
                 .setColor(new Color(0x378020), new Color(0xffdc16))
                 .build(BeeBranches.TROPICAL)),
-        EXOTIC(AlleleSpecies.getBuilder()
+        EXOTIC(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.LONG)
                 .setTemperature(EnumTemperature.WARM).setHumidity(EnumHumidity.DAMP)
                 .setColor(new Color(0x304903), new Color(0xffdc16))
                 .build(BeeBranches.TROPICAL), true),
-        EDENIC(AlleleSpecies.getBuilder()
+        EDENIC(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOWEST)
                 .addToTemplate(LifeSpan.ETERNAL)
                 .addToTemplate(HumidityTolerance.UP_1)
@@ -156,16 +154,16 @@ public class Alleles {
                 .build(BeeBranches.TROPICAL)),
         // endregion
         // region Phantom branch
-        ENDED(AlleleSpecies.getBuilder()
+        ENDED(SpeciesData.getBuilder()
                 .setTemperature(EnumTemperature.COLD)
                 .setColor(new Color(0xe079fa), new Color(0xd9de9e))
                 .build(BeeBranches.END)),
-        SPECTRAL(AlleleSpecies.getBuilder()
+        SPECTRAL(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .setTemperature(EnumTemperature.COLD)
                 .setColor(new Color(0xa98bed), new Color(0xd9de9e))
                 .build(BeeBranches.END)),
-        PHANTASMAL(AlleleSpecies.getBuilder()
+        PHANTASMAL(SpeciesData.getBuilder()
                 .addToTemplate(LifeSpan.ETERNAL)
                 .addToTemplate(Territory.LARGE)
                 .setTemperature(EnumTemperature.COLD)
@@ -173,17 +171,17 @@ public class Alleles {
                 .build(BeeBranches.END), true),
         // endregion
         // region Frozen branch
-        WINTRY(AlleleSpecies.getBuilder()
+        WINTRY(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.SLOW)
                 .setTemperature(EnumTemperature.ICY)
                 .setColor(new Color(0xa0ffc8), new Color(0xdaf5f3))
                 .build(BeeBranches.FROZEN)),
-        ICY(AlleleSpecies.getBuilder()
+        ICY(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .setTemperature(EnumTemperature.ICY)
                 .setColor(new Color(0xa0ffff), new Color(0xdaf5f3))
                 .build(BeeBranches.FROZEN), true),
-        GLACIAL(AlleleSpecies.getBuilder()
+        GLACIAL(SpeciesData.getBuilder()
                 .addToTemplate(Productivity.NORMAL)
                 .addToTemplate(LifeSpan.SHORT)
                 .setTemperature(EnumTemperature.ICY)
@@ -191,46 +189,46 @@ public class Alleles {
                 .build(BeeBranches.FROZEN)),
         // endregion
         // region Vengeful branch
-        VINDICTIVE(AlleleSpecies.getBuilder()
+        VINDICTIVE(SpeciesData.getBuilder()
                 .addToTemplate(LifeSpan.LONG)
                 .addToTemplate(Productivity.SLOWEST)
                 .setColor(new Color(0xeafff3), new Color(0xffdc16))
                 .build(BeeBranches.VENGEFUL)),
-        VENGEFUL(AlleleSpecies.getBuilder()
+        VENGEFUL(SpeciesData.getBuilder()
                 .addToTemplate(LifeSpan.ANCIENT)
                 .addToTemplate(Productivity.SLUGGISH)
                 .setColor(new Color(0xc2de00), new Color(0xffdc16))
                 .build(BeeBranches.VENGEFUL)),
-        AVENGING(AlleleSpecies.getBuilder()
+        AVENGING(SpeciesData.getBuilder()
                 .addToTemplate(LifeSpan.ETERNAL)
                 .addToTemplate(Productivity.SLUGGISH)
                 .setColor(new Color(0xddff00), new Color(0xffdc16)).setFoil()
                 .build(BeeBranches.VENGEFUL)),
         // endregion
         // region Agrarian branch
-        RURAL(AlleleSpecies.getBuilder()
+        RURAL(SpeciesData.getBuilder()
                 .setColor(new Color(0xfeff8f), new Color(0xffdc16))
                 .build(BeeBranches.AGRARIAN)),
-        FARMER(AlleleSpecies.getBuilder()
+        FARMER(SpeciesData.getBuilder()
                 .setColor(new Color(0xd39728), new Color(0xffdc16))
                 .build(BeeBranches.AGRARIAN), true),
-        AGRARIAN(AlleleSpecies.getBuilder()
+        AGRARIAN(SpeciesData.getBuilder()
                 .addToTemplate(HumidityTolerance.BOTH_2)
                 .setColor(new Color(0xffca75), new Color(0xffdc16)).setFoil()
                 .build(BeeBranches.AGRARIAN), true),
         // endregion
         // region Boggy branch
-        MARSHY(AlleleSpecies.getBuilder()
+        MARSHY(SpeciesData.getBuilder()
                 .setHumidity(EnumHumidity.DAMP)
                 .setColor(new Color(0x546626), new Color(0xffdc16))
                 .build(BeeBranches.BOGGY), true),
-        MIRY(AlleleSpecies.getBuilder()
+        MIRY(SpeciesData.getBuilder()
                 .addToTemplate(RainTolerance.TRUE)
                 .addToTemplate(Behavior.CREPUSCULAR)
                 .setHumidity(EnumHumidity.DAMP)
                 .setColor(new Color(0x92af42), new Color(0xffdc16))
                 .build(BeeBranches.BOGGY)),
-        BOGGY(AlleleSpecies.getBuilder()
+        BOGGY(SpeciesData.getBuilder()
                 .addToTemplate(RainTolerance.TRUE)
                 .addToTemplate(Behavior.CATHEMERAL)
                 .setHumidity(EnumHumidity.DAMP)
@@ -238,38 +236,38 @@ public class Alleles {
                 .build(BeeBranches.BOGGY)),
         // endregion
         // region Monastic branch
-        MONASTIC(AlleleSpecies.getBuilder()
+        MONASTIC(SpeciesData.getBuilder()
                 .setColor(new Color(0x42371c), new Color(0xfff7b6))
                 .build(BeeBranches.MONASTIC)),
-        SECLUDED(AlleleSpecies.getBuilder()
+        SECLUDED(SpeciesData.getBuilder()
                 .setColor(new Color(0x7b6634), new Color(0xfff7b6))
                 .build(BeeBranches.MONASTIC), true),
-        HERMITIC(AlleleSpecies.getBuilder()
+        HERMITIC(SpeciesData.getBuilder()
                 .setColor(new Color(0xffd46c), new Color(0xfff7b6)).setFoil()
                 .build(BeeBranches.MONASTIC)),
         // endregion
         // region Player specified branch
-        EMILIAS(AlleleSpecies.getBuilder()
+        EMILIAS(SpeciesData.getBuilder()
                 .setColor(new Color(0xd7bee5), new Color(0xfd58ab)).setFoil()
                 .build(BeeBranches.EMILY)),
-        AKINAPIS(AlleleSpecies.getBuilder()
+        AKINAPIS(SpeciesData.getBuilder()
                 .setColor(new Color(0xa976ff), new Color(0xdc77ff)).setFoil()
                 .build(BeeBranches.AKINA));
         // endregion
         // region InternalMethods
         private final boolean dominant;
-        private final AlleleSpecies species;
+        private final SpeciesData species;
 
-        Species(AlleleSpecies species){
+        Species(SpeciesData species){
             this(species, false);
         }
-        Species(AlleleSpecies species, boolean dominant){
+        Species(SpeciesData species, boolean dominant){
             this.dominant = dominant;
             this.species = species;
         }
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -279,22 +277,22 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
             components.add(Component.translatable("tooltip.branch")
                     .append(": ")
-                    .append(Component.translatable(getValue().getBranch().getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getValue().getBranch().getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             return components;
         }
 
         @Override
-        public AlleleSpecies getValue() {
+        public SpeciesData getValue() {
             return species;
         }
 
@@ -325,8 +323,8 @@ public class Alleles {
             this.dominant = dominant;
         }
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -336,11 +334,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -382,8 +380,8 @@ public class Alleles {
             this.dominant = dominant;
         }
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -393,11 +391,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -440,8 +438,8 @@ public class Alleles {
         }
 
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -451,11 +449,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -485,8 +483,8 @@ public class Alleles {
             this.dominant = dominant;
         }
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -508,11 +506,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -523,7 +521,7 @@ public class Alleles {
                 case CREPUSCULAR -> color = ChatFormatting.AQUA;
                 case CATHEMERAL -> color = ChatFormatting.DARK_GREEN;
             }
-            components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + this).withStyle(color)));
+            components.add(Component.translatable("bee.tooltip.behavior").append(Component.translatable("tooltip." + this.getRegistryName()).withStyle(color)));
             return components;
         }
 
@@ -549,8 +547,8 @@ public class Alleles {
             this.dominant = dominant;
         }
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
         @Override
         public boolean isDominant() {
@@ -560,11 +558,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -593,8 +591,8 @@ public class Alleles {
             this.dominant = dominant;
         }
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
         @Override
         public boolean isDominant() {
@@ -603,11 +601,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -649,8 +647,8 @@ public class Alleles {
         }
 
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -664,11 +662,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -724,8 +722,8 @@ public class Alleles {
         }
 
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -795,8 +793,8 @@ public class Alleles {
         }
 
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -855,8 +853,8 @@ public class Alleles {
         }
 
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -866,11 +864,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }
@@ -908,8 +906,8 @@ public class Alleles {
         }
 
         @Override
-        public String toString(){
-            return getType() + "." + this.name().toLowerCase(Locale.ENGLISH);
+        public String getRegistryName(){
+            return getType().getRegistryName() + "." + this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -919,11 +917,11 @@ public class Alleles {
 
         @Override
         public List<Component> getDescriptionTooltips() {
-            List<String> strings = List.of(Component.translatable(getDescription()).getString().split("\n"));
+            List<String> strings = List.of(Component.translatable(getDescriptionKey()).getString().split("\n"));
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable(getType().getName())
+            components.add(Component.translatable(getType().getLocalizationKey())
                     .append(": ")
-                    .append(Component.translatable(getName()).withStyle(ChatFormatting.YELLOW)));
+                    .append(Component.translatable(getLocalizationKey()).withStyle(ChatFormatting.YELLOW)));
             for(String str : strings){
                 components.add(Component.literal(str));
             }

@@ -41,91 +41,91 @@ public class MutationRecipeProvider extends RecipeProvider {
 
     protected void addRecipes(Consumer<FinishedRecipe> writer){
         // region Common branch
-        Alleles.Species[] overworldSpecies = {
-                Alleles.Species.FOREST, Alleles.Species.MEADOWS, Alleles.Species.WINTRY,
-                Alleles.Species.MODEST, Alleles.Species.TROPICAL, Alleles.Species.MARSHY
+        String[] overworldSpecies = {
+                "species.forest", "species.meadows", "species.wintry",
+                "species.modest", "species.tropical", "species.marshy"
         };
         for(int i = 0; i < overworldSpecies.length; i++){
             for(int j = i + 1; j < overworldSpecies.length; j++){
                 MutationRecipeBuilder.get()
                         .setParents(overworldSpecies[i], overworldSpecies[j])
-                        .setResult(Alleles.Species.COMMON).setChance(0.15f)
+                        .setResult("species.common").setChance(0.15f)
                         .buildAndAccept(writer);
             }
             MutationRecipeBuilder.get()
-                    .setParents(Alleles.Species.COMMON, overworldSpecies[i])
-                    .setResult(Alleles.Species.CULTIVATED).setChance(0.12f)
+                    .setParents("species.common", overworldSpecies[i])
+                    .setResult("species.cultivated").setChance(0.12f)
                     .buildAndAccept(writer);
         }
         //endregion
 
         // region Noble branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.CULTIVATED, Alleles.Species.COMMON)
-                .setResult(Alleles.Species.NOBLE).setChance(0.10f)
+                .setParents("species.cultivated", "species.common")
+                .setResult("species.noble").setChance(0.10f)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.NOBLE, Alleles.Species.CULTIVATED)
-                .setResult(Alleles.Species.MAJESTIC).setChance(0.08f)
+                .setParents("species.noble", "species.cultivated")
+                .setResult("species.majestic").setChance(0.08f)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MAJESTIC, Alleles.Species.NOBLE)
-                .setResult(Alleles.Species.IMPERIAL).setChance(0.05f)
+                .setParents("species.majestic", "species.noble")
+                .setResult("species.imperial").setChance(0.05f)
                 .buildAndAccept(writer);
         // endregion
 
         // region Industrious branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.CULTIVATED, Alleles.Species.COMMON)
-                .setResult(Alleles.Species.DILIGENT).setChance(0.1f)
+                .setParents("species.cultivated", "species.common")
+                .setResult("species.diligent").setChance(0.1f)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.DILIGENT, Alleles.Species.CULTIVATED)
-                .setResult(Alleles.Species.UNWEARY).setChance(0.08f)
+                .setParents("species.diligent", "species.cultivated")
+                .setResult("species.unweary").setChance(0.08f)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.UNWEARY, Alleles.Species.DILIGENT)
-                .setResult(Alleles.Species.INDUSTRIOUS).setChance(0.05f)
+                .setParents("species.unweary", "species.diligent")
+                .setResult("species.industrious").setChance(0.05f)
                 .buildAndAccept(writer);
         // endregion
 
         // region Heroic branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.STEADFAST, Alleles.Species.VALIANT)
-                .setResult(Alleles.Species.HEROIC).setChance(0.03f)
+                .setParents("species.steadfast", "species.valiant")
+                .setResult("species.heroic").setChance(0.03f)
                 .restrictBiomeTag(BiomeTags.IS_FOREST)
                 .buildAndAccept(writer);
         // endregion
 
         // region Infernal branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.CULTIVATED, Alleles.Species.MODEST)
-                .setResult(Alleles.Species.SINISTER).setChance(0.6f)
+                .setParents("species.cultivated", "species.modest")
+                .setResult("species.sinister").setChance(0.6f)
                 .restrictBiomeTag(BiomeTags.IS_NETHER)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.CULTIVATED, Alleles.Species.TROPICAL)
-                .setResult(Alleles.Species.SINISTER).setChance(0.6f)
+                .setParents("species.cultivated", "species.tropical")
+                .setResult("species.sinister").setChance(0.6f)
                 .restrictBiomeTag(BiomeTags.IS_NETHER)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.SINISTER, Alleles.Species.MODEST)
-                .setResult(Alleles.Species.FIENDISH).setChance(0.4f)
+                .setParents("species.sinister", "species.modest")
+                .setResult("species.fiendish").setChance(0.4f)
                 .restrictBiomeTag(BiomeTags.IS_NETHER)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.SINISTER, Alleles.Species.TROPICAL)
-                .setResult(Alleles.Species.FIENDISH).setChance(0.4f)
+                .setParents("species.sinister", "species.tropical")
+                .setResult("species.fiendish").setChance(0.4f)
                 .restrictBiomeTag(BiomeTags.IS_NETHER)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.SINISTER, Alleles.Species.CULTIVATED)
-                .setResult(Alleles.Species.FIENDISH).setChance(0.4f)
+                .setParents("species.sinister", "species.cultivated")
+                .setResult("species.fiendish").setChance(0.4f)
                 .restrictBiomeTag(BiomeTags.IS_NETHER)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.FIENDISH, Alleles.Species.SINISTER)
-                .setResult(Alleles.Species.DEMONIC).setChance(0.4f)
+                .setParents("species.fiendish", "species.sinister")
+                .setResult("species.demonic").setChance(0.4f)
                 .restrictBiomeTag(BiomeTags.IS_NETHER)
                 .requireBlock(Blocks.MAGMA_BLOCK)
                 .buildAndAccept(writer);
@@ -133,20 +133,20 @@ public class MutationRecipeProvider extends RecipeProvider {
 
         // region Austere branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MODEST, Alleles.Species.SINISTER)
-                .setResult(Alleles.Species.FRUGAL).setChance(0.16f)
+                .setParents("species.modest", "species.sinister")
+                .setResult("species.frugal").setChance(0.16f)
                 .restrictTemperatureRange(EnumTemperature.HOT, EnumTemperature.HELLISH)
                 .restrictHumidity(EnumHumidity.ARID)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MODEST, Alleles.Species.FIENDISH)
-                .setResult(Alleles.Species.FRUGAL).setChance(0.1f)
+                .setParents("species.modest", "species.fiendish")
+                .setResult("species.frugal").setChance(0.1f)
                 .restrictTemperatureRange(EnumTemperature.HOT, EnumTemperature.HELLISH)
                 .restrictHumidity(EnumHumidity.ARID)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.FRUGAL, Alleles.Species.MODEST)
-                .setResult(Alleles.Species.AUSTERE).setChance(0.08f)
+                .setParents("species.frugal", "species.modest")
+                .setResult("species.austere").setChance(0.08f)
                 .restrictTemperatureRange(EnumTemperature.HOT, EnumTemperature.HELLISH)
                 .restrictHumidity(EnumHumidity.ARID)
                 .buildAndAccept(writer);
@@ -154,60 +154,60 @@ public class MutationRecipeProvider extends RecipeProvider {
 
         // region Tropical branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.AUSTERE, Alleles.Species.TROPICAL)
-                .setResult(Alleles.Species.EXOTIC).setChance(0.12f)
+                .setParents("species.austere", "species.tropical")
+                .setResult("species.exotic").setChance(0.12f)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.EXOTIC, Alleles.Species.TROPICAL)
-                .setResult(Alleles.Species.EDENIC).setChance(0.08f)
+                .setParents("species.exotic", "species.tropical")
+                .setResult("species.edenic").setChance(0.08f)
                 .requireBlock(Blocks.LAPIS_BLOCK)
                 .buildAndAccept(writer);
         // endregion
 
         // region Spectral branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.HERMITIC, Alleles.Species.ENDED)
-                .setResult(Alleles.Species.SPECTRAL).setChance(0.04f)
+                .setParents("species.hermitic", "species.ended")
+                .setResult("species.spectral").setChance(0.04f)
                 .requireBlock(Blocks.END_STONE)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.SPECTRAL, Alleles.Species.ENDED)
-                .setResult(Alleles.Species.PHANTASMAL).setChance(0.02f)
+                .setParents("species.spectral", "species.ended")
+                .setResult("species.phantasmal").setChance(0.02f)
                 .requireBlock(Blocks.PURPUR_BLOCK)
                 .buildAndAccept(writer);
         // endregion
 
         // region Glacial branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.INDUSTRIOUS, Alleles.Species.WINTRY)
-                .setResult(Alleles.Species.ICY).setChance(0.12f)
+                .setParents("species.industrious", "species.wintry")
+                .setResult("species.icy").setChance(0.12f)
                 .restrictTemperatureRange(EnumTemperature.ICY, EnumTemperature.COLD)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.ICY, Alleles.Species.WINTRY)
-                .setResult(Alleles.Species.GLACIAL).setChance(0.08f)
+                .setParents("species.icy", "species.wintry")
+                .setResult("species.glacial").setChance(0.08f)
                 .restrictTemperature(EnumTemperature.ICY)
                 .buildAndAccept(writer);
         // endregion
 
         // region Vengeful branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MONASTIC, Alleles.Species.DEMONIC)
-                .setResult(Alleles.Species.VINDICTIVE).setChance(0.04f)
+                .setParents("species.monastic", "species.demonic")
+                .setResult("species.vindictive").setChance(0.04f)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.VINDICTIVE, Alleles.Species.DEMONIC)
-                .setResult(Alleles.Species.VENGEFUL).setChance(0.08f)
+                .setParents("species.vindictive", "species.demonic")
+                .setResult("species.vengeful").setChance(0.08f)
                 .requireBlock(Blocks.CRYING_OBSIDIAN)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.VINDICTIVE, Alleles.Species.MONASTIC)
-                .setResult(Alleles.Species.VENGEFUL).setChance(0.08f)
+                .setParents("species.vindictive", "species.monastic")
+                .setResult("species.vengeful").setChance(0.08f)
                 .requireBlock(Blocks.CRYING_OBSIDIAN)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.VINDICTIVE, Alleles.Species.VENGEFUL)
-                .setResult(Alleles.Species.AVENGING).setChance(0.02f)
+                .setParents("species.vindictive", "species.vengeful")
+                .setResult("species.avenging").setChance(0.02f)
                 .restrictTemperature(EnumTemperature.HELLISH)
                 .restrictHumidity(EnumHumidity.ARID)
                 .requireBlock(Blocks.SCULK)
@@ -216,20 +216,20 @@ public class MutationRecipeProvider extends RecipeProvider {
 
         // region Agrarian branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.DILIGENT, Alleles.Species.MEADOWS)
-                .setResult(Alleles.Species.RURAL).setChance(0.12f)
+                .setParents("species.diligent", "species.meadows")
+                .setResult("species.rural").setChance(0.12f)
                 .restrictBiome(Biomes.PLAINS.location())
                 .requireBlock(Blocks.HAY_BLOCK)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.RURAL, Alleles.Species.UNWEARY)
-                .setResult(Alleles.Species.FARMER).setChance(0.1f)
+                .setParents("species.rural", "species.unweary")
+                .setResult("species.farmer").setChance(0.1f)
                 .restrictBiome(Biomes.PLAINS.location())
                 .requireBlock(Blocks.HAY_BLOCK)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.FARMER, Alleles.Species.INDUSTRIOUS)
-                .setResult(Alleles.Species.AGRARIAN).setChance(0.06f)
+                .setParents("species.farmer", "species.industrious")
+                .setResult("species.agrarian").setChance(0.06f)
                 .restrictBiome(Biomes.PLAINS.location())
                 .requireBlock(Blocks.HAY_BLOCK)
                 .buildAndAccept(writer);
@@ -237,15 +237,15 @@ public class MutationRecipeProvider extends RecipeProvider {
 
         // region Boggy branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MARSHY, Alleles.Species.NOBLE)
-                .setResult(Alleles.Species.MIRY).setChance(0.15f)
+                .setParents("species.marshy", "species.noble")
+                .setResult("species.miry").setChance(0.15f)
                 .restrictTemperature(EnumTemperature.WARM)
                 .restrictHumidity(EnumHumidity.DAMP)
                 .requireBlock(Blocks.MUD)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MIRY, Alleles.Species.MARSHY)
-                .setResult(Alleles.Species.BOGGY).setChance(0.08f)
+                .setParents("species.miry", "species.marshy")
+                .setResult("species.boggy").setChance(0.08f)
                 .restrictTemperature(EnumTemperature.WARM)
                 .restrictHumidity(EnumHumidity.DAMP)
                 .requireBlock(Blocks.MUD)
@@ -254,13 +254,13 @@ public class MutationRecipeProvider extends RecipeProvider {
 
         // region Monastic branch
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.MONASTIC, Alleles.Species.AUSTERE)
-                .setResult(Alleles.Species.SECLUDED).setChance(0.1f)
+                .setParents("species.monastic", "species.austere")
+                .setResult("species.secluded").setChance(0.1f)
                 .requireBlockTag(BlockTags.SOUL_FIRE_BASE_BLOCKS)
                 .buildAndAccept(writer);
         MutationRecipeBuilder.get()
-                .setParents(Alleles.Species.SECLUDED, Alleles.Species.MONASTIC)
-                .setResult(Alleles.Species.HERMITIC).setChance(0.04f)
+                .setParents("species.secluded", "species.monastic")
+                .setResult("species.hermitic").setChance(0.04f)
                 .requireBlockTag(BlockTags.SOUL_FIRE_BASE_BLOCKS)
                 .buildAndAccept(writer);
         // endregion

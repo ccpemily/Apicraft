@@ -1,6 +1,8 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.genetics.genome;
 
 import com.emily.apicraft.core.registry.Registries;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import com.emily.apicraft.utils.Tags;
 import net.minecraft.nbt.CompoundTag;
 
@@ -46,8 +48,8 @@ public class BeeChromosome {
     }
 
     public CompoundTag writeToTag(CompoundTag tag){
-        tag.putString(Tags.TAG_ACTIVE, active.toString());
-        tag.putString(Tags.TAG_INACTIVE, inactive.toString());
+        tag.putString(Tags.TAG_ACTIVE, active.getRegistryName());
+        tag.putString(Tags.TAG_INACTIVE, inactive.getRegistryName());
         return tag;
     }
 

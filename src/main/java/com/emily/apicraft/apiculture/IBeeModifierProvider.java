@@ -1,4 +1,4 @@
-package com.emily.apicraft.genetics;
+package com.emily.apicraft.apiculture;
 
 import net.minecraft.core.Vec3i;
 

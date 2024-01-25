@@ -2,8 +2,8 @@ package com.emily.apicraft.capabilities;
 
 import com.emily.apicraft.genetics.Bee;
 import com.emily.apicraft.genetics.alleles.Alleles;
-import com.emily.apicraft.genetics.IAllele;
-import com.emily.apicraft.genetics.IAlleleType;
+import com.emily.apicraft.genetics.alleles.IAllele;
+import com.emily.apicraft.genetics.alleles.IAlleleType;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 
 import javax.annotation.Nullable;

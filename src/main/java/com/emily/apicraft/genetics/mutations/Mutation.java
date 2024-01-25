@@ -1,9 +1,13 @@
 package com.emily.apicraft.genetics.mutations;
 
-import com.emily.apicraft.genetics.alleles.AlleleSpecies;
-import com.emily.apicraft.genetics.IAllele;
+import com.emily.apicraft.Apicraft;
+import com.emily.apicraft.core.registry.Registries;
+import com.emily.apicraft.genetics.alleles.Species;
+import com.emily.apicraft.genetics.alleles.SpeciesData;
+import com.emily.apicraft.genetics.alleles.IAllele;
 import com.emily.apicraft.genetics.conditions.IBeeCondition;
 import com.emily.apicraft.block.beehouse.IBeeHousing;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +16,9 @@ import java.util.List;
 import static com.mojang.logging.LogUtils.getLogger;
 
 public class Mutation {
-    private final IAllele<AlleleSpecies> speciesFirst;
-    private final IAllele<AlleleSpecies> speciesSecond;
-    private final IAllele<AlleleSpecies> speciesResult;
+    private final ResourceLocation speciesFirst;
+    private final ResourceLocation speciesSecond;
+    private final ResourceLocation speciesResult;
     private final int baseChance;
     private final List<IBeeCondition> conditions;
 
@@ -26,16 +30,21 @@ public class Mutation {
         this.conditions = List.copyOf(builder.conditions);
     }
 
-    public IAllele<AlleleSpecies> getFirst(){
+    public ResourceLocation getFirst(){
         return speciesFirst;
     }
 
-    public IAllele<AlleleSpecies> getSecond() {
+    public ResourceLocation getSecond() {
         return speciesSecond;
     }
 
-    public IAllele<AlleleSpecies> getResult() {
+    public ResourceLocation getResult() {
         return speciesResult;
+    }
+
+    @SuppressWarnings("unchecked")
+    public IAllele<SpeciesData> getResultSpecies(){
+        return (IAllele<SpeciesData>) Registries.ALLELES.get(speciesResult);
     }
     public List<IBeeCondition> getConditions() {return conditions;}
     public int getBaseChance(){
@@ -51,9 +60,9 @@ public class Mutation {
     }
 
     public static class MutationBuilder {
-        private IAllele<AlleleSpecies> speciesFirst;
-        private IAllele<AlleleSpecies> speciesSecond;
-        private IAllele<AlleleSpecies> speciesResult;
+        private ResourceLocation speciesFirst;
+        private ResourceLocation speciesSecond;
+        private ResourceLocation speciesResult;
         private int baseChance = 0;
         private final List<IBeeCondition> conditions = new ArrayList<>();
 
@@ -68,14 +77,25 @@ public class Mutation {
             }
         }
 
-        public MutationBuilder setParent(IAllele<AlleleSpecies> first, IAllele<AlleleSpecies> second){
+        public MutationBuilder setParent(ResourceLocation first, ResourceLocation second){
             this.speciesFirst = first;
             this.speciesSecond = second;
             return this;
         }
 
-        public MutationBuilder setResult(IAllele<AlleleSpecies> result){
+        public MutationBuilder setParent(String first, String second){
+            this.speciesFirst = new ResourceLocation(Apicraft.MOD_ID, first);
+            this.speciesSecond = new ResourceLocation(Apicraft.MOD_ID, second);
+            return this;
+        }
+
+        public MutationBuilder setResult(ResourceLocation result){
             this.speciesResult = result;
+            return this;
+        }
+
+        public MutationBuilder setResult(String result){
+            this.speciesResult = new ResourceLocation(Apicraft.MOD_ID, result);
             return this;
         }
 

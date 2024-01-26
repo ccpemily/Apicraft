@@ -52,12 +52,13 @@ public class ClientSetupEvents {
         MenuScreens.register((MenuType<ThermalApiaryMenu>) Registries.MENUS.get("thermal_apiary"), ThermalApiaryScreen::new);
     }
     @SubscribeEvent
-    @SuppressWarnings("deprecation")
     public static void colorSetupItem(final RegisterColorHandlersEvent.Item event) {
-        ItemColors colors = event.getItemColors();
-        for (Item colorable : COLORABLE_ITEMS) {
-            colors.register(ColorableItemColor.INSTANCE, colorable);
-        }
+        //ItemColors colors = event.getItemColors();
+        COLORABLE_ITEMS.forEach(c -> event.register(ColorableItemColor.INSTANCE, c));
+        /*for (Item colorable : COLORABLE_ITEMS) {
+            event.register(ColorableItemColor.INSTANCE, colorable);
+            //colors.register(ColorableItemColor.INSTANCE, colorable);
+        }*/
     }
 
     @SubscribeEvent

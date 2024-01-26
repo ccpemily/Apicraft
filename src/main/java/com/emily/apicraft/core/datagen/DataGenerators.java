@@ -13,7 +13,7 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event){
         DataGenerator generator = event.getGenerator();
-        generator.addProvider(event.includeServer(), new MutationRecipeProvider(generator.getPackOutput(), event.getExistingFileHelper()));
+        //generator.addProvider(event.includeServer(), new MutationRecipeProvider(generator.getPackOutput(), event.getExistingFileHelper()));
         //generator.addProvider(event.includeClient(), new ZhCNLanguageProvider(generator, "zh_cn"));
     }
 }

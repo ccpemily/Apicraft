@@ -76,7 +76,7 @@ public enum BeeBranches implements IBeeBranch{
         this.template = new HashMap<>();
     }
     BeeBranches(BeeBranchProperties properties){
-        this.template = properties.template;
+        this.template = properties.getTemplate();
     }
 
     public HashMap<IAlleleType, IAllele<?>> getTemplate(){
@@ -88,20 +88,5 @@ public enum BeeBranches implements IBeeBranch{
     }
     public String getLocalizationKey(){
         return "branch." + this.name().toLowerCase(Locale.ENGLISH);
-    }
-
-    private static class BeeBranchProperties {
-        private final HashMap<IAlleleType, IAllele<?>> template = new HashMap<>();
-
-        private BeeBranchProperties(){}
-
-        public BeeBranchProperties addToTemplate(IAllele<?> allele){
-            template.put(allele.getType(), allele);
-            return this;
-        }
-
-        public static BeeBranchProperties get(){
-            return new BeeBranchProperties();
-        }
     }
 }

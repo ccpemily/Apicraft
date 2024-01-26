@@ -1,0 +1,14 @@
+{
+  "type": "apicraft:species",
+  "name": "custom_species_1",
+  "first_color": "0xffffff",
+  "second_color": "0xffcccc",
+  "branch": "apicraft:custom_branch_1",
+  "foil": true,
+  "temperature": "icy",
+  "humidity": "damp",
+  "template": [
+    "apicraft:productivity.fast",
+    "apicraft:rain_tolerance.true"
+  ]
+}

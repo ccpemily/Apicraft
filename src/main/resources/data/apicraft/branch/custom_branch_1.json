@@ -1,0 +1,14 @@
+{
+  "type": "apicraft:branch",
+  "name": "custom_branch_1",
+  "template": [
+    "apicraft:productivity.slowest",
+    "apicraft:lifespan.ancient",
+    "apicraft:fertility.infertile",
+    "apicraft:temperature_tolerance.both_1",
+    "apicraft:humidity_tolerance.both_1",
+    "apicraft:behavior.crepuscular",
+    "apicraft:cave_dwelling.true",
+    "apicraft:accepted_flowers.wheat"
+  ]
+}

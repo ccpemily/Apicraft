@@ -4,9 +4,13 @@ import com.emily.apicraft.climatology.EnumHumidity;
 import com.emily.apicraft.climatology.EnumTemperature;
 import com.emily.apicraft.genetics.branches.BeeBranches;
 import com.emily.apicraft.genetics.branches.IBeeBranch;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 
 public class SpeciesData {
     private final IBeeBranch branch;
@@ -16,6 +20,26 @@ public class SpeciesData {
     private final EnumTemperature temperature;
     private final EnumHumidity humidity;
     private final HashMap<IAlleleType, IAllele<?>> template;
+    /*private static final Codec<SpeciesData> CODEC = RecordCodecBuilder.create( instance -> instance.group(
+            Codec.INT.fieldOf("first").forGetter(SpeciesData::getFirstColor),
+            Codec.INT.fieldOf("second_color").forGetter(SpeciesData::getSecondColor),
+            ResourceLocation.CODEC.listOf().fieldOf("template").forGetter()
+            ).apply(instance, SpeciesData::new)
+    );*/
+
+    /*SpeciesData(
+            IBeeBranch branch,
+            int firstColor, int secondColor, boolean isFoil,
+            EnumTemperature temperature, EnumHumidity humidity,
+            List<ResourceLocation> template
+    ){
+        this.firstColor = firstColor;
+        this.secondColor = secondColor;
+        this.branch = branch;
+        this.isFoil = isFoil;
+        this.temperature = temperature;
+        this.humidity = humidity;
+    }*/
 
     SpeciesData(IBeeBranch branch, BeeSpeciesProperties builder){
         this.firstColor = builder.firstColor;
@@ -34,6 +58,14 @@ public class SpeciesData {
 
     public int getColor(int tintIndex){
         return tintIndex == 0 ? firstColor : tintIndex == 1 ? secondColor : 0xffffff;
+    }
+
+    public int getFirstColor(){
+        return getColor(0);
+    }
+
+    public int getSecondColor(){
+        return getColor(1);
     }
 
     public boolean isFoil(){

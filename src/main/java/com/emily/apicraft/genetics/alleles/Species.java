@@ -11,10 +11,10 @@ public class Species implements IAllele<SpeciesData> {
     private final boolean dominant;
     private final SpeciesData species;
 
-    Species(String id, SpeciesData species){
+    public Species(String id, SpeciesData species){
         this(id, species, false);
     }
-    Species(String id, SpeciesData species, boolean dominant){
+    public Species(String id, SpeciesData species, boolean dominant){
         this.id = id;
         this.dominant = dominant;
         this.species = species;
